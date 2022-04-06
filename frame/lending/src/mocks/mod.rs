@@ -5,6 +5,7 @@ use composable_traits::{
 	currency::{Exponent, LocalAssets},
 	defi::DeFiComposableConfig,
 	governance::{GovernanceRegistry, SignedRawOrigin},
+	math::SafeAdd,
 	oracle::Price,
 };
 use frame_support::{
@@ -454,18 +455,27 @@ pub fn new_test_ext() -> sp_io::TestExternalities {
 // 	}
 // }
 
-/// calls [`next_block(n)`] and then calls [`Lending::finalize`](OnFinalize::on_finalize).
-pub fn process_block(n: BlockNumber) {
-	println!("PROCESSING BLOCK {}", n);
-	next_block(n);
-	Lending::on_finalize(n);
+/// Processes the specified amount alls [`next_block()`] and then calls
+/// [`Lending::finalize`](OnFinalize::on_finalize).
+pub fn process_blocks(blocks_to_process: usize) {
+	std::iter::repeat(())
+		.enumerate()
+		.take(blocks_to_process)
+		.for_each(|(block, _)| {
+			next_block();
+			Lending::on_finalize(block as u64);
+		})
 }
 
-/// Sets the block to `n`, initializes the block with
+/// Progresses to the next block, initializes the block with
 /// [`Lending::on_initialize`](OnInitialize::on_initialize), and then sets the timestamp to where it
-/// should be for the specified block.
-pub fn next_block(n: u64) {
-	System::set_block_number(n);
-	Timestamp::set_timestamp(MILLISECS_PER_BLOCK * n);
-	Lending::on_initialize(n);
+/// should be for the block.
+pub fn next_block() {
+	let next_block = System::block_number()
+		.safe_add(&1)
+		.expect("hit the numeric limit for block number");
+	println!("PROCESSING BLOCK {}", next_block);
+	System::set_block_number(next_block);
+	Timestamp::set_timestamp(MILLISECS_PER_BLOCK * next_block);
+	Lending::on_initialize(next_block);
 }

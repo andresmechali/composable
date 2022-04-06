@@ -394,7 +394,7 @@ pub mod pallet {
 		/// A market with a borrow balance of `0` was attempted to be repaid.
 		CannotRepayZeroBalance,
 		/// Cannot repay the total amount of debt when partially repaying.
-		PartialRepayMustBeLessThanTotalDebt,
+		CannotRepayMoreThanTotalDebt,
 	}
 
 	#[pallet::event]
@@ -1512,15 +1512,6 @@ pub mod pallet {
 
 			let MarketAssets { borrow_asset, debt_asset } = Self::get_assets_for_market(market_id)?;
 
-			{
-				// let market = Self::get_market(market_id).unwrap();
-				// dbg!(market);
-				// dbg!(<T as Config>::MultiCurrency::balance(
-				// 	debt_asset,
-				// 	&Self::account_id(market_id)
-				// ));
-			}
-
 			// initial borrow amount
 			let beneficiary_borrow_asset_principal =
 				<T as Config>::MultiCurrency::balance(debt_asset, beneficiary);
@@ -1536,7 +1527,7 @@ pub mod pallet {
 				Error::<T>::CannotRepayZeroBalance
 			);
 
-			match total_repay_amount {
+			let repaid_amount = match total_repay_amount {
 				RepayStrategy::TotalDebt => {
 					// transfer borrow token interest, from -> market
 					// burn debt token interest from market
@@ -1567,99 +1558,100 @@ pub mod pallet {
 					}
 					.run()?;
 
-					// borrow no longer exists as it has been repaid in entirety, remove the
-					// timestamp
-					BorrowTimestamp::<T>::remove(market_id, beneficiary);
-
-					// ???
-					DebtIndex::<T>::remove(market_id, beneficiary);
-
-					// give back rent (rent == deposit?)
-					if let Some(rent) = BorrowRent::<T>::get(market_id, beneficiary) {
-						<T as Config>::NativeCurrency::transfer(
-							&market_account,
-							beneficiary,
-							rent,
-							false, // <- we do not need to keep the market account alive
-						)?;
-					} else {
-						// ??? REVIEW
-					}
-
-					Ok(beneficiary_total_debt_with_interest)
+					beneficiary_total_debt_with_interest
 				},
 
-				// attempt to repay a partial amount of the debt, paying off interest first.
+				// attempt to repay a partial amount of the debt, paying off interest and principal
+				// proportional to how much of each there is.
 				RepayStrategy::PartialAmount(partial_repay_amount) => {
 					#[cfg(feature = "std")]
 					dbg!(&partial_repay_amount);
 					ensure!(
-						partial_repay_amount < beneficiary_total_debt_with_interest,
-						Error::<T>::PartialRepayMustBeLessThanTotalDebt
+						partial_repay_amount <= beneficiary_total_debt_with_interest,
+						Error::<T>::CannotRepayMoreThanTotalDebt
 					);
 
 					#[cfg(feature = "std")]
 					dbg!(beneficiary_interest_on_market);
 
-					// enough balance was provided to pay off the interest & part of the debt.
-					if partial_repay_amount > beneficiary_interest_on_market {
-						// pay off all of the interest
+					// INVARIANT: ArithmeticError::Overflow is used as the error here as
+					// beneficiary_total_debt_with_interest is known to be non-zero at this point
+					// due to the check above (CannotRepayZeroBalance)
 
-						// pay interest, from -> market
-						// burn interest (debt token) from market
+					let interest_percentage = FixedU128::checked_from_rational(
+						beneficiary_interest_on_market,
+						beneficiary_total_debt_with_interest,
+					)
+					.ok_or(ArithmeticError::Overflow)?;
 
-						PayInterest::<T> {
-							borrow_asset,
-							debt_asset,
+					let principal_percentage = FixedU128::checked_from_rational(
+						beneficiary_borrow_asset_principal,
+						beneficiary_total_debt_with_interest,
+					)
+					.ok_or(ArithmeticError::Overflow)?;
 
-							payer_account: &from,
-							market_account: &market_account,
+					// pay interest, from -> market
+					// burn interest (debt token) from market
+					PayInterest::<T> {
+						borrow_asset,
+						debt_asset,
 
-							amount_of_interest_to_repay: beneficiary_interest_on_market,
-							keep_alive: true,
-						}
-						.run()?;
+						payer_account: &from,
+						market_account: &market_account,
 
-						// amount remaining to repay the debt with
-						let amount_to_repay_principal_with =
-							partial_repay_amount - beneficiary_interest_on_market;
+						amount_of_interest_to_repay: interest_percentage
+							.checked_mul_int::<u128>(partial_repay_amount.into())
+							.ok_or(ArithmeticError::Overflow)?
+							.into(),
 
-						// release borrow asset and burn debt token from beneficiary, paid by `from`
-						RepayPrincipal::<T> {
-							borrow_asset,
-							debt_token: debt_asset,
+						keep_alive: true,
+					}
+					.run()?;
 
-							payer_account: &from,
-							market_account: &market_account,
-							beneficiary_account: &beneficiary,
+					// release borrow asset and burn debt token from beneficiary, paid by `from`
+					RepayPrincipal::<T> {
+						borrow_asset,
+						debt_token: debt_asset,
 
-							amount_of_debt_to_repay: amount_to_repay_principal_with,
+						payer_account: &from,
+						market_account: &market_account,
+						beneficiary_account: &beneficiary,
 
-							keep_alive: true,
-						}
-						.run()?;
-					} else {
-						// pay interest, from -> market
-						// burn interest from market
-						PayInterest::<T> {
-							borrow_asset,
-							debt_asset,
+						amount_of_debt_to_repay: principal_percentage
+							.checked_mul_int::<u128>(partial_repay_amount.into())
+							.ok_or(ArithmeticError::Overflow)?
+							.into(),
 
-							payer_account: &from,
-							market_account: &market_account,
-
-							amount_of_interest_to_repay: partial_repay_amount,
-
-							keep_alive: true,
-						}
-						.run()?;
+						keep_alive: true,
 					};
 
 					// the above will short circuit if amount cannot be paid, so if this is reached
 					// then we know `partial_repay_amount` has been repaid
-					Ok(partial_repay_amount)
+					partial_repay_amount
 				},
+			};
+
+			// if the borrow is completely repaid, remove the borrow information
+			if repaid_amount == beneficiary_total_debt_with_interest {
+				// borrow no longer exists as it has been repaid in entirety, remove the
+				// timestamp & index
+				BorrowTimestamp::<T>::remove(market_id, beneficiary);
+				DebtIndex::<T>::remove(market_id, beneficiary);
+
+				// give back rent (rent == deposit?)
+				if let Some(rent) = BorrowRent::<T>::get(market_id, beneficiary) {
+					<T as Config>::NativeCurrency::transfer(
+						&market_account,
+						beneficiary,
+						rent,
+						false, // <- we do not need to keep the market account alive
+					)?;
+				} else {
+					// ??? REVIEW
+				}
 			}
+
+			Ok(repaid_amount)
 		}
 
 		fn total_borrowed_from_market_excluding_interest(
@@ -2033,7 +2025,14 @@ mod repay_borrow {
 			<T as Config>::MultiCurrency::burn_from(
 				self.debt_asset,
 				self.market_account,
-				self.amount_of_interest_to_repay,
+				// Iue to precision errors, the actual balance may be *slightly* less than the
+				// amount requested to repay. If that's the case, burn the amount actually on the
+				// account.
+				if market_debt_asset_balance < self.amount_of_interest_to_repay {
+					market_debt_asset_balance
+				} else {
+					self.amount_of_interest_to_repay
+				},
 			)?;
 
 			Ok(())

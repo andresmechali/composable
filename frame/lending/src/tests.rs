@@ -356,11 +356,11 @@ fn test_borrow_repay_in_same_block() {
 		let mut total_cash =
 			DEFAULT_MARKET_VAULT_STRATEGY_SHARE.mul(borrow_asset_deposit) + initial_total_cash;
 
-		(1..2).for_each(process_block);
+		(1..2).for_each(process_blocks);
 
 		let limit_normalized = Lending::get_borrow_limit(&market_id, &ALICE).unwrap();
 		assert_eq!(Lending::total_available_to_be_borrowed(&market_id), Ok(total_cash));
-		process_block(1); // <- ???
+		process_blocks(1); // <- ???
 		assert_ok!(<Lending as LendingTrait>::borrow(&market_id, &ALICE, limit_normalized / 4));
 		total_cash -= limit_normalized / 4;
 		let total_borrows = limit_normalized / 4;
@@ -432,7 +432,7 @@ fn borrow_flow() {
 		assert_ok!(Tokens::mint_into(USDT::ID, &CHARLIE, borrow_amount));
 		assert_ok!(Vault::deposit(Origin::signed(*CHARLIE), vault, borrow_amount));
 
-		(1..2).for_each(process_block);
+		(1..2).for_each(process_blocks);
 
 		let expected_cash =
 			DEFAULT_MARKET_VAULT_STRATEGY_SHARE.mul(borrow_amount) + initial_total_cash;
@@ -458,7 +458,7 @@ fn borrow_flow() {
 		let borrow = Lending::total_debt_with_interest(&market, &ALICE).unwrap().unwrap_or_zero();
 		assert_eq!(borrow, alice_borrow);
 		let interest_before = Lending::total_interest_accurate(&market).unwrap();
-		(2..50).for_each(process_block);
+		(2..50).for_each(process_blocks);
 		let interest_after = Lending::total_interest_accurate(&market).unwrap();
 		assert!(interest_before < interest_after);
 
@@ -482,7 +482,7 @@ fn borrow_flow() {
 			Error::<Runtime>::InvalidTimestampOnBorrowRequest
 		);
 
-		process_block(10001);
+		process_blocks(10001);
 
 		assert_ok!(Tokens::mint_into(USDT::ID, &ALICE, collateral_amount));
 		assert_ok!(<Lending as LendingTrait>::deposit_collateral(
@@ -536,7 +536,7 @@ fn test_vault_market_can_withdraw() {
 		assert_ok!(<Lending as LendingTrait>::deposit_collateral(&market, &ALICE, collateral));
 
 		for i in 1..2 {
-			process_block(i);
+			process_blocks(i);
 		}
 
 		// We waited 1 block, the market should have withdraw the funds
@@ -570,7 +570,7 @@ fn test_repay_partial_amount() {
 
 		let borrow_asset_deposit = BORROW::units(1_000_000);
 		assert_ok!(Tokens::mint_into(BORROW::ID, &CHARLIE, borrow_asset_deposit));
-		assert_extrinsic::<Runtime>(
+		assert_extrinsic_event::<Runtime>(
 			Vault::deposit(Origin::signed(*CHARLIE), vault_id, borrow_asset_deposit),
 			Event::Vault(pallet_vault::Event::<Runtime>::Deposited {
 				account: *CHARLIE,
@@ -579,7 +579,7 @@ fn test_repay_partial_amount() {
 			}),
 		);
 
-		(2..1_000).for_each(process_block);
+		process_blocks(1_000);
 
 		let get_collateral_borrow_limit_for_account = |account| {
 			// `limit_normalized` is the limit in USDT
@@ -596,7 +596,7 @@ fn test_repay_partial_amount() {
 		};
 
 		let alice_limit = get_collateral_borrow_limit_for_account(*ALICE);
-		assert_extrinsic::<Runtime>(
+		assert_extrinsic_event::<Runtime>(
 			// partial borrow
 			Lending::borrow(Origin::signed(*ALICE), market_index, alice_limit / 2),
 			Event::Lending(crate::Event::<Runtime>::Borrowed {
@@ -607,32 +607,44 @@ fn test_repay_partial_amount() {
 		);
 		dbg!(alice_limit);
 
-		(1_000..2_000).for_each(process_block);
-		// (2_000..3_000).for_each(process_block);
+		process_blocks(1_000);
 
-		dbg!(BORROW::units(1) / 10_000);
-		// 100000000
-		//    948441
 		// pay off a small amount
+		assert_extrinsic_event::<Runtime>(
+			Lending::repay_borrow(
+				Origin::signed(*ALICE),
+				market_index,
+				*ALICE,
+				RepayStrategy::PartialAmount(BORROW::units(1) / 10_000),
+			),
+			Event::Lending(crate::Event::<Runtime>::BorrowRepaid {
+				sender: *ALICE,
+				market_id: market_index,
+				beneficiary: *ALICE,
+				amount: BORROW::units(1) / 10_000,
+			}),
+		);
 
-		assert_ok!(Lending::repay_borrow(
-			Origin::signed(*ALICE),
-			market_index,
-			*ALICE,
-			RepayStrategy::TotalDebt // RepayStrategy::PartialAmount(BORROW::units(1) / 10_000) /* BORROW::units(1) / 10_000 */
-		));
+		// wait a few blocks
+		process_blocks(3);
 
-		(2_000..2_003).for_each(process_block);
+		// pay off a small amount
+		assert_extrinsic_event::<Runtime>(
+			Lending::repay_borrow(
+				Origin::signed(*ALICE),
+				market_index,
+				*ALICE,
+				RepayStrategy::PartialAmount(BORROW::units(1) / 10_000),
+			),
+			Event::Lending(crate::Event::<Runtime>::BorrowRepaid {
+				sender: *ALICE,
+				market_id: market_index,
+				beneficiary: *ALICE,
+				amount: BORROW::units(1) / 10_000,
+			}),
+		);
 
-		assert_ok!(Lending::repay_borrow(
-			Origin::signed(*ALICE),
-			market_index,
-			*ALICE,
-			RepayStrategy::PartialAmount(BORROW::units(1) / 10_000) /* BORROW::units(1) / 10_000
-			                                                         * RepayStrategy::TotalDebt */
-		));
-
-		// (1_002..1_003).for_each(process_block);
+		process_blocks(10);
 
 		let alice_total_debt_with_interest =
 			Lending::total_debt_with_interest(&market_index, &ALICE)
@@ -649,31 +661,38 @@ fn test_repay_partial_amount() {
 				Origin::signed(*ALICE),
 				market_index,
 				*ALICE,
-				RepayStrategy::PartialAmount(alice_total_debt_with_interest)
+				RepayStrategy::PartialAmount(alice_total_debt_with_interest + 1)
 			),
 			DispatchErrorWithPostInfo {
 				post_info: PostDispatchInfo { actual_weight: None, pays_fee: Pays::Yes },
 				error: DispatchError::Module(ModuleError {
 					index: 8,
-					error: 31,
-					message: Some(Error::<Runtime>::PartialRepayMustBeLessThanTotalDebt.into(),),
+					error: 33,
+					message: Some(Error::<Runtime>::CannotRepayMoreThanTotalDebt.into(),),
 				}),
 			},
 		);
-		(1_002..1_003).for_each(process_block);
-		dbg!(Tokens::balance(BORROW::ID, &ALICE)); // 999499800002852
-		dbg!(alice_total_debt_with_interest); //         249900002852
 
-		assert_ok!(Lending::repay_borrow(
-			Origin::signed(*ALICE),
-			market_index,
-			*ALICE,
-			RepayStrategy::PartialAmount(alice_total_debt_with_interest / 2)
-		));
+		assert_extrinsic_event::<Runtime>(
+			Lending::repay_borrow(
+				Origin::signed(*ALICE),
+				market_index,
+				*ALICE,
+				RepayStrategy::PartialAmount(alice_total_debt_with_interest),
+			),
+			Event::Lending(crate::Event::<Runtime>::BorrowRepaid {
+				sender: *ALICE,
+				market_id: market_index,
+				beneficiary: *ALICE,
+				amount: alice_total_debt_with_interest,
+			}),
+		);
 		dbg!(alice_balance);
 		dbg!(Tokens::balance(COLLATERAL::ID, &ALICE));
-		dbg!(Tokens::balance(COLLATERAL::ID, &BOB));
-		assert!(alice_balance > Tokens::balance(COLLATERAL::ID, &ALICE));
+		dbg!(Tokens::balance(BORROW::ID, &ALICE));
+		// assert_eq!(Lending(COLLATERAL::ID, &ALICE), alice_balance);
+		assert_eq!(Lending::collateral_of_account(&market_index, &*ALICE), Ok(alice_balance));
+		// assert!(Tokens::balance(COLLATERAL::ID, &ALICE).is_zero());
 	});
 }
 
@@ -740,7 +759,7 @@ fn test_repay_total_debt() {
 		assert_ok!(Vault::deposit(Origin::signed(*CHARLIE), vault_id, borrow_asset_deposit));
 
 		// processes one block
-		(2..3).for_each(process_block);
+		(2..3).for_each(process_blocks);
 
 		let get_btc_borrow_limit_for_account = |account| {
 			// `limit_normalized` is the limit in USDT
@@ -757,13 +776,13 @@ fn test_repay_total_debt() {
 		assert_ok!(Lending::borrow(Origin::signed(*ALICE), market_index, alice_borrow_limit));
 		dbg!(alice_borrow_limit);
 
-		(3..1000).for_each(process_block);
+		(3..1000).for_each(process_blocks);
 
 		let bob_limit_after_blocks = get_btc_borrow_limit_for_account(*BOB);
 		assert_ok!(Lending::borrow(Origin::signed(*BOB), market_index, bob_limit_after_blocks));
 		// TODO: Check event
 
-		(1000..1000 + 100).for_each(process_block);
+		(1000..1000 + 100).for_each(process_blocks);
 
 		let alice_total_debt_with_interest =
 			Lending::total_debt_with_interest(&market_index, &ALICE)
@@ -846,7 +865,7 @@ fn liquidation() {
 		// Allow the market to initialize it's account by withdrawing
 		// from the vault
 		for i in 1..2 {
-			process_block(i);
+			process_blocks(i);
 		}
 
 		let borrow_limit = Lending::get_borrow_limit(&market_id, &ALICE).expect("impossible");
@@ -855,7 +874,7 @@ fn liquidation() {
 		assert_ok!(<Lending as LendingTrait>::borrow(&market_id, &ALICE, borrow_limit));
 
 		for i in 2..10000 {
-			process_block(i);
+			process_blocks(i);
 		}
 
 		assert_ok!(Lending::liquidate(Origin::signed(*ALICE), market_id, vec![*ALICE]));
@@ -884,14 +903,14 @@ fn test_warn_soon_under_collateralized() {
 		assert_ok!(Tokens::mint_into(USDT::ID, &CHARLIE, usdt_amt));
 		assert_ok!(Vault::deposit(Origin::signed(*CHARLIE), vault, usdt_amt));
 
-		(1..2).for_each(process_block);
+		(1..2).for_each(process_blocks);
 
 		assert_eq!(Lending::get_borrow_limit(&market, &ALICE), Ok(50_000_000_000_000_000));
 
 		let borrow_amount = USDT::units(80);
 		assert_ok!(<Lending as LendingTrait>::borrow(&market, &ALICE, borrow_amount));
 
-		(2..10000).for_each(process_block);
+		(2..10000).for_each(process_blocks);
 
 		assert_eq!(Lending::soon_under_collateralized(&market, &ALICE), Ok(false));
 		set_price(BTC::ID, NORMALIZED::units(85));
@@ -1061,7 +1080,7 @@ proptest! {
 			prop_assert_ok!(Tokens::mint_into(USDT::ID, &BOB, 10*amount2));
 			prop_assert_ok!(Vault::deposit(Origin::signed(*BOB), vault_id2, 10*amount2));
 
-			(1..2).for_each(process_block);
+			(1..2).for_each(process_blocks);
 
 			let expected_market1_balance = DEFAULT_MARKET_VAULT_STRATEGY_SHARE.mul(amount1);
 			let expected_market2_balance = DEFAULT_MARKET_VAULT_STRATEGY_SHARE.mul(10*amount2);
@@ -1267,7 +1286,7 @@ fn mint_and_deposit_collateral<T: crate::Config>(
 
 /// Asserts that the outcome of an extrinsic is `Ok`, and that the last event is the specified
 /// event.
-fn assert_extrinsic<T: crate::Config>(
+fn assert_extrinsic_event<T: crate::Config>(
 	result: DispatchResultWithPostInfo,
 	event: <T as crate::Config>::Event,
 ) {

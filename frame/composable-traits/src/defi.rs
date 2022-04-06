@@ -240,6 +240,7 @@ pub trait DeFiComposableConfig: frame_system::Config {
 		+ CheckedMul
 		+ CheckedSub
 		+ From<u64> // at least 64 bit
+		+ From<u128>
 		+ Zero
 		+ FixedPointOperand
 		+ Into<u128>; // cannot do From<u128>, until LiftedFixedBalance integer part is larger than 128
