@@ -1939,6 +1939,8 @@ mod repay_borrow {
 		pub(crate) beneficiary_account: &'a T::AccountId,
 
 		/// The amount of `beneficiary_account`'s debt to be repaid by `payer_account`.
+		///
+		/// NOTE: This is assumed to be `<=` the total principal amount.
 		pub(crate) amount_of_debt_to_repay: <T as DeFiComposableConfig>::Balance,
 
 		// Whether or not to keep `from_account` alive.
@@ -2026,9 +2028,25 @@ mod repay_borrow {
 			<T as Config>::MultiCurrency::burn_from(
 				self.debt_asset,
 				self.market_account,
+				// NOTE(benluelo):
+				//
 				// Due to precision errors, the actual balance may be *slightly* less than the
 				// amount requested to repay. If that's the case, burn the amount actually on the
 				// account.
+				//
+				// The discrepency between `Lending::total_debt_with_interest` and the amount of
+				// debt token minted per block in `fn accrue_interest` don't quite line up,
+				// resulting resulting in the amount of debt token being *very slightly* less than
+				// the total amount of interest accrued according to the borrow index
+				// (`Lending::total_debt_with_interest`).
+				//
+				// The difference is very small, roughly 0.03%, so as a temporary workaround we
+				// burn the debt token in a 'best effort' fashion. Since the debt token is just a
+				// marker, it's fine if there's a bit of discrepency since the borrow index is the
+				// 'single source of truth' in this.
+				//
+				// Note that the value returned by `Lending::total_interest` is NOT accurate due to
+				// the discrepency described above.
 				if market_debt_asset_balance < self.amount_of_interest_to_repay {
 					market_debt_asset_balance
 				} else {
