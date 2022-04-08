@@ -448,7 +448,7 @@ fn borrow_flow() {
 			Lending::total_borrowed_from_market_excluding_interest(&market),
 			Ok(alice_borrow)
 		);
-		assert_eq!(Lending::total_interest_accurate(&market), Ok(0));
+		assert_eq!(Lending::total_interest(&market), Ok(0));
 
 		let limit_normalized = Lending::get_borrow_limit(&market, &ALICE).unwrap();
 		let original_limit = limit_normalized * USDT::ONE / get_price(USDT::ID, USDT::ONE);
@@ -457,9 +457,9 @@ fn borrow_flow() {
 
 		let borrow = Lending::total_debt_with_interest(&market, &ALICE).unwrap().unwrap_or_zero();
 		assert_eq!(borrow, alice_borrow);
-		let interest_before = Lending::total_interest_accurate(&market).unwrap();
+		let interest_before = Lending::total_interest(&market).unwrap();
 		process_and_progress_blocks(49);
-		let interest_after = Lending::total_interest_accurate(&market).unwrap();
+		let interest_after = Lending::total_interest(&market).unwrap();
 		assert!(interest_before < interest_after);
 
 		let limit_normalized = Lending::get_borrow_limit(&market, &ALICE).unwrap();

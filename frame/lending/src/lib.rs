@@ -775,18 +775,6 @@ pub mod pallet {
 			T::Oracle::get_price_inverse(borrow_asset, T::OracleMarketCreationStake::get())
 		}
 
-		// REVIEW: Remove this function? Another function with the exact same functionality already
-		// exists.
-		pub fn total_interest_accurate(
-			market_id: &<Self as Lending>::MarketId,
-		) -> Result<T::Balance, DispatchError> {
-			let debt_asset_id =
-				DebtMarkets::<T>::get(market_id).ok_or(Error::<T>::MarketDoesNotExist)?;
-			let total_interest =
-				<T as Config>::MultiCurrency::balance(debt_asset_id, &Self::account_id(market_id));
-			Ok(total_interest)
-		}
-
 		/// Creates a new [`BorrowerData`] for the given market and account. See [`BorrowerData`]
 		/// for more information.
 		pub fn create_borrower_data(
