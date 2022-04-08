@@ -2026,7 +2026,7 @@ mod repay_borrow {
 			<T as Config>::MultiCurrency::burn_from(
 				self.debt_asset,
 				self.market_account,
-				// Iue to precision errors, the actual balance may be *slightly* less than the
+				// Due to precision errors, the actual balance may be *slightly* less than the
 				// amount requested to repay. If that's the case, burn the amount actually on the
 				// account.
 				if market_debt_asset_balance < self.amount_of_interest_to_repay {
