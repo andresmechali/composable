@@ -60,7 +60,7 @@ pub(crate) fn set_price<T: Config + pallet_oracle::Config>(asset_id: T::MayBeAss
 
 /// Round-trip encode/ decode a value into a different type.
 ///
-/// Panics if the innput value cannot be decoded into the specified type.
+/// Panics if the input value cannot be decoded into the specified type.
 fn encode_decode<D: Decode, E: Encode>(value: E) -> D {
 	let asset_id = value.encode();
 	let asset_id = D::decode(&mut &asset_id[..]).unwrap();
@@ -69,7 +69,7 @@ fn encode_decode<D: Decode, E: Encode>(value: E) -> D {
 
 /// Creates a new [`CurrencyPair`] with [`USDT`] as collateral and [`BTC`] as borrow.
 ///
-/// Mints `amount` of both currencies into `adccount`.
+/// Mints `amount` of both currencies into `account`.
 ///
 /// TODO: Document prices set.
 pub(crate) fn setup_currency_pair<T: Config + pallet_oracle::Config + DeFiComposableConfig>(
@@ -104,11 +104,3 @@ pub(crate) fn create_market_config<T: Config>(
 		currency_pair: CurrencyPair::new(collateral_asset, borrow_asset),
 	}
 }
-
-// fn get_last_event<T: Config>(
-// 	event: &EventRecord<<T as frame_system::Config>::Event, <T as frame_system::Config>::Hash>,
-// ) {
-// 	match event.event {
-// 		frame_system::Event,
-// 	}
-// }

@@ -547,6 +547,28 @@ fn test_vault_market_can_withdraw() {
 }
 
 #[test]
+fn test_liquidate_multiple() {
+	new_test_ext().execute_with(|| {
+		let (market, vault) = create_simple_market();
+
+		mint_and_deposit_collateral::<Runtime>(&*ALICE, BTC::units(100), market, BTC::ID);
+		mint_and_deposit_collateral::<Runtime>(&*BOB, BTC::units(100), market, BTC::ID);
+		mint_and_deposit_collateral::<Runtime>(&*CHARLIE, BTC::units(100), market, BTC::ID);
+
+		match Lending::liquidate(Origin::signed(*ALICE), market, vec![*ALICE, *BOB, *CHARLIE]) {
+			Ok(_) => {
+				println!("ok!")
+			},
+			Err(why) => {
+				panic!("{:#?}", why)
+			},
+		};
+
+		Lending::should_liquidate(&market, &*ALICE).unwrap();
+	})
+}
+
+#[test]
 fn test_repay_partial_amount() {
 	new_test_ext().execute_with(|| {
 		type COLLATERAL = BTC;
@@ -695,30 +717,7 @@ fn test_repay_partial_amount() {
 }
 
 #[test]
-fn test_liquidate_multiple() {
-	new_test_ext().execute_with(|| {
-		let (market, vault) = create_simple_market();
-
-		mint_and_deposit_collateral::<Runtime>(&*ALICE, BTC::units(100), market, BTC::ID);
-		mint_and_deposit_collateral::<Runtime>(&*BOB, BTC::units(100), market, BTC::ID);
-		mint_and_deposit_collateral::<Runtime>(&*CHARLIE, BTC::units(100), market, BTC::ID);
-
-		match Lending::liquidate(Origin::signed(*ALICE), market, vec![*ALICE, *BOB, *CHARLIE]) {
-			Ok(_) => {
-				println!("ok!")
-			},
-			Err(why) => {
-				panic!("{:#?}", why)
-			},
-		};
-
-		Lending::should_liquidate(&market, &*ALICE).unwrap();
-	})
-}
-
-#[test]
 fn test_repay_total_debt() {
-	// TODO: Split out partial and total repay testing into separate tests
 	new_test_ext().execute_with(|| {
 		// accounts have 1 BTC of collateral
 		let alice_original_btc_balance = BTC::ONE;
@@ -728,28 +727,18 @@ fn test_repay_total_debt() {
 
 		let deposit_collateral = |account, balance| {
 			assert_ok!(Tokens::mint_into(BTC::ID, account, balance));
-			assert_ok!(Lending::deposit_collateral(
-				Origin::signed(*account),
-				market_index,
-				balance
-			));
-			assert!(matches!(
-				System::events().last(),
-				Some(EventRecord {
-					event: Event::Lending(crate::Event::<Runtime>::CollateralDeposited {
-						market_id,
-						amount: BTC::ONE,
-						sender,
-					}),
-					..
-				}) if sender == account && market_id == &market_index
-			));
+			assert_extrinsic_event::<Runtime>(
+				Lending::deposit_collateral(Origin::signed(*account), market_index, balance),
+				Event::Lending(crate::Event::<Runtime>::CollateralDeposited {
+					market_id: market_index,
+					amount: BTC::ONE,
+					sender: *account,
+				}),
+			);
 		};
 
 		deposit_collateral(&*ALICE, alice_original_btc_balance);
 		deposit_collateral(&*BOB, bob_original_btc_balance);
-
-		// dbg!(System::events());
 
 		// CHARLIE is the lender
 		let borrow_asset_deposit = USDT::units(1_000_000);
@@ -762,7 +751,7 @@ fn test_repay_total_debt() {
 		let get_btc_borrow_limit_for_account = |account| {
 			// `limit_normalized` is the limit in USDT
 			// `limit` is the limit in BTC
-			// BTC is worth 50_000 times more than USDT (see `create_market()`)
+			// BTC is worth 50_000 times more than USDT (see `create_simple_market()`)
 
 			// REVIEW: I'm still not sure if this makes sense
 			let limit_normalized = Lending::get_borrow_limit(&market_index, &account).unwrap();
@@ -771,14 +760,26 @@ fn test_repay_total_debt() {
 		};
 
 		let alice_borrow_limit = get_btc_borrow_limit_for_account(*ALICE);
-		assert_ok!(Lending::borrow(Origin::signed(*ALICE), market_index, alice_borrow_limit));
-		dbg!(alice_borrow_limit);
+		assert_extrinsic_event::<Runtime>(
+			Lending::borrow(Origin::signed(*ALICE), market_index, alice_borrow_limit),
+			Event::Lending(crate::Event::<Runtime>::Borrowed {
+				sender: *ALICE,
+				market_id: market_index,
+				amount: alice_borrow_limit,
+			}),
+		);
 
 		process_and_progress_blocks(1000);
 
 		let bob_limit_after_blocks = get_btc_borrow_limit_for_account(*BOB);
-		assert_ok!(Lending::borrow(Origin::signed(*BOB), market_index, bob_limit_after_blocks));
-		// TODO: Check event
+		assert_extrinsic_event::<Runtime>(
+			Lending::borrow(Origin::signed(*BOB), market_index, bob_limit_after_blocks),
+			Event::Lending(crate::Event::<Runtime>::Borrowed {
+				sender: *BOB,
+				market_id: market_index,
+				amount: bob_limit_after_blocks,
+			}),
+		);
 
 		process_and_progress_blocks(100);
 
@@ -792,49 +793,51 @@ fn test_repay_total_debt() {
 		assert_ok!(Tokens::mint_into(USDT::ID, &ALICE, alice_total_debt_with_interest));
 		assert_ok!(Tokens::mint_into(USDT::ID, &BOB, bob_total_debt_with_interest));
 
-		assert_ok!(Lending::repay_borrow(
-			Origin::signed(*BOB),
-			market_index,
-			*BOB,
-			RepayStrategy::TotalDebt
-		));
+		// repay ALICE and check state
+		{
+			assert_extrinsic_event::<Runtime>(
+				Lending::repay_borrow(
+					Origin::signed(*ALICE),
+					market_index,
+					*ALICE,
+					RepayStrategy::TotalDebt,
+				),
+				Event::Lending(crate::Event::<Runtime>::BorrowRepaid {
+					sender: *ALICE,
+					market_id: market_index,
+					beneficiary: *ALICE,
+					amount: alice_total_debt_with_interest,
+				}),
+			);
 
-		let system_events = System::events();
-
-		match &*system_events {
-			[.., EventRecord {
-				topics: event_topics,
-				phase: Phase::Initialization,
-				event:
-					Event::Lending(crate::Event::BorrowRepaid {
-						amount,
-						beneficiary,
-						sender,
-						market_id,
-					}),
-			}] if market_id == &market_index &&
-				sender == &*BOB && beneficiary == &*BOB &&
-				event_topics.is_empty() =>
-			{
-				assert!(Tokens::balance(BTC::ID, &BOB) == 0);
-
-				Lending::total_debt_with_interest(&market_index, &ALICE)
-					.unwrap()
-					.unwrap_amount();
-
-				assert_eq!(amount, &bob_total_debt_with_interest);
-			},
-			_ => panic!("Unexpected value for System::events(); found {system_events:#?}"),
+			assert_eq!(
+				Lending::total_debt_with_interest(&market_index, &ALICE).unwrap(),
+				TotalDebtWithInterest::NoDebt
+			);
 		}
 
-		// TODO: fix bug with partial repay:
-		assert_ok!(Lending::repay_borrow(
-			Origin::signed(*ALICE),
-			market_index,
-			*ALICE,
-			RepayStrategy::TotalDebt
-		));
-		assert!(alice_original_btc_balance > Tokens::balance(BTC::ID, &ALICE));
+		// repay BOB and check state
+		{
+			assert_extrinsic_event::<Runtime>(
+				Lending::repay_borrow(
+					Origin::signed(*BOB),
+					market_index,
+					*BOB,
+					RepayStrategy::TotalDebt,
+				),
+				Event::Lending(crate::Event::<Runtime>::BorrowRepaid {
+					sender: *BOB,
+					market_id: market_index,
+					beneficiary: *BOB,
+					amount: bob_total_debt_with_interest,
+				}),
+			);
+
+			assert_eq!(
+				Lending::total_debt_with_interest(&market_index, &BOB).unwrap(),
+				TotalDebtWithInterest::NoDebt
+			);
+		}
 	});
 }
 

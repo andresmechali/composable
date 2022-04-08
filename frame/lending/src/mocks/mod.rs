@@ -474,7 +474,8 @@ pub fn next_block() {
 	let next_block = System::block_number()
 		.safe_add(&1)
 		.expect("hit the numeric limit for block number");
-	println!("PROCESSING BLOCK {}", next_block);
+	// println!("PROCESSING BLOCK {}", next_block); // uncomment if you want to obliterate your
+	// terminal
 	System::set_block_number(next_block);
 	Timestamp::set_timestamp(MILLISECS_PER_BLOCK * next_block);
 	Lending::on_initialize(next_block);

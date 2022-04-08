@@ -28,17 +28,6 @@ pub enum CollateralRatio<T> {
 	NoBorrowValue,
 }
 
-/// Representation for the utilization ratio of a market. It's possible for the borrow value to be
-/// zero when calculating this, which would result in a divide by zero error; hence the
-/// [`NoBorrowValue`][UtilizationRatio::NoBorrowValue] variant.
-pub enum UtilizationRatio<T> {
-	/// The current utilization ratio for the market.
-	Ratio(T),
-	/// The total value of the borrow assets owned by the borrower is `0`, either because the
-	/// account hasn't borrowed yet *or* the borrow asset has no value.
-	NoBorrowValue,
-}
-
 pub type CollateralLpAmountOf<T> = <T as DeFiEngine>::Balance;
 
 pub type BorrowAmountOf<T> = <T as DeFiEngine>::Balance;
@@ -144,13 +133,30 @@ pub struct MarketConfig<VaultId, AssetId, AccountId, LiquidationStrategyId> {
 pub enum RepayStrategy<T> {
 	/// Attempt to repay the entirety of the remaining debt.
 	TotalDebt,
-	/// Repay the specified amount, repaying interest first and then principal with whatever (if
-	/// anything) is left.
+	/// Repay the specified amount, repaying interest and principal proportionately.
 	///
-	/// NOTE: Must be *less than* the total owing amount + the accrued interest.
+	/// # Example
+	///
+	/// ```text
+	/// principal = 90
+	/// interest = 10
+	///
+	/// total_debt_with_interest = 10 + 90
+	/// 						 = 100
+	///
+	/// repay = 20
+	///
+	/// new_principal = principal - ((principal / total_debt_with_interest) * repay)
+	/// 			  = 90 - ((90 / 100) * 20)
+	/// 			  = 72
+	///
+	/// new_interest = interest - ((interest / total_debt_with_interest) * repay)
+	/// 			 = 10 - ((10 / 100) * 20)
+	/// 			 = 8
+	/// ```
 	PartialAmount(T),
 	// REVIEW: Perhaps add an "interest only" strategy?
-	// InterestOnly,
+	// InterestOnly
 }
 
 /// The total amount of debt for an account on a market, if any.

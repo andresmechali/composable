@@ -11,8 +11,8 @@
 		clippy::identity_op,
 	)
 )] // allow in tests
-#![warn(clippy::unseparated_literal_suffix)]
 #![cfg_attr(not(feature = "std"), no_std)]
+#![warn(clippy::unseparated_literal_suffix)]
 #![deny(
 	unused_imports,
 	clippy::useless_conversion,
@@ -1092,9 +1092,10 @@ pub mod pallet {
 			market_account: &T::AccountId,
 		) -> Result<(), DispatchError> {
 			// REVIEW: Unnecessary check?
-			let latest_borrow_timestamp = BorrowTimestamp::<T>::get(market_id, debt_owner);
-			if let Some(time) = latest_borrow_timestamp {
-				if time >= LastBlockTimestamp::<T>::get() {
+			if let Some(latest_borrow_timestamp) = BorrowTimestamp::<T>::get(market_id, debt_owner)
+			{
+				dbg!(latest_borrow_timestamp, LastBlockTimestamp::<T>::get());
+				if latest_borrow_timestamp >= LastBlockTimestamp::<T>::get() {
 					return Err(Error::<T>::InvalidTimestampOnBorrowRequest.into())
 				}
 			}

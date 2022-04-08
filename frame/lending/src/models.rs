@@ -21,8 +21,9 @@ pub struct BorrowerData {
 	pub borrow_balance_total_value: FixedU128,
 	/// The collateral factor for the market.
 	///
-	/// See [`MarketConfig::collateral_factor`][composable_traits::lending::MarketConfig::
-	/// collateral_factor] for more information.
+	/// See [`MarketConfig::collateral_factor`] for more information.
+	///
+	/// [`MarketConfig::collateral_factor`]: composable_traits::lending::MarketConfig
 	pub collateral_factor: Validated<FixedU128, MoreThanOne>,
 	pub under_collateralized_warn_percent: Percent,
 }
