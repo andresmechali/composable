@@ -356,11 +356,11 @@ fn test_borrow_repay_in_same_block() {
 		let mut total_cash =
 			DEFAULT_MARKET_VAULT_STRATEGY_SHARE.mul(borrow_asset_deposit) + initial_total_cash;
 
-		(1..2).for_each(process_blocks);
+		process_and_progress_blocks(1);
 
 		let limit_normalized = Lending::get_borrow_limit(&market_id, &ALICE).unwrap();
 		assert_eq!(Lending::total_available_to_be_borrowed(&market_id), Ok(total_cash));
-		process_blocks(1); // <- ???
+		process_and_progress_blocks(1); // <- ???
 		assert_ok!(<Lending as LendingTrait>::borrow(&market_id, &ALICE, limit_normalized / 4));
 		total_cash -= limit_normalized / 4;
 		let total_borrows = limit_normalized / 4;
@@ -432,7 +432,7 @@ fn borrow_flow() {
 		assert_ok!(Tokens::mint_into(USDT::ID, &CHARLIE, borrow_amount));
 		assert_ok!(Vault::deposit(Origin::signed(*CHARLIE), vault, borrow_amount));
 
-		(1..2).for_each(process_blocks);
+		process_and_progress_blocks(1);
 
 		let expected_cash =
 			DEFAULT_MARKET_VAULT_STRATEGY_SHARE.mul(borrow_amount) + initial_total_cash;
@@ -458,7 +458,7 @@ fn borrow_flow() {
 		let borrow = Lending::total_debt_with_interest(&market, &ALICE).unwrap().unwrap_or_zero();
 		assert_eq!(borrow, alice_borrow);
 		let interest_before = Lending::total_interest_accurate(&market).unwrap();
-		(2..50).for_each(process_blocks);
+		process_and_progress_blocks(49);
 		let interest_after = Lending::total_interest_accurate(&market).unwrap();
 		assert!(interest_before < interest_after);
 
@@ -482,7 +482,7 @@ fn borrow_flow() {
 			Error::<Runtime>::InvalidTimestampOnBorrowRequest
 		);
 
-		process_blocks(10001);
+		process_and_progress_blocks(10001);
 
 		assert_ok!(Tokens::mint_into(USDT::ID, &ALICE, collateral_amount));
 		assert_ok!(<Lending as LendingTrait>::deposit_collateral(
@@ -535,9 +535,7 @@ fn test_vault_market_can_withdraw() {
 		assert_ok!(Vault::deposit(Origin::signed(*ALICE), vault_id, borrow));
 		assert_ok!(<Lending as LendingTrait>::deposit_collateral(&market, &ALICE, collateral));
 
-		for i in 1..2 {
-			process_blocks(i);
-		}
+		process_and_progress_blocks(1);
 
 		// We waited 1 block, the market should have withdraw the funds
 		assert_ok!(<Lending as LendingTrait>::borrow(
@@ -579,7 +577,7 @@ fn test_repay_partial_amount() {
 			}),
 		);
 
-		process_blocks(1_000);
+		process_and_progress_blocks(1_000);
 
 		let get_collateral_borrow_limit_for_account = |account| {
 			// `limit_normalized` is the limit in USDT
@@ -607,7 +605,7 @@ fn test_repay_partial_amount() {
 		);
 		dbg!(alice_limit);
 
-		process_blocks(1_000);
+		process_and_progress_blocks(1_000);
 
 		// pay off a small amount
 		assert_extrinsic_event::<Runtime>(
@@ -626,7 +624,7 @@ fn test_repay_partial_amount() {
 		);
 
 		// wait a few blocks
-		process_blocks(3);
+		process_and_progress_blocks(3);
 
 		// pay off a small amount
 		assert_extrinsic_event::<Runtime>(
@@ -644,7 +642,7 @@ fn test_repay_partial_amount() {
 			}),
 		);
 
-		process_blocks(10);
+		process_and_progress_blocks(10);
 
 		let alice_total_debt_with_interest =
 			Lending::total_debt_with_interest(&market_index, &ALICE)
@@ -759,7 +757,7 @@ fn test_repay_total_debt() {
 		assert_ok!(Vault::deposit(Origin::signed(*CHARLIE), vault_id, borrow_asset_deposit));
 
 		// processes one block
-		(2..3).for_each(process_blocks);
+		process_and_progress_blocks(1);
 
 		let get_btc_borrow_limit_for_account = |account| {
 			// `limit_normalized` is the limit in USDT
@@ -776,13 +774,13 @@ fn test_repay_total_debt() {
 		assert_ok!(Lending::borrow(Origin::signed(*ALICE), market_index, alice_borrow_limit));
 		dbg!(alice_borrow_limit);
 
-		(3..1000).for_each(process_blocks);
+		process_and_progress_blocks(1000);
 
 		let bob_limit_after_blocks = get_btc_borrow_limit_for_account(*BOB);
 		assert_ok!(Lending::borrow(Origin::signed(*BOB), market_index, bob_limit_after_blocks));
 		// TODO: Check event
 
-		(1000..1000 + 100).for_each(process_blocks);
+		process_and_progress_blocks(100);
 
 		let alice_total_debt_with_interest =
 			Lending::total_debt_with_interest(&market_index, &ALICE)
@@ -864,18 +862,14 @@ fn liquidation() {
 
 		// Allow the market to initialize it's account by withdrawing
 		// from the vault
-		for i in 1..2 {
-			process_blocks(i);
-		}
+		process_and_progress_blocks(1);
 
 		let borrow_limit = Lending::get_borrow_limit(&market_id, &ALICE).expect("impossible");
 		assert!(borrow_limit > 0);
 
 		assert_ok!(<Lending as LendingTrait>::borrow(&market_id, &ALICE, borrow_limit));
 
-		for i in 2..10000 {
-			process_blocks(i);
-		}
+		process_and_progress_blocks(10_000);
 
 		assert_ok!(Lending::liquidate(Origin::signed(*ALICE), market_id, vec![*ALICE]));
 	});
@@ -903,14 +897,14 @@ fn test_warn_soon_under_collateralized() {
 		assert_ok!(Tokens::mint_into(USDT::ID, &CHARLIE, usdt_amt));
 		assert_ok!(Vault::deposit(Origin::signed(*CHARLIE), vault, usdt_amt));
 
-		(1..2).for_each(process_blocks);
+		process_and_progress_blocks(1);
 
 		assert_eq!(Lending::get_borrow_limit(&market, &ALICE), Ok(50_000_000_000_000_000));
 
 		let borrow_amount = USDT::units(80);
 		assert_ok!(<Lending as LendingTrait>::borrow(&market, &ALICE, borrow_amount));
 
-		(2..10000).for_each(process_blocks);
+		process_and_progress_blocks(10000);
 
 		assert_eq!(Lending::soon_under_collateralized(&market, &ALICE), Ok(false));
 		set_price(BTC::ID, NORMALIZED::units(85));
@@ -1080,7 +1074,7 @@ proptest! {
 			prop_assert_ok!(Tokens::mint_into(USDT::ID, &BOB, 10*amount2));
 			prop_assert_ok!(Vault::deposit(Origin::signed(*BOB), vault_id2, 10*amount2));
 
-			(1..2).for_each(process_blocks);
+		process_and_progress_blocks(1);
 
 			let expected_market1_balance = DEFAULT_MARKET_VAULT_STRATEGY_SHARE.mul(amount1);
 			let expected_market2_balance = DEFAULT_MARKET_VAULT_STRATEGY_SHARE.mul(10*amount2);

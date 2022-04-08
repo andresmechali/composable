@@ -457,7 +457,7 @@ pub fn new_test_ext() -> sp_io::TestExternalities {
 
 /// Processes the specified amount alls [`next_block()`] and then calls
 /// [`Lending::finalize`](OnFinalize::on_finalize).
-pub fn process_blocks(blocks_to_process: usize) {
+pub fn process_and_progress_blocks(blocks_to_process: usize) {
 	std::iter::repeat(())
 		.enumerate()
 		.take(blocks_to_process)
