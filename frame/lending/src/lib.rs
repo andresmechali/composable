@@ -38,9 +38,13 @@
 
 pub use pallet::*;
 
+pub mod weights;
+pub use crate::weights::WeightInfo;
+
+mod models;
+
 #[cfg(test)]
 mod mocks;
-
 #[cfg(test)]
 mod tests;
 
@@ -52,15 +56,9 @@ mod setup;
 #[cfg(any(feature = "runtime-benchmarks", test))]
 pub mod currency;
 
-pub mod weights;
-
-mod models;
-
-pub use crate::weights::WeightInfo;
-
 #[frame_support::pallet]
 pub mod pallet {
-	use crate::{models::BorrowerData, weights::WeightInfo};
+	use crate::{models::borrower_data::BorrowerData, weights::WeightInfo};
 
 	use codec::Codec;
 	use composable_support::validation::{TryIntoValidated, Validated};
@@ -106,6 +104,7 @@ pub mod pallet {
 	// Definitions
 	/////////////////////////////////////////////////////////////////////////
 
+	/// Simple type alias around [`MarketConfig`] for this pallet.
 	type MarketConfigOf<T> = MarketConfig<
 		<T as Config>::VaultId,
 		<T as DeFiComposableConfig>::MayBeAssetId,
@@ -113,10 +112,11 @@ pub mod pallet {
 		<T as Config>::LiquidationStrategyId,
 	>;
 
+	// REVIEW: Maybe move this to `models::market_index`?
 	#[derive(Default, Debug, Copy, Clone, Encode, Decode, PartialEq, MaxEncodedLen, TypeInfo)]
 	#[repr(transparent)]
 	pub struct MarketIndex(
-		#[cfg(test)] // to allow pattern matching in tests
+		#[cfg(test)] // to allow pattern matching in tests outside of crate
 		pub u32,
 		#[cfg(not(test))] pub(crate) u32,
 	);
@@ -135,6 +135,8 @@ pub mod pallet {
 		pub(crate) debt_asset: <T as DeFiComposableConfig>::MayBeAssetId,
 	}
 
+	/// Used to count the calls in [`Pallet::initialize_block`]. Each field corresponds to a
+	/// function call to count.
 	#[derive(Debug, Default, Clone, Copy)]
 	pub(crate) struct InitializeBlockCallCounters {
 		now: u32,
@@ -180,11 +182,16 @@ pub mod pallet {
 		CreateSignedTransaction<Call<Self>> + frame_system::Config + DeFiComposableConfig
 	{
 		type Event: From<Event<Self>> + IsType<<Self as frame_system::Config>::Event>;
+
 		type Oracle: Oracle<
 			AssetId = <Self as DeFiComposableConfig>::MayBeAssetId,
 			Balance = <Self as DeFiComposableConfig>::Balance,
 		>;
+
+		/// The `id`s to be used for the [`Vault`][Config::Vault].
 		type VaultId: Clone + Codec + MaxEncodedLen + Debug + PartialEq + Default + Parameter;
+
+		/// The Vault used to store the borrow asset.
 		type Vault: StrategicVault<
 			VaultId = Self::VaultId,
 			AssetId = <Self as DeFiComposableConfig>::MayBeAssetId,
@@ -218,9 +225,14 @@ pub mod pallet {
 			AccountId = Self::AccountId,
 			LiquidationStrategyId = Self::LiquidationStrategyId,
 		>;
+
 		type UnixTime: UnixTime;
-		type MaxLendingCount: Get<u32>;
+
+		/// The maximum amount of markets that can be open at once.
+		type MaxMarketCount: Get<u32>;
+
 		type AuthorityId: AppCrypto<Self::Public, Self::Signature>;
+
 		type WeightInfo: WeightInfo;
 
 		/// Id of proxy to liquidate
@@ -256,8 +268,10 @@ pub mod pallet {
 
 		#[pallet::constant]
 		type PalletId: Get<PalletId>;
+
 		type NativeCurrency: NativeTransfer<Self::AccountId, Balance = Self::Balance>
 			+ NativeInspect<Self::AccountId, Balance = Self::Balance>;
+
 		/// Convert a weight value into a deductible fee based on the currency type.
 		type WeightToFee: WeightToFeePolynomial<Balance = Self::Balance>;
 	}
@@ -377,7 +391,6 @@ pub mod pallet {
 
 		BorrowDoesNotExist,
 
-		///
 		RepayAmountMustBeGreaterThanZero,
 		CannotRepayMoreThanBorrowAmount,
 
@@ -457,30 +470,112 @@ pub mod pallet {
 	#[allow(clippy::disallowed_type)] // MarketIndex implements Default, so ValueQuery is ok here. REVIEW: Should it?
 	pub type LendingCount<T: Config> = StorageValue<_, MarketIndex, ValueQuery>;
 
-	/// Indexed lending instances
+	/// Indexed lending instances. Maps markets to their respective [`MarketConfig`].
 	///
-	/// Market -> MarketConfig
+	/// ```
+	/// MarketIndex -> MarketConfig
+	/// ```
 	#[pallet::storage]
-	pub type Markets<T: Config> = StorageMap<
-		_,
-		Twox64Concat,
-		MarketIndex,
-		MarketConfig<
-			T::VaultId,
-			<T as DeFiComposableConfig>::MayBeAssetId,
-			T::AccountId,
-			T::LiquidationStrategyId,
-		>,
-	>;
+	pub type Markets<T: Config> =
+		StorageMap<_, Twox64Concat, MarketIndex, MarketConfigOf<T>, OptionQuery>;
 
-	/// Original debt values are on balances.
-	/// Debt token allows to simplify some debt management and implementation of features
-	///
-	/// market_id -> debt asset
-	///
 	/// Maps markets to their corresponding debt token.
+	///
+	/// ```
+	/// MarketIndex -> debt asset
+	/// ```
+	///
+	/// # Reasoning and Usage
+	///
+	/// Debt tokens are used as a 'marker' of debt in a market. They serve two purposes:
+	///
+	/// 1. Marker of accrued interest in a market. Allows for finding the total interest accrued in
+	/// a market without iterating over all the borrowers:
+	///
+	/// ```python
+	/// total_interest = balance(market_account, debt_token)
+	/// ```
+	///
+	/// 2. Marker of a borrower's total principal. When a borrower borrows X amount, that same
+	/// amount of debt token is minted into and held on the borrowers account. Similar to above,
+	/// this allows for easily calculating the total amount borrowed from the market without
+	/// iterating all the borrowers:
+	///
+	/// ```python
+	/// total_borrowed = total_issuance(debt_token) - total_interest
+	/// ```
+	///
+	/// # Caveats
+	///
+	/// Note that the debt token comes with a few caveats as well:
+	///
+	/// ## Interest Discrepencies
+	///
+	/// The return value of [`Lending::total_debt_with_interest`] and the amount of
+	/// debt token minted per block in [`Lending::accrue_interest`] don't quite line up - since
+	/// interest is accrued in small amounts incrementally, there is a possibility for precision
+	/// losses when minting the debt token into the market:
+	///
+	/// - accrue 10.4 interest, rounds down/ truncates to 10
+	/// - borrow index progresses to account for 10.4 interest
+	/// - repeat 3 times
+	/// - accrued interest is now 30, but the borrow index represents 31.2 interest
+	///
+	/// ...resulting in the amount of debt token being *very slightly less* than
+	/// the total amount of interest accrued according to the borrow index. (The numbers used above
+	/// are just to demonstrate the issue, the difference is not typically observable until the
+	/// interest is 4 or 5 digits.)
+	///
+	/// The difference is very small, roughly 0.03%, so as a temporary workaround we
+	/// burn the debt token in a 'best effort' fashion. Since the debt token is just a
+	/// marker, it's fine if there's a bit of discrepency since the borrow index can be thought of
+	/// as the 'single source of truth' in this.
+	///
+	/// Note that due to the discrepency described above, [`Lending::total_interest`] and
+	/// [`Lending::total_debt_with_interest`] are *also* inaccurate. Since it uses the calculation
+	/// described in ***Reasoning and Usage***, it may
+	/// be *slightly* less than the *actual* amount of interest.
+	///
+	/// # Possible Solutions/ Alternatives
+	///
+	/// There are a few different options to solve this, each with their own pros and cons.
+	///
+	/// ## fNFT
+	///
+	/// An in-depth explanation of fNFTs can be found in clickup: <https://app.clickup.com/t/23neb2a>.
+	///
+	/// ## Not using Debt Token
+	///
+	/// Since the debt token is essentially a "nice to have" and isn't strictly necessary, it would
+	/// be possible to remove it entirely and query the borrow index directly when calculating the
+	/// total borrowed & total interest.
+	///
+	/// ### Pros
+	///
+	/// - Moderately decreased complexity
+	/// - No more duplication of information between the debt token and the borrow index
+	///
+	/// ### Cons
+	///
+	/// - Loses the benefits and scalability the debt token provides (easily querying the total debt
+	///   on a market, etc)
+	///
+	/// ## Change how debt token is minted when accrued
+	///
+	/// Currently, the *accrued increment* is minted per-block, using the calculation described
+	/// previously. Since the borrow index can be thought of as the "single source of truth" for how
+	/// much interest the borrower *actually* has, then we could instead mint the difference between
+	/// where the borrow index was previously and where it is now.
+	///
+	/// ### Pros
+	///
+	/// - Retains the pros of having a debt token (easily querying the total debt on a market, etc)
+	///
+	/// ### Cons
+	///
+	/// - Slightly increased complexity
 	#[pallet::storage]
-	pub type DebtMarkets<T: Config> = StorageMap<
+	pub type DebtTokenForMarket<T: Config> = StorageMap<
 		_,
 		Twox64Concat,
 		MarketIndex,
@@ -782,14 +877,19 @@ pub mod pallet {
 			account: &<Self as DeFiEngine>::AccountId,
 		) -> Result<BorrowerData, DispatchError> {
 			let market = Self::get_market(market_id)?;
-			let collateral_balance = Self::collateral_of_account(market_id, account)?;
-			let collateral_balance_value =
-				Self::get_price(market.collateral_asset, collateral_balance)?;
-			let borrow_asset = T::Vault::asset_id(&market.borrow_asset_vault)?;
-			let borrower_balance_with_interest =
+
+			let collateral_balance_value = Self::get_price(
+				market.collateral_asset,
+				Self::collateral_of_account(market_id, account)?,
+			)?;
+
+			let account_total_debt_with_interest =
 				Self::total_debt_with_interest(market_id, account)?.unwrap_or_zero();
-			let borrow_balance_value =
-				Self::get_price(borrow_asset, borrower_balance_with_interest)?;
+			let borrow_balance_value = Self::get_price(
+				T::Vault::asset_id(&market.borrow_asset_vault)?,
+				account_total_debt_with_interest,
+			)?;
+
 			let borrower =
 				BorrowerData::new(
 					collateral_balance_value,
@@ -800,9 +900,12 @@ pub mod pallet {
 						.map_err(|_| Error::<T>::CollateralFactorMustBeMoreThanOne)?, /* TODO: Use a proper error mesage */
 					market.under_collateralized_warn_percent,
 				);
+
 			Ok(borrower)
 		}
 
+		/// Whether or not an account should be liquidated. See [`BorrowerData::should_liquidate()`]
+		/// for more information.
 		pub fn should_liquidate(
 			market_id: &<Self as Lending>::MarketId,
 			account: &<Self as DeFiEngine>::AccountId,
@@ -871,7 +974,6 @@ pub mod pallet {
 			with_transaction(|| {
 				let now = Self::now();
 				call_counters.now += 1;
-				// dbg!(now);
 
 				let mut errors = Markets::<T>::iter()
 					.map(|(market_id, config)| {
@@ -1003,7 +1105,7 @@ pub mod pallet {
 			let borrow_asset =
 				T::Vault::asset_id(&Self::get_market(market_id)?.borrow_asset_vault)?;
 			let debt_asset =
-				DebtMarkets::<T>::get(market_id).ok_or(Error::<T>::MarketDoesNotExist)?;
+				DebtTokenForMarket::<T>::get(market_id).ok_or(Error::<T>::MarketDoesNotExist)?;
 
 			Ok(MarketAssets { borrow_asset, debt_asset })
 		}
@@ -1018,10 +1120,6 @@ pub mod pallet {
 			Markets::<T>::get(market_id).ok_or_else(|| Error::<T>::MarketDoesNotExist.into())
 		}
 
-		// fn get_borrow_index(market_id: &MarketIndex) -> Result<FixedU128, DispatchError> {
-		// 	BorrowIndex::<T>::try_get(market_id).map_err(|_| Error::<T>::MarketDoesNotExist.into())
-		// }
-
 		fn get_price(
 			asset_id: <T as DeFiComposableConfig>::MayBeAssetId,
 			amount: T::Balance,
@@ -1031,47 +1129,6 @@ pub mod pallet {
 				.map_err(|_| Error::<T>::AssetPriceNotFound.into())
 		}
 
-		// fn updated_account_interest_index(
-		// 	market_id: &MarketIndex,
-		// 	debt_owner: &T::AccountId,
-		// 	amount_to_borrow: T::Balance,
-		// 	debt_asset_id: <T as DeFiComposableConfig>::MayBeAssetId,
-		// ) -> Result<FixedU128, DispatchError> {
-		// 	let market_index =
-		// 		BorrowIndex::<T>::get(market_id).ok_or(Error::<T>::MarketDoesNotExist)?;
-
-		// 	let account_interest_index =
-		// 		DebtIndex::<T>::get(market_id, debt_owner).unwrap_or_else(ZeroToOneFixedU128::zero);
-
-		// 	let existing_borrow_amount =
-		// 		<T as Config>::MultiCurrency::balance(debt_asset_id, debt_owner);
-
-		// 	let total_borrow_amount = existing_borrow_amount.safe_add(&amount_to_borrow)?;
-		// 	let existing_borrow_share =
-		// 		Percent::from_rational(existing_borrow_amount, total_borrow_amount);
-		// 	let new_borrow_share = Percent::from_rational(amount_to_borrow, total_borrow_amount);
-		// 	Ok(market_index
-		// 		.safe_mul(&new_borrow_share.into())?
-		// 		.safe_add(&account_interest_index.safe_mul(&existing_borrow_share.into())?)?)
-		// }
-
-		// REVIEW: Remove? Was only used in the above function, inlining it makes more sense
-		// (inlined currently).
-		// fn calc_updated_account_interest_index(
-		// 	market_index: ZeroToOneFixedU128,
-		// 	amount_to_borrow: T::Balance,
-		// 	existing_borrow_amount: T::Balance,
-		// 	account_interest_index: ZeroToOneFixedU128,
-		// ) -> Result<FixedU128, DispatchError> {
-		// 	let total_borrow_amount = existing_borrow_amount.safe_add(&amount_to_borrow)?;
-		// 	let existing_borrow_share =
-		// 		Percent::from_rational(existing_borrow_amount, total_borrow_amount);
-		// 	let new_borrow_share = Percent::from_rational(amount_to_borrow, total_borrow_amount);
-		// 	Ok(market_index
-		// 		.safe_mul(&new_borrow_share.into())?
-		// 		.safe_add(&account_interest_index.safe_mul(&existing_borrow_share.into())?)?)
-		// }
-
 		fn can_borrow(
 			market_id: &MarketIndex,
 			debt_owner: &T::AccountId,
@@ -1079,10 +1136,12 @@ pub mod pallet {
 			market: MarketConfigOf<T>,
 			market_account: &T::AccountId,
 		) -> Result<(), DispatchError> {
+			// Some of these checks remain to provide better errors. Any instance of a check that
+			// *could* be removed is annoted with a NOTE comment explaining what purpose it serves.
+
 			// REVIEW: Unnecessary check?
 			if let Some(latest_borrow_timestamp) = BorrowTimestamp::<T>::get(market_id, debt_owner)
 			{
-				dbg!(latest_borrow_timestamp, LastBlockTimestamp::<T>::get());
 				if latest_borrow_timestamp >= LastBlockTimestamp::<T>::get() {
 					return Err(Error::<T>::InvalidTimestampOnBorrowRequest.into())
 				}
@@ -1093,26 +1152,36 @@ pub mod pallet {
 			let borrow_limit = Self::get_borrow_limit(market_id, debt_owner)?;
 			let borrow_amount_value = Self::get_price(borrow_asset, amount_to_borrow)?;
 			ensure!(borrow_limit >= borrow_amount_value, Error::<T>::NotEnoughCollateralToBorrow);
-			// ensure!(
-			// 	<T as Config>::MultiCurrency::can_withdraw(
-			// 		borrow_asset,
-			// 		market_account,
-			// 		amount_to_borrow
-			// 	)
-			// 	.into_result()
-			// 	.is_ok(),
-			// 	Error::<T>::NotEnoughBorrowAsset,
-			// );
-			// if !BorrowRent::<T>::contains_key(market_id, debt_owner) {
-			// 	let deposit = T::WeightToFee::calc(&T::WeightInfo::liquidate(1));
 
-			// 	ensure!(
-			// 		<T as Config>::NativeCurrency::can_withdraw(debt_owner, deposit,)
-			// 			.into_result()
-			// 			.is_ok(),
-			// 		Error::<T>::NotEnoughRent,
-			// 	);
-			// }
+			// NOTE(benluelo): If the account doesn't have enough borrow asset, blindly using
+			// `transfer` *works* (since the extrinsic is transactional) but the error message is
+			// "BalanceTooLow". It *would* be possible to `transfer(..).map_err(..)` but given that
+			// we don't have access to the `Error` type of orml_tokens (the pallet used for
+			// multicurrency currently), we would have to match on `&'static str`'s which is far
+			// from ideal. If more specific/ accurate errors aren't required, then these checks can
+			// be removed. If it's decided that the cost of these checks is too high, then the
+			// string matching solution can be revisited.
+			ensure!(
+				<T as Config>::MultiCurrency::can_withdraw(
+					borrow_asset,
+					market_account,
+					amount_to_borrow
+				)
+				.into_result()
+				.is_ok(),
+				Error::<T>::NotEnoughBorrowAsset,
+			);
+
+			if !BorrowRent::<T>::contains_key(market_id, debt_owner) {
+				let deposit = T::WeightToFee::calc(&T::WeightInfo::liquidate(1));
+
+				ensure!(
+					<T as Config>::NativeCurrency::can_withdraw(debt_owner, deposit)
+						.into_result()
+						.is_ok(),
+					Error::<T>::NotEnoughRent,
+				);
+			}
 
 			ensure!(
 				!matches!(
@@ -1172,7 +1241,7 @@ pub mod pallet {
 				let market_id = {
 					*previous_market_index += 1;
 					ensure!(
-						*previous_market_index <= T::MaxLendingCount::get(),
+						*previous_market_index <= T::MaxMarketCount::get(),
 						Error::<T>::ExceedLendingCount
 					);
 					MarketIndex(*previous_market_index)
@@ -1187,6 +1256,10 @@ pub mod pallet {
 						strategies: [(
 							Self::account_id(&market_id),
 							// Borrowable = 100% - reserved
+							// REVIEW: Review use of `saturating_sub` here - I'm pretty sure this
+							// can never error, but if `Perquintill` can be `>`
+							// `Perquintill::one()` then we might want to re-evaluate the logic
+							// here.
 							Perquintill::one().saturating_sub(config_input.reserved_factor()),
 						)]
 						.into_iter()
@@ -1225,7 +1298,7 @@ pub mod pallet {
 
 				let debt_token_id = T::CurrencyFactory::reserve_lp_token_id()?;
 
-				DebtMarkets::<T>::insert(market_id, debt_token_id);
+				DebtTokenForMarket::<T>::insert(market_id, debt_token_id);
 				Markets::<T>::insert(market_id, market_config);
 				BorrowIndex::<T>::insert(market_id, FixedU128::one());
 
@@ -1440,7 +1513,12 @@ pub mod pallet {
 				borrowing_account,
 				amount_to_borrow,
 				false,
-			)?;
+			)
+			/* .map_err(crate::map_dispatch_err(
+				// <T as Config>::MultiCurrency::
+				(),
+				Error::<T>::NotEnoughBorrowAsset,
+			)) */?;
 			DebtIndex::<T>::insert(market_id, borrowing_account, new_account_interest_index);
 			BorrowTimestamp::<T>::insert(
 				market_id,
@@ -1508,9 +1586,6 @@ pub mod pallet {
 			let beneficiary_interest_on_market = beneficiary_total_debt_with_interest
 				.safe_sub(&beneficiary_borrow_asset_principal)?;
 
-			#[cfg(feature = "std")]
-			dbg!(beneficiary_interest_on_market);
-
 			ensure!(
 				!beneficiary_total_debt_with_interest.is_zero(),
 				Error::<T>::CannotRepayZeroBalance
@@ -1553,15 +1628,10 @@ pub mod pallet {
 				// attempt to repay a partial amount of the debt, paying off interest and principal
 				// proportional to how much of each there is.
 				RepayStrategy::PartialAmount(partial_repay_amount) => {
-					#[cfg(feature = "std")]
-					dbg!(&partial_repay_amount);
 					ensure!(
 						partial_repay_amount <= beneficiary_total_debt_with_interest,
 						Error::<T>::CannotRepayMoreThanTotalDebt
 					);
-
-					#[cfg(feature = "std")]
-					dbg!(beneficiary_interest_on_market);
 
 					// INVARIANT: ArithmeticError::Overflow is used as the error here as
 					// beneficiary_total_debt_with_interest is known to be non-zero at this point
@@ -1647,7 +1717,7 @@ pub mod pallet {
 			market_id: &Self::MarketId,
 		) -> Result<Self::Balance, DispatchError> {
 			let debt_token =
-				DebtMarkets::<T>::get(market_id).ok_or(Error::<T>::MarketDoesNotExist)?;
+				DebtTokenForMarket::<T>::get(market_id).ok_or(Error::<T>::MarketDoesNotExist)?;
 
 			// total amount of debt *interest* owned by the market
 			let total_debt_interest =
@@ -1661,7 +1731,7 @@ pub mod pallet {
 
 		fn total_interest(market_id: &Self::MarketId) -> Result<Self::Balance, DispatchError> {
 			let debt_token =
-				DebtMarkets::<T>::get(market_id).ok_or(Error::<T>::MarketDoesNotExist)?;
+				DebtTokenForMarket::<T>::get(market_id).ok_or(Error::<T>::MarketDoesNotExist)?;
 
 			// total amount of debt *interest* owned by the market
 			let total_debt_interest =
@@ -1682,39 +1752,41 @@ pub mod pallet {
 			let total_borrowed_from_market_excluding_interest =
 				Self::total_borrowed_from_market_excluding_interest(market_id)?;
 			let total_available_to_be_borrowed = Self::total_available_to_be_borrowed(market_id)?;
+
 			let utilization_ratio = Self::calculate_utilization_ratio(
 				total_available_to_be_borrowed,
 				total_borrowed_from_market_excluding_interest,
 			)?;
 
 			let delta_time = now.checked_sub(LastBlockTimestamp::<T>::get()).ok_or(
-				// this error should never happen, `now` should always be > last block timestamp
+				// REVIEW: INVARIANT: this error should never happen, `now` should always
+				// be `> LastBlockTimestamp`
 				Error::<T>::Underflow,
 			)?;
+
 			let borrow_index =
 				BorrowIndex::<T>::get(market_id).ok_or(Error::<T>::MarketDoesNotExist)?;
 			let debt_asset_id =
-				DebtMarkets::<T>::get(market_id).ok_or(Error::<T>::MarketDoesNotExist)?;
+				DebtTokenForMarket::<T>::get(market_id).ok_or(Error::<T>::MarketDoesNotExist)?;
 
-			let accrued_interest_result = Markets::<T>::try_mutate/* ::<_, _, DispatchError, _> */(market_id, |market_config| {
-					let market_config =
-						market_config.as_mut().ok_or(Error::<T>::MarketDoesNotExist)?;
+			let accrued_interest = Markets::<T>::try_mutate(market_id, |market_config| {
+				let market_config = market_config.as_mut().ok_or(Error::<T>::MarketDoesNotExist)?;
 
-					accrue_interest_internal::<T, InterestRateModel>(
-						utilization_ratio,
-						&mut market_config.interest_rate_model,
-						borrow_index,
-						delta_time,
-						total_borrowed_from_market_excluding_interest,
-					)
-				})?;
+				accrue_interest_internal::<T, InterestRateModel>(
+					utilization_ratio,
+					&mut market_config.interest_rate_model,
+					borrow_index,
+					delta_time,
+					total_borrowed_from_market_excluding_interest,
+				)
+			})?;
 
 			// overwrites
-			BorrowIndex::<T>::insert(market_id, accrued_interest_result.new_borrow_index);
+			BorrowIndex::<T>::insert(market_id, accrued_interest.new_borrow_index);
 			<T as Config>::MultiCurrency::mint_into(
 				debt_asset_id,
 				&Self::account_id(market_id),
-				accrued_interest_result.accrued_increment,
+				accrued_interest.accrued_increment,
 			)?;
 
 			Ok(())
@@ -1744,7 +1816,7 @@ pub mod pallet {
 			account: &Self::AccountId,
 		) -> Result<TotalDebtWithInterest<BorrowAmountOf<Self>>, DispatchError> {
 			let debt_token =
-				DebtMarkets::<T>::get(market_id).ok_or(Error::<T>::MarketDoesNotExist)?;
+				DebtTokenForMarket::<T>::get(market_id).ok_or(Error::<T>::MarketDoesNotExist)?;
 
 			// Self::get_assets_for_market()?;
 			match DebtIndex::<T>::get(market_id, account) {
@@ -1752,17 +1824,9 @@ pub mod pallet {
 					let market_interest_index =
 						BorrowIndex::<T>::get(market_id).ok_or(Error::<T>::MarketDoesNotExist)?;
 
-					#[cfg(feature = "std")]
-					{
-						dbg!(&market_interest_index);
-						dbg!(&account_interest_index);
-					}
-
 					let account_principal =
 						<T as Config>::MultiCurrency::balance_on_hold(debt_token, account);
 
-					#[cfg(feature = "std")]
-					dbg!(&account_principal);
 					if account_principal.is_zero() {
 						Ok(TotalDebtWithInterest::NoDebt)
 					} else {
@@ -1856,7 +1920,7 @@ pub mod pallet {
 		borrow_index: OneOrMoreFixedU128,
 		delta_time: DurationSeconds,
 		total_borrows: T::Balance,
-	) -> Result<AccrueInterest<T>, DispatchError> {
+	) -> Result<AccruedInterest<T>, DispatchError> {
 		let total_borrows: FixedU128 =
 			FixedU128::checked_from_integer(Into::<u128>::into(total_borrows))
 				.ok_or(ArithmeticError::Overflow)?;
@@ -1879,11 +1943,11 @@ pub mod pallet {
 			.ok_or(ArithmeticError::Overflow)?
 			.into();
 
-		Ok(AccrueInterest { accrued_increment, new_borrow_index })
+		Ok(AccruedInterest { accrued_increment, new_borrow_index })
 	}
 
 	#[derive(Debug, PartialEqNoBound)]
-	pub(crate) struct AccrueInterest<T: Config> {
+	pub(crate) struct AccruedInterest<T: Config> {
 		pub(crate) accrued_increment: T::Balance,
 		pub(crate) new_borrow_index: FixedU128,
 	}
@@ -2010,31 +2074,16 @@ mod repay_borrow {
 
 			let market_debt_asset_balance =
 				<T as Config>::MultiCurrency::balance(self.debt_asset, self.market_account);
-			#[cfg(feature = "std")]
-			dbg!(market_debt_asset_balance);
 
 			<T as Config>::MultiCurrency::burn_from(
 				self.debt_asset,
 				self.market_account,
 				// NOTE(benluelo):
-				//
-				// Due to precision errors, the actual balance may be *slightly* less than the
-				// amount requested to repay. If that's the case, burn the amount actually on the
-				// account.
-				//
-				// The discrepency between `Lending::total_debt_with_interest` and the amount of
-				// debt token minted per block in `fn accrue_interest` don't quite line up,
-				// resulting resulting in the amount of debt token being *very slightly* less than
-				// the total amount of interest accrued according to the borrow index
-				// (`Lending::total_debt_with_interest`).
-				//
-				// The difference is very small, roughly 0.03%, so as a temporary workaround we
-				// burn the debt token in a 'best effort' fashion. Since the debt token is just a
-				// marker, it's fine if there's a bit of discrepency since the borrow index is the
-				// 'single source of truth' in this.
-				//
-				// Note that the value returned by `Lending::total_interest` is NOT accurate due to
-				// the discrepency described above.
+				///
+				/// Due to precision errors, the actual interest balance may be *slightly* less
+				/// than the amount requested to repay. If that's the case, burn the amount
+				/// actually on the account. See the documentation on `DebtTokenForMarket` for more
+				/// information.
 				if market_debt_asset_balance < self.amount_of_interest_to_repay {
 					market_debt_asset_balance
 				} else {
@@ -2045,4 +2094,15 @@ mod repay_borrow {
 			Ok(())
 		}
 	}
+}
+
+use sp_runtime::DispatchError;
+
+fn map_dispatch_err<T: pallet::Config, TFrom: Into<DispatchError>>(
+	from: TFrom,
+	to: pallet::Error<T>,
+) -> impl FnOnce(DispatchError) -> DispatchError {
+	// <T as pallet::Config>::MultiCurrency
+	|err| if err == from.into() { to.into() } else { err }
+	// todo!()
 }

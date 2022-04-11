@@ -13,7 +13,7 @@ use std::ops::{Div, Mul};
 
 use crate::{
 	self as pallet_lending, accrue_interest_internal, currency::*, mocks::*, models::BorrowerData,
-	setup::assert_last_event, AccrueInterest, Error, MarketIndex,
+	setup::assert_last_event, AccruedInterest, Error, MarketIndex,
 };
 use codec::{Decode, Encode};
 use composable_support::validation::{TryIntoValidated, Validated};
@@ -54,7 +54,7 @@ fn accrue_interest_base_cases() {
 	let total_issued = 100_000_000_000_000_000_000;
 	let accrued_debt = 0;
 	let total_borrows = total_issued - accrued_debt;
-	let AccrueInterest { accrued_increment: accrued_increase, .. } =
+	let AccruedInterest { accrued_increment: accrued_increase, .. } =
 		accrue_interest_internal::<Runtime, InterestRateModel>(
 			optimal,
 			interest_rate_model,
@@ -66,7 +66,7 @@ fn accrue_interest_base_cases() {
 	assert_eq!(accrued_increase, 10_000_000_000_000_000_000);
 
 	let delta_time = MILLISECS_PER_BLOCK;
-	let AccrueInterest { accrued_increment: accrued_increase, .. } =
+	let AccruedInterest { accrued_increment: accrued_increase, .. } =
 		accrue_interest_internal::<Runtime, InterestRateModel>(
 			optimal,
 			interest_rate_model,
@@ -91,7 +91,7 @@ fn apr_for_zero() {
 	let utilization = Percent::from_percent(100);
 	let borrow_index = Rate::saturating_from_integer(1_u128);
 
-	let AccrueInterest { accrued_increment: accrued_increase, .. } =
+	let AccruedInterest { accrued_increment: accrued_increase, .. } =
 		accrue_interest_internal::<Runtime, InterestRateModel>(
 			utilization,
 			interest_rate_model,
@@ -134,7 +134,7 @@ fn accrue_interest_induction() {
 			|(slot, total_issued)| {
 				let (optimal, ref mut interest_rate_model) = new_jump_model();
 
-				let AccrueInterest {
+				let AccruedInterest {
 					accrued_increment: accrued_increase_1,
 					new_borrow_index: borrow_index_1,
 				} = accrue_interest_internal::<Runtime, InterestRateModel>(
@@ -146,7 +146,7 @@ fn accrue_interest_induction() {
 				)
 				.unwrap();
 
-				let AccrueInterest {
+				let AccruedInterest {
 					accrued_increment: accrued_increase_2,
 					new_borrow_index: borrow_index_2,
 				} = accrue_interest_internal::<Runtime, InterestRateModel>(
@@ -177,7 +177,7 @@ fn accrue_interest_plotter() {
 	const TOTAL_BLOCKS: u64 = 1000;
 	let _data: Vec<_> = (0..TOTAL_BLOCKS)
 		.map(|x| {
-			let AccrueInterest { accrued_increment, .. } =
+			let AccruedInterest { accrued_increment, .. } =
 				accrue_interest_internal::<Runtime, InterestRateModel>(
 					optimal,
 					interest_rate_model,
@@ -191,7 +191,7 @@ fn accrue_interest_plotter() {
 		})
 		.collect();
 
-	let AccrueInterest { accrued_increment: total_accrued, .. } =
+	let AccruedInterest { accrued_increment: total_accrued, .. } =
 		accrue_interest_internal::<Runtime, InterestRateModel>(
 			optimal,
 			interest_rate_model,
@@ -386,7 +386,7 @@ fn test_borrow_repay_in_same_block() {
 }
 
 #[test]
-fn test_calc_utilization_ratio() {
+fn test_calculate_utilization_ratio() {
 	// 50% borrow
 	assert_eq!(Lending::calculate_utilization_ratio(1, 1).unwrap(), Percent::from_percent(50));
 	assert_eq!(Lending::calculate_utilization_ratio(100, 100).unwrap(), Percent::from_percent(50));
@@ -401,11 +401,14 @@ fn test_borrow_math() {
 	let borrower = BorrowerData::new(
 		100_u128,
 		0,
-		MoreThanOneFixedU128::from_float(1.0).try_into_validated().unwrap(),
-		Percent::from_float(0.10),
+		MoreThanOneFixedU128::checked_from_rational(200_u8, 100_u8)
+			.unwrap()
+			.try_into_validated()
+			.unwrap(),
+		Percent::from_percent(10),
 	);
 	let borrow = borrower.get_borrow_limit().unwrap();
-	assert_eq!(borrow, LiftedFixedBalance::from(100));
+	assert_eq!(borrow, LiftedFixedBalance::from(50));
 }
 
 #[test]
@@ -514,9 +517,16 @@ fn vault_takes_part_of_borrow_so_cannot_withdraw() {
 		assert_ok!(Tokens::mint_into(BTC::ID, &ALICE, deposit_btc));
 
 		assert_ok!(Vault::deposit(Origin::signed(*ALICE), vault_id, deposit_btc));
-		assert_ok!(<Lending as LendingTrait>::deposit_collateral(&market_id, &ALICE, deposit_usdt));
+		assert_extrinsic_event::<Runtime>(
+			Lending::deposit_collateral(Origin::signed(*ALICE), market_id, deposit_usdt),
+			Event::Lending(pallet_lending::Event::<Runtime>::CollateralDeposited {
+				sender: *ALICE,
+				market_id,
+				amount: deposit_usdt,
+			}),
+		);
 		assert_noop!(
-			<Lending as LendingTrait>::borrow(&market_id, &ALICE, deposit_btc + initial_total_cash),
+			Lending::borrow(Origin::signed(*ALICE), market_id, deposit_btc + initial_total_cash),
 			Error::<Runtime>::NotEnoughBorrowAsset
 		);
 	});
@@ -586,7 +596,7 @@ fn test_repay_partial_amount() {
 			COLLATERAL::ID,
 		);
 
-		let debt_asset = crate::DebtMarkets::<Runtime>::get(market_index).unwrap();
+		let debt_asset = crate::DebtTokenForMarket::<Runtime>::get(market_index).unwrap();
 
 		let borrow_asset_deposit = BORROW::units(1_000_000);
 		assert_ok!(Tokens::mint_into(BORROW::ID, &CHARLIE, borrow_asset_deposit));
@@ -996,8 +1006,11 @@ proptest! {
 		let borrower = BorrowerData::new(
 			collateral_balance * collateral_price,
 			borrower_balance_with_interest * borrow_price,
-			MoreThanOneFixedU128::checked_from_integer(1).unwrap().try_into_validated().unwrap(),
-			Percent::from_percent(10), // 10%
+			MoreThanOneFixedU128::checked_from_rational(101_u8, 100_u8)
+				.unwrap()
+				.try_into_validated()
+				.unwrap(),
+			Percent::from_percent(10),
 		);
 		let borrow = borrower.get_borrow_limit();
 		prop_assert_ok!(borrow);

@@ -399,7 +399,7 @@ impl pallet_lending::Config for Runtime {
 	type CurrencyFactory = LpTokenFactory;
 	type Liquidation = Liquidations;
 	type UnixTime = Timestamp;
-	type MaxLendingCount = MaxLendingCount;
+	type MaxMarketCount = MaxLendingCount;
 	type AuthorityId = crypto::TestAuthId;
 	type WeightInfo = ();
 	type LiquidationStrategyId = LiquidationStrategyId;
