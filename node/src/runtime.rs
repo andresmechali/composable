@@ -107,14 +107,6 @@ where
 {
 }
 
-macro_rules! trait_alias {
-	($name:ident: $($super_trait:ty),+) => {
-		pub trait $name where $(Self: $super_trait),+ {}
-
-		impl<Api> $name for Api where $(Api: $super_trait),+ {}
-	};
-}
-
 // only dali
 #[cfg(all(feature = "dali", not(feature = "composable")))]
 pub trait HostRuntimeApis: BaseHostRuntimeApis + DaliHostRuntimeApis {}
