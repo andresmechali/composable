@@ -8112,6 +8112,7 @@ dependencies = [
  "lite-json",
  "log 0.4.17",
  "pallet-balances",
+ "pallet-timestamp",
  "parity-scale-codec",
  "parking_lot 0.12.0",
  "proptest",
