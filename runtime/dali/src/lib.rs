@@ -474,6 +474,7 @@ impl oracle::Config for Runtime {
 	type OracleWeightInfo = weights::oracle::WeightInfo<Runtime>;
 	type LocalAssets = CurrencyFactory;
 	type TreasuryAccount = TreasuryAccount;
+	type RewardOrigin = EnsureRootOrHalfCouncil;
 }
 
 // Parachain stuff.

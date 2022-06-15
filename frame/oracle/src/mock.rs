@@ -166,6 +166,7 @@ impl pallet_oracle::Config for Test {
 	type OracleWeightInfo = ();
 	type LocalAssets = ();
 	type TreasuryAccount = TreasuryAccountId;
+	type RewardOrigin = EnsureRoot<AccountId>;
 }
 
 // Build genesis storage according to the mock runtime.
