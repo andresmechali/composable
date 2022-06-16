@@ -163,7 +163,13 @@ pub mod pallet {
 	#[pallet::call]
 	impl<T: Config> Pallet<T> {
 		/// creates asset using `CurrencyFactory`,
-		/// raises `AssetRegistered` event
+		/// Raises `AssetRegistered` event
+		///
+		/// # Parameters:
+		/// `ratio` - given unit of foreign asset id, how much of native assets it would be given.
+		/// One to one is 10^18 integer. 10*10^8 will tell that for 1 foreign asset, 10 local native
+		/// will be given. `decimals` - remote number of decimals on other chain
+		/// `ed` - same meaning as in `CurrencyFactory`
 		#[pallet::weight(<T as Config>::WeightInfo::register_asset())]
 		pub fn register_asset(
 			origin: OriginFor<T>,
@@ -185,6 +191,7 @@ pub mod pallet {
 
 		/// Given well existing asset, update its remote information.
 		/// Use with caution as it allow reroute assets location.
+		/// See `register_asset` for parameters meaning.
 		#[pallet::weight(<T as Config>::WeightInfo::update_asset())]
 		pub fn update_asset(
 			origin: OriginFor<T>,
