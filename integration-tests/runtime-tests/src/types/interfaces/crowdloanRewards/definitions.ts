@@ -179,5 +179,13 @@ export default {
         feeFrozen: "u128"
       }
     },
+    PalletIbcAny: "Null",
+    PalletIbcConnectionParams: "Null",
+    IbcTraitOpenChannelParams: "Null",
+    PalletIbcPingSendPingParams: "Null",
+    PalletIbcErrorsIbcError: "Null",
+    PalletIbcEventsIbcEvent: "Null",
+    OrmlTokensReserveData: "Null",
+    PalletIbcIbcConsensusState: "Null"
   }
 };
