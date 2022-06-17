@@ -10,3 +10,4 @@ status = [
 up_to_date_approvals = true
 update_base_for_deletes = true
 use_codeowners = true
+use_squash_merge = true
