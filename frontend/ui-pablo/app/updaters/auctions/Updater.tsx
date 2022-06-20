@@ -63,15 +63,15 @@ const Updater = () => {
         pool < liquidityBootstrappingPools.verified.length;
         pool++
       ) {
-        let quoteId =
-          liquidityBootstrappingPools.verified[pool].pair.quote.toString();
-        if (apollo[quoteId]) {
+        // let quoteId =
+          // liquidityBootstrappingPools.verified[pool].pair.quote.toString();
+        // if (apollo[quoteId]) {
           fetchSpotPrice(
             parachainApi,
             liquidityBootstrappingPools.verified[pool].pair,
             liquidityBootstrappingPools.verified[pool].poolId
           ).then((spotPrice) => {
-            spotPrice = spotPrice.times(apollo[quoteId]);
+            // spotPrice = spotPrice.times(apollo[quoteId]);
             setLiquidityBootstrappingPoolSpotPrice(
               liquidityBootstrappingPools.verified[pool].poolId,
               spotPrice.toFixed(4)
@@ -79,10 +79,10 @@ const Updater = () => {
           }).catch(err => {
             console.error(err);
           })
-        }
+        // }
       }
     }
-  }, [parachainApi, liquidityBootstrappingPools.verified.length, apollo]);
+  }, [parachainApi, liquidityBootstrappingPools.verified.length]);
 
   return null;
 };
