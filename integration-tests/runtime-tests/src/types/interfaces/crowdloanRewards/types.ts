@@ -2,12 +2,12 @@
 /* eslint-disable */
 
 import type { ComposableTraitsDefiCurrencyPairCurrencyId, CurrencyId } from '@composable/types/interfaces/common';
-import type { Enum, Null, Struct, bool, u128, u32 } from '@polkadot/types-codec';
+import type { Enum, Null, Struct, Vec, bool, u128, u32 } from '@polkadot/types-codec';
 import type { ITuple } from '@polkadot/types-codec/types';
 import type { EthereumAccountId } from '@polkadot/types/interfaces/eth';
 import type { EcdsaSignature, MultiSignature } from '@polkadot/types/interfaces/extrinsics';
 import type { ParachainInherentData, PersistedValidationData } from '@polkadot/types/interfaces/parachains';
-import type { AccountId32, Balance, Permill } from '@polkadot/types/interfaces/runtime';
+import type { AccountId32, Balance, FixedU128, Percent, Permill, Perquintill } from '@polkadot/types/interfaces/runtime';
 
 /** @name CommonMosaicRemoteAssetId */
 export interface CommonMosaicRemoteAssetId extends Null {}
@@ -89,16 +89,48 @@ export interface ComposableTraitsGovernanceSignedRawOrigin extends Enum {
 }
 
 /** @name ComposableTraitsLendingCreateInput */
-export interface ComposableTraitsLendingCreateInput extends Null {}
+export interface ComposableTraitsLendingCreateInput extends Struct {
+  readonly updatable: ComposableTraitsLendingUpdateInput;
+}
 
 /** @name ComposableTraitsLendingMarketConfig */
 export interface ComposableTraitsLendingMarketConfig extends Null {}
+
+/** @name ComposableTraitsLendingMathCurveModel */
+export interface ComposableTraitsLendingMathCurveModel extends Struct {
+  readonly baseRate: u128;
+}
+
+/** @name ComposableTraitsLendingMathInterestRateModel */
+export interface ComposableTraitsLendingMathInterestRateModel extends Enum {
+  readonly isJump: boolean;
+  readonly asJump: ComposableTraitsLendingMathJumpModel;
+  readonly isCurve: boolean;
+  readonly asCurve: ComposableTraitsLendingMathCurveModel;
+  readonly type: 'Jump' | 'Curve';
+}
+
+/** @name ComposableTraitsLendingMathJumpModel */
+export interface ComposableTraitsLendingMathJumpModel extends Struct {
+  readonly baseRate: u128;
+  readonly jumpRate: u128;
+  readonly fullRate: u128;
+  readonly targetUtilization: Percent;
+}
 
 /** @name ComposableTraitsLendingRepayStrategy */
 export interface ComposableTraitsLendingRepayStrategy extends Null {}
 
 /** @name ComposableTraitsLendingUpdateInput */
-export interface ComposableTraitsLendingUpdateInput extends Null {}
+export interface ComposableTraitsLendingUpdateInput extends Struct {
+  readonly collateralFactor: FixedU128;
+  readonly underCollateralizedWarnPercent: Percent;
+  readonly liquidators: Vec<u32>;
+  readonly maxPriceAge: u32;
+  readonly currencyPair: ComposableTraitsDefiCurrencyPairCurrencyId;
+  readonly reservedFactor: Perquintill;
+  readonly interestRateModel: ComposableTraitsLendingMathInterestRateModel;
+}
 
 /** @name ComposableTraitsOraclePrice */
 export interface ComposableTraitsOraclePrice extends Null {}
