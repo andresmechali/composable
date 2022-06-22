@@ -91,6 +91,9 @@ export interface ComposableTraitsGovernanceSignedRawOrigin extends Enum {
 /** @name ComposableTraitsLendingCreateInput */
 export interface ComposableTraitsLendingCreateInput extends Struct {
   readonly updatable: ComposableTraitsLendingUpdateInput;
+  readonly currencyPair: ComposableTraitsDefiCurrencyPairCurrencyId;
+  readonly reservedFactor: Perquintill;
+  readonly interestRateModel: ComposableTraitsLendingMathInterestRateModel;
 }
 
 /** @name ComposableTraitsLendingMarketConfig */
@@ -127,9 +130,6 @@ export interface ComposableTraitsLendingUpdateInput extends Struct {
   readonly underCollateralizedWarnPercent: Percent;
   readonly liquidators: Vec<u32>;
   readonly maxPriceAge: u32;
-  readonly currencyPair: ComposableTraitsDefiCurrencyPairCurrencyId;
-  readonly reservedFactor: Perquintill;
-  readonly interestRateModel: ComposableTraitsLendingMathInterestRateModel;
 }
 
 /** @name ComposableTraitsOraclePrice */
