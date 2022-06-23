@@ -12,3 +12,5 @@ pub const BTC: AssetId = AssetId(2000);
 pub const LAYR: AssetId = CurrencyId::LAYR;
 pub const DOT: AssetId = AssetId(4000);
 pub const ETH: AssetId = AssetId(5000);
+
+pub const ASSETS: [AssetId; 6] = [PICA, USDC, BTC, LAYR, DOT, ETH];

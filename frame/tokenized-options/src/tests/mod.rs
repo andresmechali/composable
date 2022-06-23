@@ -38,6 +38,7 @@ pub mod create_vault;
 pub mod delete_sell_option;
 pub mod sell_option;
 mod time_management;
+mod total_test;
 
 // ----------------------------------------------------------------------------------------------------
 //		VaultConfigBuilder
@@ -110,7 +111,7 @@ impl VaultInitializer for sp_io::TestExternalities {
 	}
 
 	fn initialize_all_vaults(mut self) -> Self {
-		let assets = Vec::from([PICA, BTC, USDC, LAYR]);
+		let assets = Vec::from(ASSETS);
 
 		self.execute_with(|| {
 			assets.iter().for_each(|&asset| {
