@@ -1,14 +1,14 @@
 {
   "name": "composable-js",
   "private": true,
-  "author": "Composable.Finance",
+  "author": "@Dom-Roth",
   "license": "Public Domain",
   "scripts": {
-    "build": "yarn build:gen && yarn build:compile",
+    "build": "yarn build:gen && yarn prettier && yarn build:compile",
     "build:gen": "yarn gen",
     "build:compile": "tsc -p . --declaration",
     "lint": "eslint 'packages/**/*.ts'",
-    "prettier": "prettier ./packages",
+    "prettier": "prettier ./packages --write",
     "gen": "npm run gen:defs && npm run gen:meta",
     "gen:defs": "ts-node --skip-project node_modules/.bin/polkadot-types-from-defs --package @composable/types/interfaces --input ./packages/types/src/interfaces",
     "gen:meta": "ts-node --skip-project node_modules/.bin/polkadot-types-from-chain --package @composable/types/interfaces --endpoint ws://localhost:9988 --output packages/types/src/interfaces/"

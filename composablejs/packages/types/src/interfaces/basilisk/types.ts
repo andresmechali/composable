@@ -1,10 +1,10 @@
 // Auto-generated via `yarn polkadot-types-from-defs`, do not edit
 /* eslint-disable */
 
-import type { Bytes, Compact, Enum, Struct, Vec, bool, i128, u32, u64, u8 } from '@polkadot/types-codec';
-import type { ITuple } from '@polkadot/types-codec/types';
-import type { AccountId, AssetId, Balance, BlockNumber, Hash } from '@polkadot/types/interfaces/runtime';
-import type { AssetInstanceV1, MultiAssetV1, MultiLocationV1, XcmOrderV1, XcmV1 } from '@polkadot/types/interfaces/xcm';
+import type { Bytes, Compact, Enum, Struct, Vec, bool, i128, u32, u64, u8 } from "@polkadot/types-codec";
+import type { ITuple } from "@polkadot/types-codec/types";
+import type { AccountId, AssetId, Balance, BlockNumber, Hash } from "@polkadot/types/interfaces/runtime";
+import type { AssetInstanceV1, MultiAssetV1, MultiLocationV1, XcmOrderV1, XcmV1 } from "@polkadot/types/interfaces/xcm";
 
 /** @name Address */
 export interface Address extends AccountId {}
@@ -49,7 +49,7 @@ export interface AssetType extends Enum {
   readonly isToken: boolean;
   readonly isPoolShare: boolean;
   readonly asPoolShare: ITuple<[AssetId, AssetId]>;
-  readonly type: 'Token' | 'PoolShare';
+  readonly type: "Token" | "PoolShare";
 }
 
 /** @name BalanceInfo */
@@ -121,7 +121,7 @@ export interface IntentionId extends Hash {}
 export interface IntentionType extends Enum {
   readonly isSell: boolean;
   readonly isBuy: boolean;
-  readonly type: 'Sell' | 'Buy';
+  readonly type: "Sell" | "Buy";
 }
 
 /** @name LBPWeight */
@@ -200,7 +200,7 @@ export interface VestingScheduleOf extends VestingSchedule {}
 /** @name WeightCurveType */
 export interface WeightCurveType extends Enum {
   readonly isLinear: boolean;
-  readonly type: 'Linear';
+  readonly type: "Linear";
 }
 
 /** @name Xcm */
@@ -209,4 +209,4 @@ export interface Xcm extends XcmV1 {}
 /** @name XcmOrder */
 export interface XcmOrder extends XcmOrderV1 {}
 
-export type PHANTOM_BASILISK = 'basilisk';
+export type PHANTOM_BASILISK = "basilisk";
