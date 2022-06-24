@@ -1,46 +1,49 @@
 {
-    "folders": [
-        {
-            "path": "."
-        },
-        {
-            "path": "integration-tests/runtime-tests"
-        },
-        {
-            "path": "frontend/ui-pablo"
-        },
-        {
-            "path": "frontend/ui-picasso"
-        },
-        {
-            "path": "scripts/oracle-setup"
-        }
-    ],
-    "settings": {
-        "cSpell.words": [
-            "autofetch",
-            "azuretools",
-            "clippy",
-            "Codespace",
-            "Dispatchable",
-            "eamodio",
-            "fsevenm",
-            "mutantdino",
-            "polkadot",
-            "prost",
-            "protobuf",
-            "PTRACE",
-            "resourcemonitor",
-            "rustfmt",
-            "seccomp",
-            "serayuzgur",
-            "Stableswap",
-            "tamasfe",
-            "tomoki",
-            "vadimcn",
-            "vsicons",
-            "XCVM",
-            "yzhang"
-        ]
+  "folders": [
+    {
+      "path": "."
+    },
+    {
+      "path": "integration-tests/runtime-tests"
+    },
+    {
+      "path": "frontend/ui-pablo"
+    },
+    {
+      "path": "frontend/ui-picasso"
+    },
+    {
+      "path": "scripts/oracle-setup"
+    },
+    {
+      "path": "composablejs"
     }
+  ],
+  "settings": {
+    "cSpell.words": [
+      "autofetch",
+      "azuretools",
+      "clippy",
+      "Codespace",
+      "Dispatchable",
+      "eamodio",
+      "fsevenm",
+      "mutantdino",
+      "polkadot",
+      "prost",
+      "protobuf",
+      "PTRACE",
+      "resourcemonitor",
+      "rustfmt",
+      "seccomp",
+      "serayuzgur",
+      "Stableswap",
+      "tamasfe",
+      "tomoki",
+      "vadimcn",
+      "vsicons",
+      "XCVM",
+      "yzhang"
+    ]
+  }
 }
