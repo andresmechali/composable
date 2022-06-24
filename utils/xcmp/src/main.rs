@@ -21,21 +21,24 @@ use subxt::{
 
 pub type PairSigner = subxt::PairSigner<DefaultConfig, sr25519::Pair>;
 
-use crate::generated::rococo_relay_chain::{api::{
+use crate::generated::rococo_relay_chain::{
 	self,
-	runtime_types::{
-		polkadot_parachain::primitives,
-		xcm::{
-			v0::junction::NetworkId,
-			v1::{
-				junction::Junction,
-				multiasset::{AssetId, Fungibility, MultiAsset, MultiAssets},
+	api::{
+		self,
+		runtime_types::{
+			polkadot_parachain::primitives,
+			xcm::{
+				v0::junction::NetworkId,
+				v1::{
+					junction::Junction,
+					multiasset::{AssetId, Fungibility, MultiAsset, MultiAssets},
+				},
+				*,
 			},
-			*,
 		},
+		xcm_pallet::calls::*,
 	},
-	xcm_pallet::calls::*,
-}, self};
+};
 
 #[derive(Parser, Debug)]
 #[clap(about ="XCMP tools", long_about = None)]
