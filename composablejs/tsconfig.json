@@ -15,6 +15,7 @@
     "sourceMap": true,
     "sourceRoot": "ts",
     "baseUrl": "./",
+    "outDir": "./dist/",
     "paths": {
       "@composable/types/*": ["./packages/types/src/*"],
       "@composable/types/api/augment": ["./packages/types/src/interfaces/augment-api.ts"],

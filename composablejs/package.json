@@ -1,5 +1,5 @@
 {
-  "name": "composable-js",
+  "name": "composablejs",
   "private": true,
   "author": "@Dom-Roth",
   "license": "Public Domain",
@@ -8,10 +8,7 @@
     "build:gen": "yarn gen",
     "build:compile": "tsc -p . --declaration",
     "lint": "eslint 'packages/**/*.ts'",
-    "prettier": "prettier ./packages --write",
-    "gen": "npm run gen:defs && npm run gen:meta",
-    "gen:defs": "ts-node --skip-project node_modules/.bin/polkadot-types-from-defs --package @composable/types/interfaces --input ./packages/types/src/interfaces",
-    "gen:meta": "ts-node --skip-project node_modules/.bin/polkadot-types-from-chain --package @composable/types/interfaces --endpoint ws://localhost:9988 --output packages/types/src/interfaces/"
+    "prettier": "prettier ./packages --write"
   },
   "workspaces": [
     "packages/*"
@@ -21,15 +18,6 @@
     "typescript": "^4.7.3"
   },
   "devDependencies": {
-    "@polkadot/api": "^8.3.2",
-    "@polkadot/ts": "^0.4.22",
-    "@polkadot/typegen": "^8.3.2",
-    "@polkadot/types": "^8.3.2",
-    "@polkadot/types-augment": "^8.3.2",
-    "@polkadot/types-codec": "^8.3.2",
-    "@polkadot/types-create": "^8.3.2",
-    "@polkadot/types-known": "^8.3.2",
-    "@polkadot/types-support": "^8.3.2",
     "@types/node": "^18.0.0",
     "@typescript-eslint/eslint-plugin": "^5.29.0",
     "@typescript-eslint/parser": "^5.29.0",
