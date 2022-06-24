@@ -470,6 +470,10 @@ declare module '@polkadot/api-base/types/errors' {
        **/
       EncodingError: AugmentedError<ApiType>;
       /**
+       * Invalid message for extirnsic
+       **/
+      InvalidMessageType: AugmentedError<ApiType>;
+      /**
        * Invalid route
        **/
       InvalidRoute: AugmentedError<ApiType>;
@@ -623,6 +627,7 @@ declare module '@polkadot/api-base/types/errors' {
       BorrowIndexDoesNotExist: AugmentedError<ApiType>;
       BorrowRateDoesNotExist: AugmentedError<ApiType>;
       BorrowRentDoesNotExist: AugmentedError<ApiType>;
+      CannotBorrowFromMarketWithUnbalancedVault: AugmentedError<ApiType>;
       /**
        * Can't allow amount 0 as collateral.
        **/
@@ -1130,6 +1135,12 @@ declare module '@polkadot/api-base/types/errors' {
        * No keys are associated with this account.
        **/
       NoKeys: AugmentedError<ApiType>;
+      /**
+       * Generic error
+       **/
+      [key: string]: AugmentedError<ApiType>;
+    };
+    stakingRewards: {
       /**
        * Generic error
        **/

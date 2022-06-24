@@ -1,38 +1,41 @@
 {
-    "name": "composable-js",
-    "private": true,
-    "author": "Composable.Finance",
-    "license": "Public Domain",
-    "scripts": {
-        "build": "yarn build:gen && yarn build:compile",
-        "build:gen": "yarn gen",
-        "build:compile": "tsc -p . --declaration",
-        "lint": "eslint 'packages/**/*.ts'",
-        "gen": "npm run gen:defs && npm run gen:meta",
-        "gen:defs": "ts-node --skip-project node_modules/.bin/polkadot-types-from-defs --package @composable/interfaces --input ./packages/types/src/interfaces",
-        "gen:meta": "ts-node --skip-project node_modules/.bin/polkadot-types-from-chain --package @composable/interfaces --endpoint ws://localhost:9988 --output packages/types/src/interfaces/"
-    },
-    "workspaces": [
-        "packages/*"
-    ],
-    "resolutions": {
-        "@polkadot/api": "^8.5.1",
-        "typescript": "^4.7.3"
-    },
-    "devDependencies": {
-        "@polkadot/api": "^8.3.2",
-        "@polkadot/ts": "^0.4.22",
-        "@polkadot/typegen": "^8.3.2",
-        "@polkadot/types": "^8.3.2",
-        "@polkadot/types-augment": "^8.3.2",
-        "@polkadot/types-codec": "^8.3.2",
-        "@polkadot/types-create": "^8.3.2",
-        "@polkadot/types-known": "^8.3.2",
-        "@polkadot/types-support": "^8.3.2",
-        "@typescript-eslint/eslint-plugin": "^5.29.0",
-        "eslint": "^8.18.0",
-        "prettier": "^2.7.1",
-        "ts-node": "^10.8.1",
-        "typescript": "^4.7.4"
-    }
+  "name": "composable-js",
+  "private": true,
+  "author": "Composable.Finance",
+  "license": "Public Domain",
+  "scripts": {
+    "build": "yarn build:gen && yarn build:compile",
+    "build:gen": "yarn gen",
+    "build:compile": "tsc -p . --declaration",
+    "lint": "eslint 'packages/**/*.ts'",
+    "prettier": "prettier ./packages",
+    "gen": "npm run gen:defs && npm run gen:meta",
+    "gen:defs": "ts-node --skip-project node_modules/.bin/polkadot-types-from-defs --package @composable/types/interfaces --input ./packages/types/src/interfaces",
+    "gen:meta": "ts-node --skip-project node_modules/.bin/polkadot-types-from-chain --package @composable/types/interfaces --endpoint ws://localhost:9988 --output packages/types/src/interfaces/"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "resolutions": {
+    "@polkadot/api": "^8.5.1",
+    "typescript": "^4.7.3"
+  },
+  "devDependencies": {
+    "@polkadot/api": "^8.3.2",
+    "@polkadot/ts": "^0.4.22",
+    "@polkadot/typegen": "^8.3.2",
+    "@polkadot/types": "^8.3.2",
+    "@polkadot/types-augment": "^8.3.2",
+    "@polkadot/types-codec": "^8.3.2",
+    "@polkadot/types-create": "^8.3.2",
+    "@polkadot/types-known": "^8.3.2",
+    "@polkadot/types-support": "^8.3.2",
+    "@types/node": "^18.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.29.0",
+    "@typescript-eslint/parser": "^5.29.0",
+    "eslint": "^8.18.0",
+    "prettier": "^2.7.1",
+    "ts-node": "^10.8.1",
+    "typescript": "^4.7.4"
+  }
 }

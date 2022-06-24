@@ -1,14 +1,14 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "target": "ES2021",
+    "target": "ES6",
     "moduleResolution": "node",
     "pretty": true,
     "noImplicitAny": true,
     "removeComments": false,
     "noImplicitReturns": true,
     "suppressImplicitAnyIndexErrors": false,
-    "allowSyntheticDefaultImports": false,
+    "allowSyntheticDefaultImports": true,
     "skipLibCheck": false,
     "esModuleInterop": true,
     "resolveJsonModule": true,
@@ -16,10 +16,9 @@
     "sourceRoot": "ts",
     "baseUrl": "./",
     "paths": {
-      "@composable/*": ["./packages/"],
-      "@composable/types/*": ["./packages/types/"],
+      "@composable/types/*": ["./packages/types/src/*"],
       "@composable/types/api/augment": ["./packages/types/src/interfaces/augment-api.ts"],
-      "@composable/types/types/augment": ["./src/types/src/interfaces/augment-types.ts"]
+      "@composable/types/types/augment": ["./packages/types/src/interfaces/augment-types.ts"]
     }
   },
   "include": ["packages", "@types/**/*.d.ts"],
