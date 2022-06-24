@@ -1,10 +1,13 @@
 {
   "name": "@composablejs/types",
+  "private": true,
   "version": "0.0.0",
+  "author": "@Dom-Roth",
+  "license": "Public Domain",
   "scripts": {
     "gen": "npm run gen:defs && npm run gen:meta",
-    "gen:defs": "ts-node --skip-project node_modules/.bin/polkadot-types-from-defs --package @composable/types/interfaces --input ./packages/types/src/interfaces",
-    "gen:meta": "ts-node --skip-project node_modules/.bin/polkadot-types-from-chain --package @composable/types/interfaces --endpoint ws://localhost:9988 --output packages/types/src/interfaces/"
+    "gen:defs": "ts-node --skip-project node_modules/.bin/polkadot-types-from-defs --package @composable/types/interfaces --input ./src/interfaces",
+    "gen:meta": "ts-node --skip-project node_modules/.bin/polkadot-types-from-chain --package @composable/types/interfaces --endpoint ws://localhost:9988 --output ./src/interfaces/"
   },
   "resolutions": {
     "@polkadot/api": "^8.5.1",

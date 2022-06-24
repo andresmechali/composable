@@ -3,9 +3,12 @@
   "private": true,
   "author": "@Dom-Roth",
   "license": "Public Domain",
+  "exports": {
+    "./packages/types/*": "./dist/types/.js"
+  },
   "scripts": {
     "build": "yarn build:gen && yarn prettier && yarn build:compile",
-    "build:gen": "yarn gen",
+    "build:gen": "cd ./packages/types && yarn && yarn gen",
     "build:compile": "tsc -p . --declaration",
     "lint": "eslint 'packages/**/*.ts'",
     "prettier": "prettier ./packages --write"

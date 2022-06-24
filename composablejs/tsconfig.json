@@ -23,5 +23,5 @@
     }
   },
   "include": ["packages", "@types/**/*.d.ts"],
-  "exclude": ["node_modules", "test/**/*.d.ts", "src/**/*.d.ts"]
+  "exclude": ["node_modules"]
 }
