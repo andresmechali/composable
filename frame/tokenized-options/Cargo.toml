@@ -28,7 +28,6 @@ sp-runtime = { default-features = false, git = "https://github.com/paritytech/su
 sp-std = { default-features = false, git = "https://github.com/paritytech/substrate", branch = "polkadot-v0.9.22" }
 
 [dev-dependencies]
-hex-literal = "0.3"
 itertools = "0.10"
 orml-tokens = { git = "https://github.com/open-web3-stack/open-runtime-module-library", rev = "f709ed62262435b3ad80482d309e3575625d1e5b" }
 pallet-assets = { path = "../assets", default-features = false }
