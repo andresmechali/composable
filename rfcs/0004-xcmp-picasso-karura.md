@@ -84,8 +84,8 @@ Register Karura token like this
 https://polkadot.js.org/apps/?rpc=wss%3A%2F%2Frpc.composablefinance.ninja#/extrinsics/decode/0x3700010200411f0608008140420f0000000000000000000000000001000064a7b3b6e00d0000000000000000010c000000
 
 
+Examples:
 
-Examples
 ```
 Asset Name: Karura Native Token 
 Asset Symbol:  KAR
@@ -114,9 +114,15 @@ Repeat for other token. Validate via `events` and via `tokens` storage.
 
 ## Picasso tokens on Karura
 
+**KAR**
+
+You can transfer KAR back, it will use Karura identifier for that asset and send it Karura using `xtokens`
+
+**PICA**
+
 Create preimage and submit proposal via https://polkadot.js.org/apps/?rpc=wss%3A%2F%2Fkarura-rpc-1.aca-api.network#/democracy
 
-where preimage is `0x7a000001019d20105049434110504943410c00ca9a3b000000000000000000000000`
+to enact https://polkadot.js.org/apps/?rpc=wss%3A%2F%2Fkarura-rpc-1.aca-api.network#/extrinsics/decode/0x7a000001019d20105049434110504943410c00ca9a3b000000000000000000000000
 
 for PICA token.
 
