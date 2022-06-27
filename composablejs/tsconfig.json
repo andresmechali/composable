@@ -24,6 +24,13 @@
     "outDir": "dist",
     "typeRoots": ["node_modules/@polkadot/ts", "node_modules/@types"]
   },
+  "paths": {
+    "@composable/types/*": ["./src/*"],
+    "@composable/types/api/augment": ["./src/interfaces/augment-api.ts"],
+    "@composable/types/types/augment": ["./src/interfaces/augment-types.ts"],
+    "@polkadot/api/augment": ["./src/interfaces/augment-api.ts"],
+    "@polkadot/types/augment": ["./src/augment-types.ts"]
+  },
   "references": [
     {
       "path": "./packages/types/tsconfig.json"
