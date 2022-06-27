@@ -4,11 +4,11 @@
     "outDir": "dist",
     "baseUrl": "./src/",
     "paths": {
-      "@composable/types/*": ["./*"],
-      "@composable/types/api/augment": ["./interfaces/augment-api.ts"],
-      "@composable/types/types/augment": ["./interfaces/augment-types.ts"],
-      "@polkadot/api/augment": ["./interfaces/augment-api.ts"],
-      "@polkadot/types/augment": ["./augment-types.ts"]
+      "@composable/types/*": ["./src/*"],
+      "@composable/types/api/augment": ["./src/interfaces/augment-api.ts"],
+      "@composable/types/types/augment": ["./src/interfaces/augment-types.ts"],
+      "@polkadot/api/augment": ["./src/interfaces/augment-api.ts"],
+      "@polkadot/types/augment": ["./src/augment-types.ts"]
     }
   },
   "include": ["./src/"],

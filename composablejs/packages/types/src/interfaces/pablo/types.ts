@@ -1,7 +1,7 @@
 // Auto-generated via `yarn polkadot-types-from-defs`, do not edit
 /* eslint-disable */
 
-import type { ComposableTraitsDefiCurrencyPairCurrencyId, CustomRpcBalance, CustomRpcCurrencyId, SafeRpcWrapper } from '@composable/types/src/interfaces/common';
+import type { ComposableTraitsDefiCurrencyPairCurrencyId, CustomRpcBalance, CustomRpcCurrencyId, SafeRpcWrapper } from '@composable/types/interfaces/common';
 import type { Enum, Null, Struct, u128, u16 } from '@polkadot/types-codec';
 import type { AccountId32, BlockNumber, Permill } from '@polkadot/types/interfaces/runtime';
 

@@ -2,8 +2,12 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "dist",
-    "baseUrl": "./src"
+    "baseUrl": "./src",
+    "paths": {
+      "@composable/oraclesetup/*": ["./*"]
+    }
   },
+  "files": ["src/index.ts", "src/config.json"],
   "include": ["./src"],
   "exclude": ["node_modules", "dist"]
 }

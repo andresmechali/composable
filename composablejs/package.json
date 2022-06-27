@@ -5,27 +5,26 @@
   "author": "@Dom-Roth",
   "license": "Public Domain",
   "type": "module",
+  "main": "dist/index.js",
   "exports": {
     "./types/*": [
       "./packages/types/dist/**/*.js",
-      "./packages/types/dist/**/*.d.ts",
-      "./packages/types/src/**/*"
+      "./packages/types/dist/**/*.d.ts"
     ],
     "./utils/*": [
       "./packages/utils/dist/**/*.js",
-      "./packages/utils/dist/**/*.d.ts",
-      "./packages/utils/src/**/*"
+      "./packages/utils/dist/**/*.d.ts"
     ],
     "./oraclesetup/*": [
-      "./packages/oraclesetup/dist/types/**/*.js",
-      "./packages/oraclesetup/dist/types/**/*.d.ts",
-      "./packages/oraclesetup/src/**/*"
+      "./packages/oraclesetup/dist/**/*.js",
+      "./packages/oraclesetup/dist/**/*.d.ts"
     ]
   },
   "scripts": {
-    "build": "yarn build:gen && yarn build:compile",
+    "prepare": "yarn build:compile",
+    "build": "./build.sh",
     "build:gen": "cd ./packages/types && yarn && yarn gen",
-    "build:compile": "tsc -p . --declaration",
+    "build:compile": "tsc -b -v",
     "lint": "eslint 'packages/**/*.ts'",
     "prettier": "prettier ./packages --write"
   },
@@ -44,17 +43,6 @@
     "prettier": "^2.7.1",
     "ts-node": "^10.8.1",
     "typescript": "^4.7.4",
-    "@polkadot/api": "^8.3.2",
-    "@polkadot/keyring": "^9.3.1",
-    "@polkadot/ts": "^0.4.22",
-    "@polkadot/typegen": "^8.3.2",
-    "@polkadot/types": "^8.3.2",
-    "@polkadot/types-augment": "^8.3.2",
-    "@polkadot/types-codec": "^8.3.2",
-    "@polkadot/types-create": "^8.3.2",
-    "@polkadot/types-known": "^8.3.2",
-    "@polkadot/types-support": "^8.3.2",
-    "@polkadot/util": "^9.3.1",
-    "@polkadot/util-crypto": "^9.3.1"
+    "@types/core-js": "^2.5.5"
   }
 }

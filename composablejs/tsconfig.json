@@ -1,8 +1,10 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "target": "ES6",
+    "target": "ES2021",
+    "lib": ["ES2021", "DOM", "ScriptHost"],
     "declaration": true,
+    "declarationMap": true,
     "noLib": false,
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
@@ -20,13 +22,19 @@
     "sourceRoot": "ts",
     "baseUrl": "./",
     "outDir": "dist",
-    "paths": {
-      "@composable/types": ["packages/types/src/"],
-      "@composable/utils": ["packages/utils/src/"],
-      "@composable/oraclesetup": ["packages/oraclesetup/src/"]
-    },
     "typeRoots": ["node_modules/@polkadot/ts", "node_modules/@types"]
   },
-  "include": ["packages"],
+  "references": [
+    {
+      "path": "./packages/types/tsconfig.json"
+    },
+    {
+      "path": "./packages/utils/tsconfig.json"
+    },
+    {
+      "path": "./packages/oraclesetup/tsconfig.json"
+    }
+  ],
+  "include": ["packages/**/src/**/*"],
   "exclude": ["node_modules", "**/*.spec.ts", "dist", "**/dist/**/*", "**/node_modules/**/*", "**/dist/**/*"]
 }

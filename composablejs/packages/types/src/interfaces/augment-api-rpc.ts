@@ -1,9 +1,9 @@
 // Auto-generated via `yarn polkadot-types-from-chain`, do not edit
 /* eslint-disable */
 
-import type { Asset } from '@composable/types/src/interfaces/assets';
-import type { CustomRpcBalance, CustomRpcCurrencyId } from '@composable/types/src/interfaces/common';
-import type { PalletPabloPoolId, PalletPabloPriceAggregate } from '@composable/types/src/interfaces/pablo';
+import type { Asset } from '@composable/types/interfaces/assets';
+import type { CustomRpcBalance, CustomRpcCurrencyId } from '@composable/types/interfaces/common';
+import type { PalletPabloPoolId, PalletPabloPriceAggregate } from '@composable/types/interfaces/pablo';
 import type { AugmentedRpc } from '@polkadot/rpc-core/types';
 import type { Metadata, StorageKey } from '@polkadot/types';
 import type { Bytes, HashMap, Json, Null, Option, Text, U256, U64, Vec, bool, u32, u64 } from '@polkadot/types-codec';

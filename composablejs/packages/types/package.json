@@ -4,16 +4,18 @@
   "version": "0.1.0",
   "author": "@Dom-Roth",
   "license": "Public Domain",
+  "main": "dist/index.js",
   "scripts": {
-    "build": "tsc -p . --declaration",
+    "build": "tsc -b",
     "gen": "npm run gen:defs && npm run gen:meta",
-    "gen:defs": "ts-node --skip-project node_modules/.bin/polkadot-types-from-defs --package @composable/types/src/interfaces --input ./src/interfaces",
-    "gen:meta": "ts-node --skip-project node_modules/.bin/polkadot-types-from-chain --package @composable/types/src/interfaces --endpoint ws://localhost:9988 --output ./src/interfaces/",
+    "gen:defs": "ts-node --skip-project node_modules/.bin/polkadot-types-from-defs --package @composable/types/interfaces --input ./src/interfaces",
+    "gen:meta": "ts-node --skip-project node_modules/.bin/polkadot-types-from-chain --package @composable/types/interfaces --endpoint ws://localhost:9988 --output ./src/interfaces/",
     "clean": "find ./src -name '*.js' -type f -delete && find ./src -name '*.js.map' -type f -delete && find ./src -name '*.d.ts' -type f -delete"
   },
-  "paths": {
-    "*": [
-      "src/*"
+  "exports": {
+    "@composable/types": [
+      "./dist/*.js",
+      "./dist/*.d.ts"
     ]
   },
   "resolutions": {

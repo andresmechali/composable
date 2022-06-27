@@ -5,7 +5,7 @@
  * It does the following:
  * 1. Connect to the node, setup KeyRing & wallets.
  */
-import { getDevWallets } from "@composable/utils/src/walletHelper";
+import { getDevWallets } from "@composable/utils/walletHelper";
 import {
   addOracleStake,
   connect,
@@ -17,7 +17,12 @@ import {
   verifyOffChainWorkerRegister,
   verifyOracleSigner
 } from "./handlers";
-import { nodes, oracle_parameters, price_feed_settings, auto_register_offchain_worker_enabled } from "./config.json";
+import {
+  nodes,
+  oracle_parameters,
+  price_feed_settings,
+  auto_register_offchain_worker_enabled
+} from "@composable/oraclesetup/config.json";
 import { expect } from "chai";
 import { Result } from "@polkadot/types-codec";
 import { AccountId32 } from "@polkadot/types/interfaces";
