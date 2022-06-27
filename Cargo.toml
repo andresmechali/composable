@@ -32,23 +32,7 @@ exclude = [
   "utils/extrinsics-docs-scraper",
   "integration-tests",
 ]
-members = [
-  "utils/xcmp",
-  # "frame/*",
-  # "integration-tests/local-integration-tests",
-  # "node",
-  # "runtime/common",
-  # "runtime/primitives",
-  # "runtime/picasso",
-  # "runtime/dali",
-  # "runtime/composable",
-  # "utils/common",
-  # "utils/price-feed",
-  # "utils/collator-sidecar",
-  # "simnode/simnode-node",
-  # "simnode/simnode-tests",
-  # "simnode/common",
-]
+members = ["utils/xcmp"]
 
 [profile.release]
 # Polkadot runtime requires unwinding.
