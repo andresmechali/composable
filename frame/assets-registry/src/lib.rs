@@ -169,7 +169,7 @@ pub mod pallet {
 		///
 		/// `ratio` -  allows `bring you own gas` fees.
 		/// Set to `None` to prevent payment in this asset, only transferring.
-		/// Setting to some will NOT start minting tokens with mentioned ration.
+		/// Setting to some will NOT start minting tokens with specified ratio.
 		/// Foreign assets will be put into parachain treasury as is.
 		///
 		/// ```python
