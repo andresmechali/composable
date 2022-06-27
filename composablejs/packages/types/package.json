@@ -1,22 +1,25 @@
 {
-  "name": "@composablejs/types",
+  "name": "@composable/types",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "author": "@Dom-Roth",
   "license": "Public Domain",
   "scripts": {
+    "build": "tsc -p . --declaration",
     "gen": "npm run gen:defs && npm run gen:meta",
-    "gen:defs": "ts-node --skip-project node_modules/.bin/polkadot-types-from-defs --package @composable/types/interfaces --input ./src/interfaces",
-    "gen:meta": "ts-node --skip-project node_modules/.bin/polkadot-types-from-chain --package @composable/types/interfaces --endpoint ws://localhost:9988 --output ./src/interfaces/"
+    "gen:defs": "ts-node --skip-project node_modules/.bin/polkadot-types-from-defs --package @composable/types/src/interfaces --input ./src/interfaces",
+    "gen:meta": "ts-node --skip-project node_modules/.bin/polkadot-types-from-chain --package @composable/types/src/interfaces --endpoint ws://localhost:9988 --output ./src/interfaces/",
+    "clean": "find ./src -name '*.js' -type f -delete && find ./src -name '*.js.map' -type f -delete && find ./src -name '*.d.ts' -type f -delete"
   },
   "resolutions": {
-    "@polkadot/api": "^8.5.1",
+    "@polkadot/api": "^8.3.2",
     "typescript": "^4.7.3"
   },
   "devDependencies": {
     "typescript": "^4.7.4",
     "ts-node": "^10.8.1",
     "@polkadot/api": "^8.3.2",
+    "@polkadot/keyring": "^9.3.1",
     "@polkadot/ts": "^0.4.22",
     "@polkadot/typegen": "^8.3.2",
     "@polkadot/types": "^8.3.2",
@@ -24,6 +27,8 @@
     "@polkadot/types-codec": "^8.3.2",
     "@polkadot/types-create": "^8.3.2",
     "@polkadot/types-known": "^8.3.2",
-    "@polkadot/types-support": "^8.3.2"
+    "@polkadot/types-support": "^8.3.2",
+    "@polkadot/util": "^9.3.1",
+    "@polkadot/util-crypto": "^9.3.1"
   }
 }

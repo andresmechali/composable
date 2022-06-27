@@ -1,13 +1,22 @@
 {
-  "name": "composablejs",
+  "name": "composable",
+  "version": "0.1.0",
   "private": true,
   "author": "@Dom-Roth",
   "license": "Public Domain",
+  "type": "module",
   "exports": {
-    "./packages/types/*": "./dist/types/.js"
+    "./types/*": [
+      "./packages/types/dist/**/*.js",
+      "./packages/types/dist/**/*.d.ts"
+    ],
+    "./oraclesetup/*": [
+      "./packages/oraclesetup/dist/types/**/*.js",
+      "./packages/oraclesetup/dist/types/**/*.d.ts"
+    ]
   },
   "scripts": {
-    "build": "yarn build:gen && yarn prettier && yarn build:compile",
+    "build": "yarn build:gen && yarn build:compile",
     "build:gen": "cd ./packages/types && yarn && yarn gen",
     "build:compile": "tsc -p . --declaration",
     "lint": "eslint 'packages/**/*.ts'",
@@ -17,7 +26,7 @@
     "packages/*"
   ],
   "resolutions": {
-    "@polkadot/api": "^8.5.1",
+    "@polkadot/api": "^8.3.2",
     "typescript": "^4.7.3"
   },
   "devDependencies": {
@@ -27,6 +36,18 @@
     "eslint": "^8.18.0",
     "prettier": "^2.7.1",
     "ts-node": "^10.8.1",
-    "typescript": "^4.7.4"
+    "typescript": "^4.7.4",
+    "@polkadot/api": "^8.3.2",
+    "@polkadot/keyring": "^9.3.1",
+    "@polkadot/ts": "^0.4.22",
+    "@polkadot/typegen": "^8.3.2",
+    "@polkadot/types": "^8.3.2",
+    "@polkadot/types-augment": "^8.3.2",
+    "@polkadot/types-codec": "^8.3.2",
+    "@polkadot/types-create": "^8.3.2",
+    "@polkadot/types-known": "^8.3.2",
+    "@polkadot/types-support": "^8.3.2",
+    "@polkadot/util": "^9.3.1",
+    "@polkadot/util-crypto": "^9.3.1"
   }
 }

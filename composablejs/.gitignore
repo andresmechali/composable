@@ -582,10 +582,9 @@ Temporary Items
 .apdisk
 
 # Custom additions
-src/**/**.js
-src/**/**.d.ts
-src/**/**.js.map
-test/**/**.js
-test/**/**.d.ts
-test/**/**.js.map
-mochawesome-report/*
+packages/**/**.js
+packages/**/**.d.ts
+srpackagesc/**/**.js.map
+packages/**/**.js
+packages/**/**.d.ts
+packages/**/**.js.map

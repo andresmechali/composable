@@ -1,4 +1,4 @@
-import * as definitions from "../types/interfaces/definitions";
+import * as definitions from "@composable/types/src/interfaces/definitions";
 import { ApiPromise, Keyring, WsProvider } from "@polkadot/api";
 import { ApiOptions } from "@polkadot/api/types";
 
@@ -12,10 +12,11 @@ import { ApiOptions } from "@polkadot/api/types";
  *
  * @return Promise<{ApiPromise, Keyring}> The connected API client object & a ready to use Keyring
  */
+
 export async function getNewConnection() {
   const rpc = Object.keys(definitions)
-    .filter(k => Object.keys(definitions[k].rpc).length > 0)
-    .reduce((accumulator, key) => ({ ...accumulator, [key]: definitions[key].rpc }), {});
+    .filter(k => Object.keys((<any>definitions)[k].rpc).length > 0)
+    .reduce((accumulator, key) => ({ ...accumulator, [key]: (<any>definitions)[key].rpc }), {});
   const types = Object.values(definitions).reduce((accumulator, { types }) => ({ ...accumulator, ...types }), {});
 
   const endpoint = "ws://" + (process.env.ENDPOINT ?? "127.0.0.1:9988");

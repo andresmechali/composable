@@ -19,6 +19,7 @@ import {
 } from "./handlers";
 import { nodes, oracle_parameters, price_feed_settings, auto_register_offchain_worker_enabled } from "./config.json";
 import { expect } from "chai";
+import { Result } from "@polkadot/types-codec";
 
 const main = async () => {
   console.log("Composable Oracle Initialization");

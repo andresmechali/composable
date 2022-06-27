@@ -74,7 +74,7 @@ export async function waitForBlocks(api: ApiPromise, n = 1) {
  * @param {number} n Block wait duration.
  * @return The current block number after waiting.
  */
-export async function waitForBlockHandler(api: ApiPromise, n) {
+export async function waitForBlockHandler(api: ApiPromise, n: number) {
   const originBlock = await api.query.system.number();
   let currentBlock = await api.query.system.number();
   while (currentBlock.toNumber() < originBlock.toNumber() + n) {

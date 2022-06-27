@@ -2,26 +2,26 @@
   "compilerOptions": {
     "module": "commonjs",
     "target": "ES6",
+    "declaration": true,
+    "noLib": false,
     "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
     "pretty": true,
     "noImplicitAny": true,
     "removeComments": false,
     "noImplicitReturns": true,
-    "suppressImplicitAnyIndexErrors": false,
+    "suppressImplicitAnyIndexErrors": true,
     "allowSyntheticDefaultImports": true,
-    "skipLibCheck": false,
+    "skipLibCheck": true, // Can't be disabled without compilation issues!
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "sourceMap": true,
     "sourceRoot": "ts",
     "baseUrl": "./",
-    "outDir": "./dist/",
-    "paths": {
-      "@composable/types/*": ["./packages/types/src/*"],
-      "@composable/types/api/augment": ["./packages/types/src/interfaces/augment-api.ts"],
-      "@composable/types/types/augment": ["./packages/types/src/interfaces/augment-types.ts"]
-    }
+    "outDir": "dist",
+    "typeRoots": ["node_modules/@types", "@composable/types"]
   },
-  "include": ["packages", "@types/**/*.d.ts"],
-  "exclude": ["node_modules"]
+  "include": ["packages"],
+  "exclude": ["node_modules", "**/*.spec.ts", "dist", "**/dist/**/*", "**/node_modules/**/*", "**/dist/**/*"]
 }
