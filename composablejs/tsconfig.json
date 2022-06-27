@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
+    "traceResolution": false,
     "module": "commonjs",
-    "target": "ES2021",
-    "lib": ["ES2021", "DOM", "ScriptHost"],
+    "target": "ES6",
+    "lib": ["ES6", "DOM", "ScriptHost"],
     "declaration": true,
     "declarationMap": true,
     "noLib": false,
@@ -20,16 +21,18 @@
     "resolveJsonModule": true,
     "sourceMap": true,
     "sourceRoot": "ts",
-    "baseUrl": "./",
     "outDir": "dist",
-    "typeRoots": ["node_modules/@polkadot/ts", "node_modules/@types"]
-  },
-  "paths": {
-    "@composable/types/*": ["./src/*"],
-    "@composable/types/api/augment": ["./src/interfaces/augment-api.ts"],
-    "@composable/types/types/augment": ["./src/interfaces/augment-types.ts"],
-    "@polkadot/api/augment": ["./src/interfaces/augment-api.ts"],
-    "@polkadot/types/augment": ["./src/augment-types.ts"]
+    "typeRoots": ["node_modules/@types"],
+    "rootDirs": ["packages/types/src/", "packages/utils/src/", "packages/oraclesetup/src/"],
+    "paths": {
+      "@composable/types/*": ["./packages/types/src/*"],
+      "@composable/types/api/augment": ["./packages/types/src/interfaces/augment-api.ts"],
+      "@composable/types/types/augment": ["./packages/types/src/interfaces/augment-types.ts"],
+      "@polkadot/api/augment": ["./packages/types/src/interfaces/augment-api.ts"],
+      "@polkadot/types/augment": ["./packages/types/src/augment-types.ts"],
+      "@composable/utils/*": ["./packages/utils/src/*"],
+      "@composable/oraclesetup/*": ["./packages/oraclesetup/src/*"]
+    }
   },
   "references": [
     {

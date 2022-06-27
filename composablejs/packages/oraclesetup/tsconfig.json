@@ -2,11 +2,9 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "dist",
-    "baseUrl": "./",
-    "paths": {
-      "@src/*": ["src/*"],
-      "@composable/oraclesetup/*": ["./src/*"]
-    }
+    "baseUrl": "./src/",
+    "rootDir": "./src/",
+    "composite": true
   },
   "files": ["src/index.ts", "src/config.json"],
   "include": ["./src"],

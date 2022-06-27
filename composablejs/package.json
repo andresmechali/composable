@@ -4,8 +4,7 @@
   "private": true,
   "author": "@Dom-Roth",
   "license": "Public Domain",
-  "type": "module",
-  "main": "dist/index.js",
+  "main": "dist/src/index.js",
   "exports": {
     "./types/*": [
       "./packages/types/dist/**/*.js",
@@ -24,41 +23,45 @@
     "prepare": "yarn build:compile",
     "build": "./build.sh",
     "build:gen": "cd ./packages/types && yarn && yarn gen",
-    "build:compile": "tsc -b -v",
+    "build:compile": "tsc -b -v --force",
     "lint": "eslint 'packages/**/*.ts'",
     "prettier": "prettier ./packages --write"
   },
   "workspaces": [
     "packages/*"
   ],
+  "engines": {
+    "yarn": "^1.10.1"
+  },
   "resolutions": {
-    "@polkadot/api": "^8.3.2",
-    "@polkadot/api-augment": "^8.3.2",
-    "@polkadot/api-base": "^8.3.2",
-    "@polkadot/api-contract": "^8.3.2",
-    "@polkadot/api-derive": "^8.3.2",
+    "@polkadot/api": "^8.10.1",
+    "@polkadot/api-augment": "^8.10.1",
+    "@polkadot/api-base": "^8.10.1",
+    "@polkadot/api-contract": "^8.10.1",
+    "@polkadot/api-derive": "^8.10.1",
     "@polkadot/hw-ledger": "^9.2.1",
     "@polkadot/keyring": "^9.2.1",
     "@polkadot/networks": "^9.2.1",
     "@polkadot/phishing": "^0.13.9",
-    "@polkadot/rpc-augment": "^8.3.2",
-    "@polkadot/rpc-core": "^8.3.2",
-    "@polkadot/rpc-provider": "^8.3.2",
-    "@polkadot/types": "^8.3.2",
-    "@polkadot/types-augment": "^8.3.2",
-    "@polkadot/types-codec": "^8.3.2",
-    "@polkadot/types-create": "^8.3.2",
-    "@polkadot/types-known": "^8.3.2",
-    "@polkadot/types-support": "^8.3.2",
+    "@polkadot/rpc-augment": "^8.10.1",
+    "@polkadot/rpc-core": "^8.10.1",
+    "@polkadot/rpc-provider": "^8.10.1",
+    "@polkadot/types": "^8.10.1",
+    "@polkadot/types-augment": "^8.10.1",
+    "@polkadot/types-codec": "^8.10.1",
+    "@polkadot/types-create": "^8.10.1",
+    "@polkadot/types-known": "^8.10.1",
+    "@polkadot/types-support": "^8.10.1",
     "@polkadot/util": "^9.2.1",
     "@polkadot/util-crypto": "^9.2.1",
     "@polkadot/wasm-crypto": "^6.1.1",
+    "@polkadot/x-randomvalues": "^9.2.1",
     "typescript": "^4.7.3"
   },
   "devDependencies": {
-    "@babel/core": "^7.14.3",
-    "@babel/register": "^7.13.6",
-    "@babel/runtime": "^7.14.0",
+    "@babel/core": "^7.18.5",
+    "@babel/register": "^7.17.7",
+    "@babel/runtime": "^7.18.3",
     "@open-web3/dev-config": "^0.2.3",
     "@open-web3/util": "^1.1.4",
     "@types/core-js": "^2.5.5",
@@ -68,7 +71,7 @@
     "eslint": "^8.18.0",
     "prettier": "^2.7.1",
     "ts-node": "^10.8.1",
-    "tsconfig-paths": "^3.9.0",
+    "tsconfig-paths": "^4.0.0",
     "typescript": "^4.7.4"
   }
 }
