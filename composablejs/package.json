@@ -8,11 +8,18 @@
   "exports": {
     "./types/*": [
       "./packages/types/dist/**/*.js",
-      "./packages/types/dist/**/*.d.ts"
+      "./packages/types/dist/**/*.d.ts",
+      "./packages/types/src/**/*"
+    ],
+    "./utils/*": [
+      "./packages/utils/dist/**/*.js",
+      "./packages/utils/dist/**/*.d.ts",
+      "./packages/utils/src/**/*"
     ],
     "./oraclesetup/*": [
       "./packages/oraclesetup/dist/types/**/*.js",
-      "./packages/oraclesetup/dist/types/**/*.d.ts"
+      "./packages/oraclesetup/dist/types/**/*.d.ts",
+      "./packages/oraclesetup/src/**/*"
     ]
   },
   "scripts": {

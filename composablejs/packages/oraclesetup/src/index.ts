@@ -5,7 +5,7 @@
  * It does the following:
  * 1. Connect to the node, setup KeyRing & wallets.
  */
-import { getDevWallets } from "./utils/walletHelper";
+import { getDevWallets } from "@composable/utils/src/walletHelper";
 import {
   addOracleStake,
   connect,
@@ -20,6 +20,8 @@ import {
 import { nodes, oracle_parameters, price_feed_settings, auto_register_offchain_worker_enabled } from "./config.json";
 import { expect } from "chai";
 import { Result } from "@polkadot/types-codec";
+import { AccountId32 } from "@polkadot/types/interfaces";
+import { IEvent } from "@polkadot/types/types";
 
 const main = async () => {
   console.log("Composable Oracle Initialization");
@@ -34,7 +36,7 @@ const main = async () => {
   console.log("Setting up the oracle");
   const {
     data: [oracleCreationResult]
-  } = await createOracleForAsset(api, devWalletAlice, oracle_parameters);
+  } = <IEvent<[Result<null, any>]>>await createOracleForAsset(api, devWalletAlice, oracle_parameters);
   expect(oracleCreationResult.isOk).to.be.true;
 
   // Configuring Picasso with price feed.
@@ -55,7 +57,7 @@ const main = async () => {
   const {
     data: [resultAccount0, resultAccount1]
   } = await setOracleSigner(api, devWalletAlice, nodes[0].address);
-  verifyOracleSigner(api, resultAccount0, resultAccount1, nodes[0].address, devWalletAlice);
+  verifyOracleSigner(api, <AccountId32>resultAccount0, <AccountId32>resultAccount1, nodes[0].address, devWalletAlice);
 
   // Adding oracle stakes.
   console.log("Adding oracle stakes for node");
@@ -63,7 +65,7 @@ const main = async () => {
     data: [result]
   } = await addOracleStake(api, devWalletAlice, 9500000000);
   console.log("Oracle Price Feed Initialization finished!");
-  verifyAddOracleStake(api, result, devWalletAlice.publicKey);
+  verifyAddOracleStake(api, <AccountId32>result, devWalletAlice.publicKey);
 
   // Disconnecting from the node.
   console.debug("disconnecting...");

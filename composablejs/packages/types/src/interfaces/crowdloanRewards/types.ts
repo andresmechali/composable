@@ -9,6 +9,16 @@ import type { EcdsaSignature, MultiSignature } from '@polkadot/types/interfaces/
 import type { ParachainInherentData, PersistedValidationData } from '@polkadot/types/interfaces/parachains';
 import type { AccountId32, Balance, Permill } from '@polkadot/types/interfaces/runtime';
 
+/** @name BeefyPayloadId */
+export interface BeefyPayloadId extends Null {}
+
+/** @name Codec */
+export interface Codec extends Enum {
+  readonly isIsOk: boolean;
+  readonly asIsOk: bool;
+  readonly type: 'IsOk';
+}
+
 /** @name CommonMosaicRemoteAssetId */
 export interface CommonMosaicRemoteAssetId extends Null {}
 

@@ -15,6 +15,11 @@
     "price-feed",
     "composable"
   ],
+  "exports": {
+    "@composable/oraclesetup": [
+      "./src/*"
+    ]
+  },
   "author": "@Dom-Roth",
   "license": "Unlicense",
   "resolutions": {
@@ -23,6 +28,7 @@
   },
   "dependencies": {
     "@composable/types": "*",
+    "@composable/utils": "*",
     "@polkadot/api": "^8.3.2",
     "@polkadot/keyring": "^9.3.1",
     "@polkadot/ts": "^0.4.22",

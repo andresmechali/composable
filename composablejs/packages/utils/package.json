@@ -1,0 +1,32 @@
+{
+  "name": "@composable/utils",
+  "private": true,
+  "version": "0.1.0",
+  "author": "@Dom-Roth",
+  "license": "Public Domain",
+  "scripts": {
+    "build": "tsc -p . --declaration",
+    "clean": "find ./src -name '*.js' -type f -delete && find ./src -name '*.js.map' -type f -delete && find ./src -name '*.d.ts' -type f -delete"
+  },
+  "paths": {
+    "*": [
+      "src/*"
+    ]
+  },
+  "exports": {
+    "@composable/utils": [
+      "./src/*"
+    ]
+  },
+  "resolutions": {
+    "@polkadot/api": "^8.3.2",
+    "typescript": "^4.7.3"
+  },
+  "devDependencies": {
+    "@composable/types": "*",
+    "typescript": "^4.7.4",
+    "ts-node": "^10.8.1",
+    "@polkadot/api": "^8.3.2",
+    "@polkadot/keyring": "^9.3.1"
+  }
+}

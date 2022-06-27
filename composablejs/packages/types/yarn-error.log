@@ -1,0 +1,52 @@
+Arguments: 
+  /usr/local/share/nvm/versions/node/v16.15.1/bin/node /usr/share/yarn/bin/yarn.js install
+
+PATH: 
+  /vscode/bin/linux-x64/30d9c6cd9483b2cc586687151bcbcd635f373630/bin/remote-cli:/usr/local/share/nvm/versions/node/v16.15.1/bin:/usr/local/cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/vscode/.local/bin
+
+Yarn version: 
+  1.22.19
+
+Node version: 
+  16.15.1
+
+Platform: 
+  linux x64
+
+Trace: 
+  SyntaxError: /workspaces/composable/composablejs/packages/types/package.json: Unexpected token } in JSON at position 857
+      at JSON.parse (<anonymous>)
+      at /usr/share/yarn/lib/cli.js:1629:59
+      at Generator.next (<anonymous>)
+      at step (/usr/share/yarn/lib/cli.js:310:30)
+      at /usr/share/yarn/lib/cli.js:321:13
+
+npm manifest: 
+  {
+    "name": "types",
+    "version": "0.0.0",
+    "scripts": {
+  
+      "gen": "npm run gen:defs && npm run gen:meta",
+      "gen:defs": "ts-node --skip-project node_modules/.bin/polkadot-types-from-defs --package @composable/types/interfaces --input ./packages/types/src/interfaces",
+      "gen:meta": "ts-node --skip-project node_modules/.bin/polkadot-types-from-chain --package @composable/types/interfaces --endpoint ws://localhost:9988 --output packages/types/src/interfaces/"
+    },
+    "devDependencies": {
+      "typescript": "^4.7.4",
+      "@polkadot/api": "^8.3.2",
+      "@polkadot/ts": "^0.4.22",
+      "@polkadot/typegen": "^8.3.2",
+      "@polkadot/types": "^8.3.2",
+      "@polkadot/types-augment": "^8.3.2",
+      "@polkadot/types-codec": "^8.3.2",
+      "@polkadot/types-create": "^8.3.2",
+      "@polkadot/types-known": "^8.3.2",
+      "@polkadot/types-support": "^8.3.2",
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

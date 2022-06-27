@@ -2,6 +2,7 @@ import { ApiPromise } from "@polkadot/api";
 import { AnyTuple, IEvent } from "@polkadot/types/types";
 import { SubmittableExtrinsic, AddressOrPair } from "@polkadot/api/types";
 import { EventRecord } from "@polkadot/types/interfaces";
+import { u32 } from "@polkadot/types-codec";
 
 /**
  * Sends an unsigned extrinsic and waits for success.
@@ -75,11 +76,11 @@ export async function waitForBlocks(api: ApiPromise, n = 1) {
  * @return The current block number after waiting.
  */
 export async function waitForBlockHandler(api: ApiPromise, n: number) {
-  const originBlock = await api.query.system.number();
-  let currentBlock = await api.query.system.number();
+  const originBlock = <u32>await api.query.system.number();
+  let currentBlock = <u32>await api.query.system.number();
   while (currentBlock.toNumber() < originBlock.toNumber() + n) {
     await sleep(3000);
-    currentBlock = await api.query.system.number();
+    currentBlock = <u32>await api.query.system.number();
   }
   return currentBlock;
 }

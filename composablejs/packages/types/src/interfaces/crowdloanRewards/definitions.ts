@@ -17,6 +17,11 @@ export default {
     }
   },
   types: {
+    Codec: {
+      _enum: {
+        isOk: "bool"
+      }
+    },
     ComposableTraitsAssetsXcmAssetLocation: "Null",
     PalletCrowdloanRewardsModelsReward: "Null",
     PalletCrowdloanRewardsModelsRemoteAccount: {
@@ -182,6 +187,7 @@ export default {
     PalletIbcAny: "Null",
     PalletIbcIbcConsensusState: "Null",
     PalletIbcEventsIbcEvent: "Null",
-    PalletIbcErrorsIbcError: "Null"
+    PalletIbcErrorsIbcError: "Null",
+    BeefyPayloadId: "Null"
   }
 };
