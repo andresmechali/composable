@@ -4,7 +4,7 @@
     "outDir": "dist",
     "baseUrl": "./src/",
     "rootDir": "./src/",
-    "composite": true
+    "composite": true,
   },
   "files": ["src/index.ts", "src/config.json"],
   "include": ["./src"],

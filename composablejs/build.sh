@@ -19,7 +19,7 @@ echo "Utils compiled"
 
 # Compiling oracle setup
 echo "Compiling oracle setup..."
-cd $rootDir/packages/oraclesetup
+cd $rootDir/packages/oracle-setup
 yarn build
 cd $rootDir
 echo "Oracle setup compiled"

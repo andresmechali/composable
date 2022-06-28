@@ -14,17 +14,16 @@
       "./packages/utils/dist/**/*.js",
       "./packages/utils/dist/**/*.d.ts"
     ],
-    "./oraclesetup/*": [
-      "./packages/oraclesetup/dist/**/*.js",
-      "./packages/oraclesetup/dist/**/*.d.ts"
+    "./oracle-setup/*": [
+      "./packages/oracle-setup/dist/**/*.js",
+      "./packages/oracle-setup/dist/**/*.d.ts"
     ]
   },
   "scripts": {
-    "prepare": "yarn build:compile",
     "build": "./build.sh",
     "build:gen": "cd ./packages/types && yarn && yarn gen",
     "build:compile": "tsc -b -v --force",
-    "lint": "eslint 'packages/**/*.ts'",
+    "lint": "eslint 'packages/**/*.ts' --ext .ts,.tsx",
     "prettier": "prettier ./packages --write"
   },
   "workspaces": [

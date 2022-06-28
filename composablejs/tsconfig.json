@@ -2,28 +2,27 @@
   "compilerOptions": {
     "traceResolution": false,
     "module": "commonjs",
+    "strict": true,
     "target": "ES6",
     "lib": ["ES6", "DOM", "ScriptHost"],
     "declaration": true,
     "declarationMap": true,
+    "sourceMap": true,
+    "sourceRoot": "ts",
     "noLib": false,
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "pretty": true,
-    "noImplicitAny": true,
     "removeComments": false,
-    "noImplicitReturns": true,
-    "suppressImplicitAnyIndexErrors": true,
-    "allowSyntheticDefaultImports": true,
     "skipLibCheck": true, // Can't be disabled without compilation issues!
     "esModuleInterop": true,
     "resolveJsonModule": true,
-    "sourceMap": true,
-    "sourceRoot": "ts",
     "outDir": "dist",
     "typeRoots": ["node_modules/@types"],
-    "rootDirs": ["packages/types/src/", "packages/utils/src/", "packages/oraclesetup/src/"],
+    "rootDirs": ["packages/types/src/", "packages/utils/src/",
+      "packages/oracle-setup/src/"
+    ],
     "paths": {
       "@composable/types/*": ["./packages/types/src/*"],
       "@composable/types/api/augment": ["./packages/types/src/interfaces/augment-api.ts"],
@@ -31,7 +30,7 @@
       "@polkadot/api/augment": ["./packages/types/src/interfaces/augment-api.ts"],
       "@polkadot/types/augment": ["./packages/types/src/augment-types.ts"],
       "@composable/utils/*": ["./packages/utils/src/*"],
-      "@composable/oraclesetup/*": ["./packages/oraclesetup/src/*"]
+      "@composable/oracle-setup/*": ["./packages/oracle-setup/src/*"]
     }
   },
   "references": [
@@ -42,7 +41,7 @@
       "path": "./packages/utils/tsconfig.json"
     },
     {
-      "path": "./packages/oraclesetup/tsconfig.json"
+      "path": "./packages/oracle-setup/tsconfig.json"
     }
   ],
   "include": ["packages/**/src/**/*"],

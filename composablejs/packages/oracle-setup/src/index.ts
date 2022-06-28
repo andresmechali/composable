@@ -17,7 +17,7 @@ import {
   verifyOffChainWorkerRegister,
   verifyOracleSigner
 } from "./handlers";
-import { nodes, oracle_parameters, price_feed_settings, auto_register_offchain_worker_enabled } from "./config.json";
+import { auto_register_offchain_worker_enabled, nodes, oracle_parameters, price_feed_settings } from "./config.json";
 import { expect } from "chai";
 import { AccountId32 } from "@polkadot/types/interfaces";
 import { IEvent } from "@polkadot/types/types";
@@ -36,7 +36,9 @@ const main = async () => {
   console.log("Setting up the oracle");
   const {
     data: [oracleCreationResult]
-  } = <IEvent<[Result<null, any>]>>await createOracleForAsset(api, devWalletAlice, oracle_parameters);
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+  } = <IEvent<[sudoResult: Result<null, any>]>>await createOracleForAsset(api, devWalletAlice, oracle_parameters);
   expect(oracleCreationResult.isOk).to.be.true;
 
   // Configuring Picasso with price feed.
