@@ -233,7 +233,7 @@ pub mod api {
 				const FUNCTION: &'static str = "remark_with_event";
 			}
 			pub struct TransactionApi<'a, T: ::subxt::Config, X> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 				marker: ::core::marker::PhantomData<X>,
 			}
 			impl<'a, T, X> TransactionApi<'a, T, X>
@@ -241,7 +241,7 @@ pub mod api {
 				T: ::subxt::Config,
 				X: ::subxt::extrinsic::ExtrinsicParams<T>,
 			{
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client, marker: ::core::marker::PhantomData }
 				}
 				#[doc = "A dispatch that will fill the block weight up to the given ratio."]
@@ -249,7 +249,7 @@ pub mod api {
 					&self,
 					ratio: runtime_types::sp_arithmetic::per_things::Perbill,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -257,7 +257,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -271,9 +271,9 @@ pub mod api {
 							61u8, 162u8, 102u8, 73u8, 89u8, 218u8, 148u8, 59u8, 73u8, 59u8, 149u8,
 						] {
 						let call = FillBlock { ratio };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Make some on-chain remark."]
@@ -285,8 +285,8 @@ pub mod api {
 					&self,
 					remark: ::std::vec::Vec<::core::primitive::u8>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<'a, T, X, Remark, DispatchError, root_mod::Event>,
-					::subxt::BasicError,
+					::subxt::tx::SubmittableExtrinsic<'a, T, X, Remark, DispatchError, root_mod::Event>,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -301,9 +301,9 @@ pub mod api {
 							140u8,
 						] {
 						let call = Remark { remark };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Set the number of pages in the WebAssembly environment's heap."]
@@ -311,7 +311,7 @@ pub mod api {
 					&self,
 					pages: ::core::primitive::u64,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -319,7 +319,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -333,9 +333,9 @@ pub mod api {
 							177u8, 105u8, 136u8, 94u8, 53u8, 26u8, 31u8, 41u8, 156u8, 228u8, 241u8,
 						] {
 						let call = SetHeapPages { pages };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Set the new runtime code."]
@@ -354,7 +354,7 @@ pub mod api {
 					&self,
 					code: ::std::vec::Vec<::core::primitive::u8>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -362,7 +362,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -377,9 +377,9 @@ pub mod api {
 							131u8,
 						] {
 						let call = SetCode { code };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Set the new runtime code without doing any checks of the given `code`."]
@@ -395,7 +395,7 @@ pub mod api {
 					&self,
 					code: ::std::vec::Vec<::core::primitive::u8>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -403,7 +403,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -418,9 +418,9 @@ pub mod api {
 							17u8,
 						] {
 						let call = SetCodeWithoutChecks { code };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Set some items of storage."]
@@ -431,7 +431,7 @@ pub mod api {
 						::std::vec::Vec<::core::primitive::u8>,
 					)>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -439,7 +439,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -454,9 +454,9 @@ pub mod api {
 							217u8,
 						] {
 						let call = SetStorage { items };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Kill some items from storage."]
@@ -464,7 +464,7 @@ pub mod api {
 					&self,
 					keys: ::std::vec::Vec<::std::vec::Vec<::core::primitive::u8>>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -472,7 +472,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -487,9 +487,9 @@ pub mod api {
 							51u8,
 						] {
 						let call = KillStorage { keys };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Kill all storage items with a key that starts with the given prefix."]
@@ -501,7 +501,7 @@ pub mod api {
 					prefix: ::std::vec::Vec<::core::primitive::u8>,
 					subkeys: ::core::primitive::u32,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -509,7 +509,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -524,9 +524,9 @@ pub mod api {
 							202u8, 115u8,
 						] {
 						let call = KillPrefix { prefix, subkeys };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Make some on-chain remark and emit event."]
@@ -534,7 +534,7 @@ pub mod api {
 					&self,
 					remark: ::std::vec::Vec<::core::primitive::u8>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -542,7 +542,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -556,9 +556,9 @@ pub mod api {
 							115u8, 156u8, 239u8, 97u8, 76u8, 193u8, 35u8, 74u8, 199u8, 43u8, 255u8,
 						] {
 						let call = RemarkWithEvent { remark };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -633,7 +633,7 @@ pub mod api {
 					runtime_types::pallet_balances::AccountData<::core::primitive::u128>,
 				>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Blake2_128Concat,
 					)])
@@ -673,7 +673,7 @@ pub mod api {
 				const STORAGE: &'static str = "BlockHash";
 				type Value = ::subxt::sp_core::H256;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Twox64Concat,
 					)])
@@ -685,7 +685,7 @@ pub mod api {
 				const STORAGE: &'static str = "ExtrinsicData";
 				type Value = ::std::vec::Vec<::core::primitive::u8>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Twox64Concat,
 					)])
@@ -747,7 +747,7 @@ pub mod api {
 				const STORAGE: &'static str = "EventTopics";
 				type Value = ::std::vec::Vec<(::core::primitive::u32, ::core::primitive::u32)>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Blake2_128Concat,
 					)])
@@ -790,10 +790,10 @@ pub mod api {
 				}
 			}
 			pub struct StorageApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " The full account information for a particular account ID."]
@@ -807,7 +807,7 @@ pub mod api {
 							::core::primitive::u32,
 							runtime_types::pallet_balances::AccountData<::core::primitive::u128>,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -830,7 +830,7 @@ pub mod api {
 							let entry = Account(_0);
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -840,8 +840,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, Account<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, Account<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -863,7 +863,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -874,7 +874,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::core::option::Option<::core::primitive::u32>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -897,7 +897,7 @@ pub mod api {
 							let entry = ExtrinsicCount;
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -910,7 +910,7 @@ pub mod api {
 						runtime_types::frame_support::weights::PerDispatchClass<
 							::core::primitive::u64,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -933,7 +933,7 @@ pub mod api {
 							let entry = BlockWeight;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -944,7 +944,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::core::option::Option<::core::primitive::u32>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -967,7 +967,7 @@ pub mod api {
 							let entry = AllExtrinsicsLen;
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -977,7 +977,7 @@ pub mod api {
 					_0: &'a ::core::primitive::u32,
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
-					Output = ::core::result::Result<::subxt::sp_core::H256, ::subxt::BasicError>,
+					Output = ::core::result::Result<::subxt::sp_core::H256, ::subxt::error::DispatchError>,
 				> + 'a {
 					let client = self.client;
 					async move {
@@ -999,7 +999,7 @@ pub mod api {
 							let entry = BlockHash(_0);
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -1009,8 +1009,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, BlockHash<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, BlockHash<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -1032,7 +1032,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -1044,7 +1044,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::std::vec::Vec<::core::primitive::u8>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -1067,7 +1067,7 @@ pub mod api {
 							let entry = ExtrinsicData(_0);
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -1077,8 +1077,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, ExtrinsicData<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, ExtrinsicData<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -1100,7 +1100,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -1109,7 +1109,7 @@ pub mod api {
 					&self,
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
-					Output = ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>,
+					Output = ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError>,
 				> + 'a {
 					let client = self.client;
 					async move {
@@ -1131,7 +1131,7 @@ pub mod api {
 							let entry = Number;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -1140,7 +1140,7 @@ pub mod api {
 					&self,
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
-					Output = ::core::result::Result<::subxt::sp_core::H256, ::subxt::BasicError>,
+					Output = ::core::result::Result<::subxt::sp_core::H256, ::subxt::error::DispatchError>,
 				> + 'a {
 					let client = self.client;
 					async move {
@@ -1162,7 +1162,7 @@ pub mod api {
 							let entry = ParentHash;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -1173,7 +1173,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						runtime_types::sp_runtime::generic::digest::Digest,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -1196,7 +1196,7 @@ pub mod api {
 							let entry = Digest;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -1218,7 +1218,7 @@ pub mod api {
 								::subxt::sp_core::H256,
 							>,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -1241,7 +1241,7 @@ pub mod api {
 							let entry = Events;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -1250,7 +1250,7 @@ pub mod api {
 					&self,
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
-					Output = ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>,
+					Output = ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError>,
 				> + 'a {
 					let client = self.client;
 					async move {
@@ -1272,7 +1272,7 @@ pub mod api {
 							let entry = EventCount;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -1293,7 +1293,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::std::vec::Vec<(::core::primitive::u32, ::core::primitive::u32)>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -1316,7 +1316,7 @@ pub mod api {
 							let entry = EventTopics(_0);
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -1335,8 +1335,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, EventTopics<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, EventTopics<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -1358,7 +1358,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -1369,7 +1369,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::core::option::Option<runtime_types::frame_system::LastRuntimeUpgradeInfo>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -1392,7 +1392,7 @@ pub mod api {
 							let entry = LastRuntimeUpgrade;
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -1401,7 +1401,7 @@ pub mod api {
 					&self,
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
-					Output = ::core::result::Result<::core::primitive::bool, ::subxt::BasicError>,
+					Output = ::core::result::Result<::core::primitive::bool, ::subxt::error::DispatchError>,
 				> + 'a {
 					let client = self.client;
 					async move {
@@ -1423,7 +1423,7 @@ pub mod api {
 							let entry = UpgradedToU32RefCount;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -1433,7 +1433,7 @@ pub mod api {
 					&self,
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
-					Output = ::core::result::Result<::core::primitive::bool, ::subxt::BasicError>,
+					Output = ::core::result::Result<::core::primitive::bool, ::subxt::error::DispatchError>,
 				> + 'a {
 					let client = self.client;
 					async move {
@@ -1455,7 +1455,7 @@ pub mod api {
 							let entry = UpgradedToTripleRefCount;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -1466,7 +1466,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::core::option::Option<runtime_types::frame_system::Phase>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -1489,7 +1489,7 @@ pub mod api {
 							let entry = ExecutionPhase;
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -1498,10 +1498,10 @@ pub mod api {
 		pub mod constants {
 			use super::runtime_types;
 			pub struct ConstantsApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> ConstantsApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " Block & extrinsics weights: base values and limits."]
@@ -1509,7 +1509,7 @@ pub mod api {
 					&self,
 				) -> ::core::result::Result<
 					runtime_types::frame_system::limits::BlockWeights,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
@@ -1521,10 +1521,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("System")?;
 						let constant = pallet.constant("BlockWeights")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " The maximum length of a block (in bytes)."]
@@ -1532,7 +1532,7 @@ pub mod api {
 					&self,
 				) -> ::core::result::Result<
 					runtime_types::frame_system::limits::BlockLength,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
@@ -1545,16 +1545,16 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("System")?;
 						let constant = pallet.constant("BlockLength")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " Maximum number of block number to block hash mappings to keep (oldest pruned first)."]
 				pub fn block_hash_count(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("System", "BlockHashCount")? ==
@@ -1565,10 +1565,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("System")?;
 						let constant = pallet.constant("BlockHashCount")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " The weight of runtime database operations the runtime can invoke."]
@@ -1576,7 +1576,7 @@ pub mod api {
 					&self,
 				) -> ::core::result::Result<
 					runtime_types::frame_support::weights::RuntimeDbWeight,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
@@ -1588,10 +1588,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("System")?;
 						let constant = pallet.constant("DbWeight")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " Get the chain's current version."]
@@ -1599,7 +1599,7 @@ pub mod api {
 					&self,
 				) -> ::core::result::Result<
 					runtime_types::sp_version::RuntimeVersion,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
@@ -1611,10 +1611,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("System")?;
 						let constant = pallet.constant("Version")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " The designated SS85 prefix of this chain."]
@@ -1624,7 +1624,7 @@ pub mod api {
 				#[doc = " an identifier of the chain."]
 				pub fn ss58_prefix(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u16, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u16, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("System", "SS58Prefix")? ==
@@ -1636,10 +1636,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("System")?;
 						let constant = pallet.constant("SS58Prefix")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -1661,7 +1661,7 @@ pub mod api {
 				const FUNCTION: &'static str = "set";
 			}
 			pub struct TransactionApi<'a, T: ::subxt::Config, X> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 				marker: ::core::marker::PhantomData<X>,
 			}
 			impl<'a, T, X> TransactionApi<'a, T, X>
@@ -1669,7 +1669,7 @@ pub mod api {
 				T: ::subxt::Config,
 				X: ::subxt::extrinsic::ExtrinsicParams<T>,
 			{
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client, marker: ::core::marker::PhantomData }
 				}
 				#[doc = "Set the current time."]
@@ -1692,8 +1692,8 @@ pub mod api {
 					&self,
 					now: ::core::primitive::u64,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<'a, T, X, Set, DispatchError, root_mod::Event>,
-					::subxt::BasicError,
+					::subxt::tx::SubmittableExtrinsic<'a, T, X, Set, DispatchError, root_mod::Event>,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -1707,9 +1707,9 @@ pub mod api {
 							143u8, 244u8, 160u8, 5u8, 18u8, 130u8, 77u8, 160u8, 227u8, 51u8,
 						] {
 						let call = Set { now };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -1735,10 +1735,10 @@ pub mod api {
 				}
 			}
 			pub struct StorageApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " Current time for the current block."]
@@ -1746,7 +1746,7 @@ pub mod api {
 					&self,
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
-					Output = ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>,
+					Output = ::core::result::Result<::core::primitive::u64, ::subxt::error::DispatchError>,
 				> + 'a {
 					let client = self.client;
 					async move {
@@ -1768,7 +1768,7 @@ pub mod api {
 							let entry = Now;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -1777,7 +1777,7 @@ pub mod api {
 					&self,
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
-					Output = ::core::result::Result<::core::primitive::bool, ::subxt::BasicError>,
+					Output = ::core::result::Result<::core::primitive::bool, ::subxt::error::DispatchError>,
 				> + 'a {
 					let client = self.client;
 					async move {
@@ -1799,7 +1799,7 @@ pub mod api {
 							let entry = DidUpdate;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -1808,10 +1808,10 @@ pub mod api {
 		pub mod constants {
 			use super::runtime_types;
 			pub struct ConstantsApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> ConstantsApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " The minimum period between blocks. Beware that this is different to the *expected*"]
@@ -1820,7 +1820,7 @@ pub mod api {
 				#[doc = " double this period on default settings."]
 				pub fn minimum_period(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u64, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u64, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Timestamp", "MinimumPeriod")? ==
@@ -1832,10 +1832,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Timestamp")?;
 						let constant = pallet.constant("MinimumPeriod")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -1888,7 +1888,7 @@ pub mod api {
 				const FUNCTION: &'static str = "sudo_as";
 			}
 			pub struct TransactionApi<'a, T: ::subxt::Config, X> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 				marker: ::core::marker::PhantomData<X>,
 			}
 			impl<'a, T, X> TransactionApi<'a, T, X>
@@ -1896,7 +1896,7 @@ pub mod api {
 				T: ::subxt::Config,
 				X: ::subxt::extrinsic::ExtrinsicParams<T>,
 			{
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client, marker: ::core::marker::PhantomData }
 				}
 				#[doc = "Authenticates the sudo key and dispatches a function call with `Root` origin."]
@@ -1913,8 +1913,8 @@ pub mod api {
 					&self,
 					call: runtime_types::dali_runtime::Call,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<'a, T, X, Sudo, DispatchError, root_mod::Event>,
-					::subxt::BasicError,
+					::subxt::tx::SubmittableExtrinsic<'a, T, X, Sudo, DispatchError, root_mod::Event>,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -1928,9 +1928,9 @@ pub mod api {
 							200u8, 44u8, 99u8, 26u8, 26u8, 14u8, 206u8, 35u8, 215u8, 112u8, 6u8,
 						] {
 						let call = Sudo { call: ::std::boxed::Box::new(call) };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Authenticates the sudo key and dispatches a function call with `Root` origin."]
@@ -1948,7 +1948,7 @@ pub mod api {
 					call: runtime_types::dali_runtime::Call,
 					weight: ::core::primitive::u64,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -1956,7 +1956,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -1972,9 +1972,9 @@ pub mod api {
 						] {
 						let call =
 							SudoUncheckedWeight { call: ::std::boxed::Box::new(call), weight };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Authenticates the current sudo key and sets the given AccountId (`new`) as the new sudo"]
@@ -1994,8 +1994,8 @@ pub mod api {
 						::core::primitive::u32,
 					>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<'a, T, X, SetKey, DispatchError, root_mod::Event>,
-					::subxt::BasicError,
+					::subxt::tx::SubmittableExtrinsic<'a, T, X, SetKey, DispatchError, root_mod::Event>,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -2010,9 +2010,9 @@ pub mod api {
 							236u8, 131u8,
 						] {
 						let call = SetKey { new };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Authenticates the sudo key and dispatches a function call with `Signed` origin from"]
@@ -2034,8 +2034,8 @@ pub mod api {
 					>,
 					call: runtime_types::dali_runtime::Call,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<'a, T, X, SudoAs, DispatchError, root_mod::Event>,
-					::subxt::BasicError,
+					::subxt::tx::SubmittableExtrinsic<'a, T, X, SudoAs, DispatchError, root_mod::Event>,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -2050,9 +2050,9 @@ pub mod api {
 							32u8, 114u8,
 						] {
 						let call = SudoAs { who, call: ::std::boxed::Box::new(call) };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -2103,10 +2103,10 @@ pub mod api {
 				}
 			}
 			pub struct StorageApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " The `AccountId` of the sudo key."]
@@ -2116,7 +2116,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::core::option::Option<::subxt::sp_core::crypto::AccountId32>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -2139,7 +2139,7 @@ pub mod api {
 							let entry = Key;
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -2162,10 +2162,10 @@ pub mod api {
 				}
 			}
 			pub struct StorageApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " Series of block headers from the last 81 blocks that acts as random seed material. This"]
@@ -2179,7 +2179,7 @@ pub mod api {
 						runtime_types::frame_support::storage::bounded_vec::BoundedVec<
 							::subxt::sp_core::H256,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -2202,7 +2202,7 @@ pub mod api {
 							let entry = RandomMaterial;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -2232,10 +2232,10 @@ pub mod api {
 				}
 			}
 			pub struct StorageApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				pub fn next_fee_multiplier(
@@ -2244,7 +2244,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						runtime_types::sp_arithmetic::fixed_point::FixedU128,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -2267,7 +2267,7 @@ pub mod api {
 							let entry = NextFeeMultiplier;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -2277,7 +2277,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						runtime_types::pallet_transaction_payment::Releases,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -2300,7 +2300,7 @@ pub mod api {
 							let entry = StorageVersion;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -2309,10 +2309,10 @@ pub mod api {
 		pub mod constants {
 			use super::runtime_types;
 			pub struct ConstantsApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> ConstantsApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " A fee multiplier for `Operational` extrinsics to compute \"virtual tip\" to boost their"]
@@ -2338,7 +2338,7 @@ pub mod api {
 				#[doc = " transactions."]
 				pub fn operational_fee_multiplier(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u8, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u8, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("TransactionPayment", "OperationalFeeMultiplier")? ==
@@ -2350,10 +2350,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("TransactionPayment")?;
 						let constant = pallet.constant("OperationalFeeMultiplier")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " The polynomial that is applied in order to derive fee from weight."]
@@ -2365,7 +2365,7 @@ pub mod api {
 							::core::primitive::u128,
 						>,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
@@ -2377,10 +2377,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("TransactionPayment")?;
 						let constant = pallet.constant("WeightToFee")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " The polynomial that is applied in order to derive fee from length."]
@@ -2392,7 +2392,7 @@ pub mod api {
 							::core::primitive::u128,
 						>,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
@@ -2405,10 +2405,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("TransactionPayment")?;
 						let constant = pallet.constant("LengthToFee")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -2479,7 +2479,7 @@ pub mod api {
 				const FUNCTION: &'static str = "freeze";
 			}
 			pub struct TransactionApi<'a, T: ::subxt::Config, X> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 				marker: ::core::marker::PhantomData<X>,
 			}
 			impl<'a, T, X> TransactionApi<'a, T, X>
@@ -2487,7 +2487,7 @@ pub mod api {
 				T: ::subxt::Config,
 				X: ::subxt::extrinsic::ExtrinsicParams<T>,
 			{
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client, marker: ::core::marker::PhantomData }
 				}
 				#[doc = "Assign an previously unassigned index."]
@@ -2512,8 +2512,8 @@ pub mod api {
 					&self,
 					index: ::core::primitive::u32,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<'a, T, X, Claim, DispatchError, root_mod::Event>,
-					::subxt::BasicError,
+					::subxt::tx::SubmittableExtrinsic<'a, T, X, Claim, DispatchError, root_mod::Event>,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -2527,9 +2527,9 @@ pub mod api {
 							148u8, 39u8, 91u8, 106u8, 197u8, 29u8, 190u8, 178u8, 221u8, 16u8, 87u8,
 						] {
 						let call = Claim { index };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Assign an index already owned by the sender to another account. The balance reservation"]
@@ -2557,7 +2557,7 @@ pub mod api {
 					new: ::subxt::sp_core::crypto::AccountId32,
 					index: ::core::primitive::u32,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -2565,7 +2565,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -2579,9 +2579,9 @@ pub mod api {
 							28u8, 61u8, 156u8, 38u8, 170u8, 129u8, 74u8, 187u8, 28u8, 33u8, 65u8,
 						] {
 						let call = Transfer { new, index };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Free up an index owned by the sender."]
@@ -2606,8 +2606,8 @@ pub mod api {
 					&self,
 					index: ::core::primitive::u32,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<'a, T, X, Free, DispatchError, root_mod::Event>,
-					::subxt::BasicError,
+					::subxt::tx::SubmittableExtrinsic<'a, T, X, Free, DispatchError, root_mod::Event>,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -2622,9 +2622,9 @@ pub mod api {
 							84u8, 214u8,
 						] {
 						let call = Free { index };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Force an index to an account. This doesn't require a deposit. If the index is already"]
@@ -2654,7 +2654,7 @@ pub mod api {
 					index: ::core::primitive::u32,
 					freeze: ::core::primitive::bool,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -2662,7 +2662,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -2677,9 +2677,9 @@ pub mod api {
 							99u8,
 						] {
 						let call = ForceTransfer { new, index, freeze };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Freeze an index so it will always point to the sender account. This consumes the"]
@@ -2704,8 +2704,8 @@ pub mod api {
 					&self,
 					index: ::core::primitive::u32,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<'a, T, X, Freeze, DispatchError, root_mod::Event>,
-					::subxt::BasicError,
+					::subxt::tx::SubmittableExtrinsic<'a, T, X, Freeze, DispatchError, root_mod::Event>,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -2720,9 +2720,9 @@ pub mod api {
 							159u8,
 						] {
 						let call = Freeze { index };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -2778,17 +2778,17 @@ pub mod api {
 					::core::primitive::bool,
 				);
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Blake2_128Concat,
 					)])
 				}
 			}
 			pub struct StorageApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " The lookup from index to account."]
@@ -2803,7 +2803,7 @@ pub mod api {
 							::core::primitive::u128,
 							::core::primitive::bool,
 						)>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -2826,7 +2826,7 @@ pub mod api {
 							let entry = Accounts(_0);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -2836,8 +2836,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, Accounts<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, Accounts<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -2859,7 +2859,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -2868,16 +2868,16 @@ pub mod api {
 		pub mod constants {
 			use super::runtime_types;
 			pub struct ConstantsApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> ConstantsApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " The deposit needed for reserving an index."]
 				pub fn deposit(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u128, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Indices", "Deposit")? ==
@@ -2889,10 +2889,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Indices")?;
 						let constant = pallet.constant("Deposit")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -2987,7 +2987,7 @@ pub mod api {
 				const FUNCTION: &'static str = "force_unreserve";
 			}
 			pub struct TransactionApi<'a, T: ::subxt::Config, X> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 				marker: ::core::marker::PhantomData<X>,
 			}
 			impl<'a, T, X> TransactionApi<'a, T, X>
@@ -2995,7 +2995,7 @@ pub mod api {
 				T: ::subxt::Config,
 				X: ::subxt::extrinsic::ExtrinsicParams<T>,
 			{
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client, marker: ::core::marker::PhantomData }
 				}
 				#[doc = "Transfer some liquid free balance to another account."]
@@ -3031,7 +3031,7 @@ pub mod api {
 					>,
 					value: ::core::primitive::u128,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -3039,7 +3039,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -3053,9 +3053,9 @@ pub mod api {
 							252u8, 83u8, 64u8, 78u8, 247u8, 136u8, 130u8, 203u8, 10u8, 206u8, 48u8,
 						] {
 						let call = Transfer { dest, value };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Set the balances of a given account."]
@@ -3075,7 +3075,7 @@ pub mod api {
 					new_free: ::core::primitive::u128,
 					new_reserved: ::core::primitive::u128,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -3083,7 +3083,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -3098,9 +3098,9 @@ pub mod api {
 							216u8,
 						] {
 						let call = SetBalance { who, new_free, new_reserved };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Exactly as `transfer`, except the origin must be root and the source account may be"]
@@ -3121,7 +3121,7 @@ pub mod api {
 					>,
 					value: ::core::primitive::u128,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -3129,7 +3129,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -3144,9 +3144,9 @@ pub mod api {
 							0u8, 232u8,
 						] {
 						let call = ForceTransfer { source, dest, value };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Same as the [`transfer`] call, but with a check that the transfer will not kill the"]
@@ -3163,7 +3163,7 @@ pub mod api {
 					>,
 					value: ::core::primitive::u128,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -3171,7 +3171,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -3186,9 +3186,9 @@ pub mod api {
 							29u8,
 						] {
 						let call = TransferKeepAlive { dest, value };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Transfer the entire transferable balance from the caller account."]
@@ -3216,7 +3216,7 @@ pub mod api {
 					>,
 					keep_alive: ::core::primitive::bool,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -3224,7 +3224,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -3239,9 +3239,9 @@ pub mod api {
 							85u8,
 						] {
 						let call = TransferAll { dest, keep_alive };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Unreserve some balance from a user by force."]
@@ -3255,7 +3255,7 @@ pub mod api {
 					>,
 					amount: ::core::primitive::u128,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -3263,7 +3263,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -3278,9 +3278,9 @@ pub mod api {
 							110u8,
 						] {
 						let call = ForceUnreserve { who, amount };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -3414,7 +3414,7 @@ pub mod api {
 				const STORAGE: &'static str = "Account";
 				type Value = runtime_types::pallet_balances::AccountData<::core::primitive::u128>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Blake2_128Concat,
 					)])
@@ -3429,7 +3429,7 @@ pub mod api {
 						runtime_types::pallet_balances::BalanceLock<::core::primitive::u128>,
 					>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Blake2_128Concat,
 					)])
@@ -3446,7 +3446,7 @@ pub mod api {
 					>,
 				>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Blake2_128Concat,
 					)])
@@ -3462,10 +3462,10 @@ pub mod api {
 				}
 			}
 			pub struct StorageApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " The total units issued in the system."]
@@ -3473,7 +3473,7 @@ pub mod api {
 					&self,
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
-					Output = ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>,
+					Output = ::core::result::Result<::core::primitive::u128, ::subxt::error::DispatchError>,
 				> + 'a {
 					let client = self.client;
 					async move {
@@ -3495,7 +3495,7 @@ pub mod api {
 							let entry = TotalIssuance;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -3530,7 +3530,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						runtime_types::pallet_balances::AccountData<::core::primitive::u128>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -3553,7 +3553,7 @@ pub mod api {
 							let entry = Account(_0);
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -3586,8 +3586,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, Account<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, Account<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -3609,7 +3609,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -3624,7 +3624,7 @@ pub mod api {
 						runtime_types::frame_support::storage::weak_bounded_vec::WeakBoundedVec<
 							runtime_types::pallet_balances::BalanceLock<::core::primitive::u128>,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -3647,7 +3647,7 @@ pub mod api {
 							let entry = Locks(_0);
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -3658,8 +3658,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, Locks<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, Locks<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -3681,7 +3681,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -3698,7 +3698,7 @@ pub mod api {
 								::core::primitive::u128,
 							>,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -3721,7 +3721,7 @@ pub mod api {
 							let entry = Reserves(_0);
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -3731,8 +3731,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, Reserves<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, Reserves<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -3754,7 +3754,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -3767,7 +3767,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						runtime_types::pallet_balances::Releases,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -3790,7 +3790,7 @@ pub mod api {
 							let entry = StorageVersion;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -3799,16 +3799,16 @@ pub mod api {
 		pub mod constants {
 			use super::runtime_types;
 			pub struct ConstantsApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> ConstantsApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " The minimum amount required to keep an account open."]
 				pub fn existential_deposit(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u128, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Balances", "ExistentialDeposit")? ==
@@ -3819,17 +3819,17 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Balances")?;
 						let constant = pallet.constant("ExistentialDeposit")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " The maximum number of locks that should exist on an account."]
 				#[doc = " Not strictly enforced, but used for weight estimation."]
 				pub fn max_locks(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Balances", "MaxLocks")? ==
@@ -3840,16 +3840,16 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Balances")?;
 						let constant = pallet.constant("MaxLocks")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " The maximum number of named reserves that can exist on an account."]
 				pub fn max_reserves(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Balances", "MaxReserves")? ==
@@ -3861,10 +3861,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Balances")?;
 						let constant = pallet.constant("MaxReserves")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -4034,7 +4034,7 @@ pub mod api {
 				const FUNCTION: &'static str = "quit_sub";
 			}
 			pub struct TransactionApi<'a, T: ::subxt::Config, X> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 				marker: ::core::marker::PhantomData<X>,
 			}
 			impl<'a, T, X> TransactionApi<'a, T, X>
@@ -4042,7 +4042,7 @@ pub mod api {
 				T: ::subxt::Config,
 				X: ::subxt::extrinsic::ExtrinsicParams<T>,
 			{
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client, marker: ::core::marker::PhantomData }
 				}
 				#[doc = "Add a registrar to the system."]
@@ -4062,7 +4062,7 @@ pub mod api {
 					&self,
 					account: ::subxt::sp_core::crypto::AccountId32,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -4070,7 +4070,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -4084,9 +4084,9 @@ pub mod api {
 							22u8, 18u8, 120u8, 70u8, 4u8, 164u8, 147u8, 228u8, 52u8, 199u8, 196u8,
 						] {
 						let call = AddRegistrar { account };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Set an account's identity information and reserve the appropriate deposit."]
@@ -4112,7 +4112,7 @@ pub mod api {
 					&self,
 					info: runtime_types::pallet_identity::types::IdentityInfo,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -4120,7 +4120,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -4134,9 +4134,9 @@ pub mod api {
 							164u8, 16u8, 58u8, 51u8, 168u8, 58u8, 184u8, 204u8, 229u8, 135u8, 91u8,
 						] {
 						let call = SetIdentity { info: ::std::boxed::Box::new(info) };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Set the sub-accounts of the sender."]
@@ -4167,7 +4167,7 @@ pub mod api {
 						runtime_types::pallet_identity::types::Data,
 					)>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -4175,7 +4175,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -4190,9 +4190,9 @@ pub mod api {
 							33u8,
 						] {
 						let call = SetSubs { subs };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Clear an account's identity info and all sub-accounts and return all deposits."]
@@ -4216,7 +4216,7 @@ pub mod api {
 				pub fn clear_identity(
 					&self,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -4224,7 +4224,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -4238,9 +4238,9 @@ pub mod api {
 							8u8, 205u8, 74u8, 23u8, 181u8, 129u8, 252u8, 110u8, 231u8, 114u8,
 						] {
 						let call = ClearIdentity {};
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Request a judgement from a registrar."]
@@ -4271,7 +4271,7 @@ pub mod api {
 					reg_index: ::core::primitive::u32,
 					max_fee: ::core::primitive::u128,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -4279,7 +4279,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -4293,9 +4293,9 @@ pub mod api {
 							24u8, 127u8, 105u8, 136u8, 191u8, 133u8, 212u8, 138u8, 22u8, 173u8,
 						] {
 						let call = RequestJudgement { reg_index, max_fee };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Cancel a previous request."]
@@ -4319,7 +4319,7 @@ pub mod api {
 					&self,
 					reg_index: ::core::primitive::u32,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -4327,7 +4327,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -4341,9 +4341,9 @@ pub mod api {
 							167u8, 40u8, 229u8, 168u8, 159u8, 2u8, 231u8, 236u8, 58u8, 109u8, 32u8,
 						] {
 						let call = CancelRequest { reg_index };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Set the fee required for a judgement to be requested from a registrar."]
@@ -4364,8 +4364,8 @@ pub mod api {
 					index: ::core::primitive::u32,
 					fee: ::core::primitive::u128,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<'a, T, X, SetFee, DispatchError, root_mod::Event>,
-					::subxt::BasicError,
+					::subxt::tx::SubmittableExtrinsic<'a, T, X, SetFee, DispatchError, root_mod::Event>,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -4380,9 +4380,9 @@ pub mod api {
 							69u8, 218u8,
 						] {
 						let call = SetFee { index, fee };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Change the account associated with a registrar."]
@@ -4403,7 +4403,7 @@ pub mod api {
 					index: ::core::primitive::u32,
 					new: ::subxt::sp_core::crypto::AccountId32,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -4411,7 +4411,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -4425,9 +4425,9 @@ pub mod api {
 							203u8, 113u8, 55u8, 7u8, 180u8, 161u8, 37u8, 66u8, 6u8, 90u8,
 						] {
 						let call = SetAccountId { index, new };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Set the field information for a registrar."]
@@ -4450,7 +4450,7 @@ pub mod api {
 						runtime_types::pallet_identity::types::IdentityField,
 					>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -4458,7 +4458,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -4472,9 +4472,9 @@ pub mod api {
 							191u8, 32u8, 106u8, 200u8, 134u8, 72u8, 244u8, 189u8, 165u8, 125u8,
 						] {
 						let call = SetFields { index, fields };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Provide a judgement for an account's identity."]
@@ -4507,7 +4507,7 @@ pub mod api {
 						::core::primitive::u128,
 					>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -4515,7 +4515,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -4529,9 +4529,9 @@ pub mod api {
 							40u8, 2u8, 243u8, 53u8, 76u8, 104u8, 69u8, 37u8, 100u8, 86u8, 238u8,
 						] {
 						let call = ProvideJudgement { reg_index, target, judgement };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Remove an account's identity and sub-account information and slash the deposits."]
@@ -4560,7 +4560,7 @@ pub mod api {
 						::core::primitive::u32,
 					>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -4568,7 +4568,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -4583,9 +4583,9 @@ pub mod api {
 							155u8,
 						] {
 						let call = KillIdentity { target };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Add the given account to the sender's subs."]
@@ -4603,8 +4603,8 @@ pub mod api {
 					>,
 					data: runtime_types::pallet_identity::types::Data,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<'a, T, X, AddSub, DispatchError, root_mod::Event>,
-					::subxt::BasicError,
+					::subxt::tx::SubmittableExtrinsic<'a, T, X, AddSub, DispatchError, root_mod::Event>,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -4619,9 +4619,9 @@ pub mod api {
 							173u8, 184u8,
 						] {
 						let call = AddSub { sub, data };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Alter the associated name of the given sub-account."]
@@ -4636,7 +4636,7 @@ pub mod api {
 					>,
 					data: runtime_types::pallet_identity::types::Data,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -4644,7 +4644,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -4658,9 +4658,9 @@ pub mod api {
 							157u8, 17u8, 97u8, 4u8, 159u8, 127u8, 173u8, 141u8, 204u8, 176u8, 22u8,
 						] {
 						let call = RenameSub { sub, data };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Remove the given account from the sender's subs."]
@@ -4677,7 +4677,7 @@ pub mod api {
 						::core::primitive::u32,
 					>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -4685,7 +4685,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -4699,9 +4699,9 @@ pub mod api {
 							126u8, 255u8, 0u8, 241u8, 173u8, 86u8, 141u8, 224u8, 222u8, 13u8, 47u8,
 						] {
 						let call = RemoveSub { sub };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Remove the sender as a sub-account."]
@@ -4717,7 +4717,7 @@ pub mod api {
 				pub fn quit_sub(
 					&self,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -4725,7 +4725,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -4739,9 +4739,9 @@ pub mod api {
 							179u8, 51u8, 254u8, 240u8, 55u8, 25u8, 142u8, 38u8, 87u8, 44u8,
 						] {
 						let call = QuitSub {};
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -4867,7 +4867,7 @@ pub mod api {
 				type Value =
 					runtime_types::pallet_identity::types::Registration<::core::primitive::u128>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Twox64Concat,
 					)])
@@ -4882,7 +4882,7 @@ pub mod api {
 					runtime_types::pallet_identity::types::Data,
 				);
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Blake2_128Concat,
 					)])
@@ -4899,7 +4899,7 @@ pub mod api {
 					>,
 				);
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Twox64Concat,
 					)])
@@ -4922,10 +4922,10 @@ pub mod api {
 				}
 			}
 			pub struct StorageApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " Information that is pertinent to identify the entity behind an account."]
@@ -4942,7 +4942,7 @@ pub mod api {
 								::core::primitive::u128,
 							>,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -4965,7 +4965,7 @@ pub mod api {
 							let entry = IdentityOf(_0);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -4977,8 +4977,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, IdentityOf<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, IdentityOf<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -5000,7 +5000,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -5016,7 +5016,7 @@ pub mod api {
 							::subxt::sp_core::crypto::AccountId32,
 							runtime_types::pallet_identity::types::Data,
 						)>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -5039,7 +5039,7 @@ pub mod api {
 							let entry = SuperOf(_0);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -5050,8 +5050,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, SuperOf<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, SuperOf<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -5073,7 +5073,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -5094,7 +5094,7 @@ pub mod api {
 								::subxt::sp_core::crypto::AccountId32,
 							>,
 						),
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -5117,7 +5117,7 @@ pub mod api {
 							let entry = SubsOf(_0);
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -5131,8 +5131,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, SubsOf<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, SubsOf<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -5154,7 +5154,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -5175,7 +5175,7 @@ pub mod api {
 								>,
 							>,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -5198,7 +5198,7 @@ pub mod api {
 							let entry = Registrars;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -5207,16 +5207,16 @@ pub mod api {
 		pub mod constants {
 			use super::runtime_types;
 			pub struct ConstantsApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> ConstantsApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " The amount held on deposit for a registered identity"]
 				pub fn basic_deposit(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u128, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Identity", "BasicDeposit")? ==
@@ -5228,16 +5228,16 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Identity")?;
 						let constant = pallet.constant("BasicDeposit")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " The amount held on deposit per additional field for a registered identity."]
 				pub fn field_deposit(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u128, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Identity", "FieldDeposit")? ==
@@ -5248,10 +5248,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Identity")?;
 						let constant = pallet.constant("FieldDeposit")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " The amount held on deposit for a registered subaccount. This should account for the fact"]
@@ -5259,7 +5259,7 @@ pub mod api {
 				#[doc = " be another trie item whose value is the size of an account ID plus 32 bytes."]
 				pub fn sub_account_deposit(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u128, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Identity", "SubAccountDeposit")? ==
@@ -5270,16 +5270,16 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Identity")?;
 						let constant = pallet.constant("SubAccountDeposit")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " The maximum number of sub-accounts allowed per identified account."]
 				pub fn max_sub_accounts(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Identity", "MaxSubAccounts")? ==
@@ -5290,17 +5290,17 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Identity")?;
 						let constant = pallet.constant("MaxSubAccounts")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " Maximum number of additional fields that may be stored in an ID. Needed to bound the I/O"]
 				#[doc = " required to access an identity, but can be pretty high."]
 				pub fn max_additional_fields(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Identity", "MaxAdditionalFields")? ==
@@ -5312,17 +5312,17 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Identity")?;
 						let constant = pallet.constant("MaxAdditionalFields")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " Maximum number of registrars allowed in the system. Needed to bound the complexity"]
 				#[doc = " of, e.g., updating judgements."]
 				pub fn max_registrars(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Identity", "MaxRegistrars")? ==
@@ -5334,10 +5334,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Identity")?;
 						let constant = pallet.constant("MaxRegistrars")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -5365,7 +5365,7 @@ pub mod api {
 				pub maybe_timepoint: ::core::option::Option<
 					runtime_types::pallet_multisig::Timepoint<::core::primitive::u32>,
 				>,
-				pub call: ::subxt::WrapperKeepOpaque<runtime_types::dali_runtime::Call>,
+				pub call: ::subxt::utils::WrapperKeepOpaque<runtime_types::dali_runtime::Call>,
 				pub store_call: ::core::primitive::bool,
 				pub max_weight: ::core::primitive::u64,
 			}
@@ -5399,7 +5399,7 @@ pub mod api {
 				const FUNCTION: &'static str = "cancel_as_multi";
 			}
 			pub struct TransactionApi<'a, T: ::subxt::Config, X> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 				marker: ::core::marker::PhantomData<X>,
 			}
 			impl<'a, T, X> TransactionApi<'a, T, X>
@@ -5407,7 +5407,7 @@ pub mod api {
 				T: ::subxt::Config,
 				X: ::subxt::extrinsic::ExtrinsicParams<T>,
 			{
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client, marker: ::core::marker::PhantomData }
 				}
 				#[doc = "Immediately dispatch a multi-signature call using a single approval from the caller."]
@@ -5431,7 +5431,7 @@ pub mod api {
 					other_signatories: ::std::vec::Vec<::subxt::sp_core::crypto::AccountId32>,
 					call: runtime_types::dali_runtime::Call,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -5439,7 +5439,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -5457,9 +5457,9 @@ pub mod api {
 							other_signatories,
 							call: ::std::boxed::Box::new(call),
 						};
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Register approval for a dispatch to be made from a deterministic composite account if"]
@@ -5514,11 +5514,11 @@ pub mod api {
 					maybe_timepoint: ::core::option::Option<
 						runtime_types::pallet_multisig::Timepoint<::core::primitive::u32>,
 					>,
-					call: ::subxt::WrapperKeepOpaque<runtime_types::dali_runtime::Call>,
+					call: ::subxt::utils::WrapperKeepOpaque<runtime_types::dali_runtime::Call>,
 					store_call: ::core::primitive::bool,
 					max_weight: ::core::primitive::u64,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -5526,7 +5526,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -5547,9 +5547,9 @@ pub mod api {
 							store_call,
 							max_weight,
 						};
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Register approval for a dispatch to be made from a deterministic composite account if"]
@@ -5597,7 +5597,7 @@ pub mod api {
 					call_hash: [::core::primitive::u8; 32usize],
 					max_weight: ::core::primitive::u64,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -5605,7 +5605,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -5625,9 +5625,9 @@ pub mod api {
 							call_hash,
 							max_weight,
 						};
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Cancel a pre-existing, on-going multisig transaction. Any deposit reserved previously"]
@@ -5663,7 +5663,7 @@ pub mod api {
 					timepoint: runtime_types::pallet_multisig::Timepoint<::core::primitive::u32>,
 					call_hash: [::core::primitive::u8; 32usize],
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -5671,7 +5671,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -5686,9 +5686,9 @@ pub mod api {
 						] {
 						let call =
 							CancelAsMulti { threshold, other_signatories, timepoint, call_hash };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -5762,8 +5762,8 @@ pub mod api {
 				>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
 					::subxt::StorageEntryKey::Map(vec![
-						::subxt::StorageMapKey::new(&self.0, ::subxt::StorageHasher::Twox64Concat),
-						::subxt::StorageMapKey::new(
+						::subxt::storage::address::StorageMapKey::new(&self.0, ::subxt::StorageHasher::Twox64Concat),
+						::subxt::storage::address::StorageMapKey::new(
 							&self.1,
 							::subxt::StorageHasher::Blake2_128Concat,
 						),
@@ -5775,22 +5775,22 @@ pub mod api {
 				const PALLET: &'static str = "Multisig";
 				const STORAGE: &'static str = "Calls";
 				type Value = (
-					::subxt::WrapperKeepOpaque<runtime_types::dali_runtime::Call>,
+					::subxt::utils::WrapperKeepOpaque<runtime_types::dali_runtime::Call>,
 					::subxt::sp_core::crypto::AccountId32,
 					::core::primitive::u128,
 				);
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Identity,
 					)])
 				}
 			}
 			pub struct StorageApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " The set of open multisig operations."]
@@ -5808,7 +5808,7 @@ pub mod api {
 								::subxt::sp_core::crypto::AccountId32,
 							>,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -5831,7 +5831,7 @@ pub mod api {
 							let entry = Multisigs(_0, _1);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -5841,8 +5841,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, Multisigs<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, Multisigs<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -5864,7 +5864,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -5875,11 +5875,11 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::core::option::Option<(
-							::subxt::WrapperKeepOpaque<runtime_types::dali_runtime::Call>,
+							::subxt::utils::WrapperKeepOpaque<runtime_types::dali_runtime::Call>,
 							::subxt::sp_core::crypto::AccountId32,
 							::core::primitive::u128,
 						)>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -5902,7 +5902,7 @@ pub mod api {
 							let entry = Calls(_0);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -5911,8 +5911,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, Calls<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, Calls<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -5934,7 +5934,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -5943,10 +5943,10 @@ pub mod api {
 		pub mod constants {
 			use super::runtime_types;
 			pub struct ConstantsApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> ConstantsApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " The base amount of currency needed to reserve for creating a multisig execution or to"]
@@ -5957,7 +5957,7 @@ pub mod api {
 				#[doc = " `32 + sizeof(AccountId)` bytes."]
 				pub fn deposit_base(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u128, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Multisig", "DepositBase")? ==
@@ -5968,10 +5968,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Multisig")?;
 						let constant = pallet.constant("DepositBase")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " The amount of currency needed per unit threshold when creating a multisig execution."]
@@ -5979,7 +5979,7 @@ pub mod api {
 				#[doc = " This is held for adding 32 bytes more into a pre-existing storage value."]
 				pub fn deposit_factor(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u128, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Multisig", "DepositFactor")? ==
@@ -5990,16 +5990,16 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Multisig")?;
 						let constant = pallet.constant("DepositFactor")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " The maximum amount of signatories allowed in the multisig."]
 				pub fn max_signatories(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u16, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u16, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Multisig", "MaxSignatories")? ==
@@ -6010,10 +6010,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Multisig")?;
 						let constant = pallet.constant("MaxSignatories")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -6059,7 +6059,7 @@ pub mod api {
 				const FUNCTION: &'static str = "enact_authorized_upgrade";
 			}
 			pub struct TransactionApi<'a, T: ::subxt::Config, X> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 				marker: ::core::marker::PhantomData<X>,
 			}
 			impl<'a, T, X> TransactionApi<'a, T, X>
@@ -6067,7 +6067,7 @@ pub mod api {
 				T: ::subxt::Config,
 				X: ::subxt::extrinsic::ExtrinsicParams<T>,
 			{
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client, marker: ::core::marker::PhantomData }
 				}
 				#[doc = "Set the current validation data."]
@@ -6083,7 +6083,7 @@ pub mod api {
 					&self,
 					data : runtime_types :: cumulus_primitives_parachain_inherent :: ParachainInherentData,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -6091,7 +6091,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -6105,16 +6105,16 @@ pub mod api {
 							100u8, 208u8, 36u8, 206u8, 200u8, 101u8, 83u8, 110u8, 226u8, 179u8,
 						] {
 						let call = SetValidationData { data };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				pub fn sudo_send_upward_message(
 					&self,
 					message: ::std::vec::Vec<::core::primitive::u8>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -6122,7 +6122,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -6137,16 +6137,16 @@ pub mod api {
 							134u8,
 						] {
 						let call = SudoSendUpwardMessage { message };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				pub fn authorize_upgrade(
 					&self,
 					code_hash: ::subxt::sp_core::H256,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -6154,7 +6154,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -6168,16 +6168,16 @@ pub mod api {
 							186u8, 240u8, 223u8, 81u8, 181u8, 0u8, 151u8, 85u8, 153u8, 6u8,
 						] {
 						let call = AuthorizeUpgrade { code_hash };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				pub fn enact_authorized_upgrade(
 					&self,
 					code: ::std::vec::Vec<::core::primitive::u8>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -6185,7 +6185,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -6200,9 +6200,9 @@ pub mod api {
 							144u8, 103u8,
 						] {
 						let call = EnactAuthorizedUpgrade { code };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -6362,7 +6362,7 @@ pub mod api {
 			impl ::subxt::StorageEntry for LastHrmpMqcHeads {
 				const PALLET: &'static str = "ParachainSystem";
 				const STORAGE: &'static str = "LastHrmpMqcHeads";
-				type Value = ::subxt::KeyedVec<
+				type Value = ::subxt::utils::KeyedVec<
 					runtime_types::polkadot_parachain::primitives::Id,
 					runtime_types::cumulus_primitives_parachain_inherent::MessageQueueChain,
 				>;
@@ -6465,10 +6465,10 @@ pub mod api {
 				}
 			}
 			pub struct StorageApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " In case of a scheduled upgrade, this storage field contains the validation code to be applied."]
@@ -6483,7 +6483,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::std::vec::Vec<::core::primitive::u8>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -6506,7 +6506,7 @@ pub mod api {
 							let entry = PendingValidationCode;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -6521,7 +6521,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::core::option::Option<::std::vec::Vec<::core::primitive::u8>>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -6544,7 +6544,7 @@ pub mod api {
 							let entry = NewValidationCode;
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -6562,7 +6562,7 @@ pub mod api {
 								::core::primitive::u32,
 							>,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -6585,7 +6585,7 @@ pub mod api {
 							let entry = ValidationData;
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -6594,7 +6594,7 @@ pub mod api {
 					&self,
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
-					Output = ::core::result::Result<::core::primitive::bool, ::subxt::BasicError>,
+					Output = ::core::result::Result<::core::primitive::bool, ::subxt::error::DispatchError>,
 				> + 'a {
 					let client = self.client;
 					async move {
@@ -6616,7 +6616,7 @@ pub mod api {
 							let entry = DidSetValidationCode;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -6635,7 +6635,7 @@ pub mod api {
 						::core::option::Option<
 							runtime_types::polkadot_primitives::v2::UpgradeRestriction,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -6658,7 +6658,7 @@ pub mod api {
 							let entry = UpgradeRestrictionSignal;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -6674,7 +6674,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::core::option::Option<runtime_types::sp_trie::storage_proof::StorageProof>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -6697,7 +6697,7 @@ pub mod api {
 							let entry = RelayStateProof;
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -6728,7 +6728,7 @@ pub mod api {
 							let entry = RelevantMessagingState;
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -6746,7 +6746,7 @@ pub mod api {
 						::core::option::Option<
 							runtime_types::polkadot_primitives::v2::AbridgedHostConfiguration,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -6769,7 +6769,7 @@ pub mod api {
 							let entry = HostConfiguration;
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -6783,7 +6783,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						runtime_types::cumulus_primitives_parachain_inherent::MessageQueueChain,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -6806,7 +6806,7 @@ pub mod api {
 							let entry = LastDmqMqcHead;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -6819,11 +6819,11 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyedVec<
+						::subxt::utils::KeyedVec<
 							runtime_types::polkadot_parachain::primitives::Id,
 							runtime_types::cumulus_primitives_parachain_inherent::MessageQueueChain,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -6846,7 +6846,7 @@ pub mod api {
 							let entry = LastHrmpMqcHeads;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -6857,7 +6857,7 @@ pub mod api {
 					&self,
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
-					Output = ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>,
+					Output = ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError>,
 				> + 'a {
 					let client = self.client;
 					async move {
@@ -6879,7 +6879,7 @@ pub mod api {
 							let entry = ProcessedDownwardMessages;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -6890,7 +6890,7 @@ pub mod api {
 					&self,
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
-					Output = ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>,
+					Output = ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError>,
 				> + 'a {
 					let client = self.client;
 					async move {
@@ -6912,7 +6912,7 @@ pub mod api {
 							let entry = HrmpWatermark;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -6929,7 +6929,7 @@ pub mod api {
 								runtime_types::polkadot_parachain::primitives::Id,
 							>,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -6952,7 +6952,7 @@ pub mod api {
 							let entry = HrmpOutboundMessages;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -6965,7 +6965,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::std::vec::Vec<::std::vec::Vec<::core::primitive::u8>>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -6988,7 +6988,7 @@ pub mod api {
 							let entry = UpwardMessages;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -6999,7 +6999,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::std::vec::Vec<::std::vec::Vec<::core::primitive::u8>>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -7022,7 +7022,7 @@ pub mod api {
 							let entry = PendingUpwardMessages;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -7032,7 +7032,7 @@ pub mod api {
 					&self,
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
-					Output = ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>,
+					Output = ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError>,
 				> + 'a {
 					let client = self.client;
 					async move {
@@ -7054,7 +7054,7 @@ pub mod api {
 							let entry = AnnouncedHrmpMessagesPerCandidate;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -7066,7 +7066,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::core::option::Option<::core::primitive::u64>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -7089,7 +7089,7 @@ pub mod api {
 							let entry = ReservedXcmpWeightOverride;
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -7101,7 +7101,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::core::option::Option<::core::primitive::u64>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -7124,7 +7124,7 @@ pub mod api {
 							let entry = ReservedDmpWeightOverride;
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -7135,7 +7135,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::core::option::Option<::subxt::sp_core::H256>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -7158,7 +7158,7 @@ pub mod api {
 							let entry = AuthorizedUpgrade;
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -7171,7 +7171,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::core::option::Option<::std::vec::Vec<::core::primitive::u8>>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -7194,7 +7194,7 @@ pub mod api {
 							let entry = CustomValidationHeadData;
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -7215,10 +7215,10 @@ pub mod api {
 				}
 			}
 			pub struct StorageApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				pub fn parachain_id(
@@ -7227,7 +7227,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						runtime_types::polkadot_parachain::primitives::Id,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -7250,7 +7250,7 @@ pub mod api {
 							let entry = ParachainId;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -7277,7 +7277,7 @@ pub mod api {
 				const FUNCTION: &'static str = "set_uncles";
 			}
 			pub struct TransactionApi<'a, T: ::subxt::Config, X> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 				marker: ::core::marker::PhantomData<X>,
 			}
 			impl<'a, T, X> TransactionApi<'a, T, X>
@@ -7285,7 +7285,7 @@ pub mod api {
 				T: ::subxt::Config,
 				X: ::subxt::extrinsic::ExtrinsicParams<T>,
 			{
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client, marker: ::core::marker::PhantomData }
 				}
 				#[doc = "Provide a set of uncles."]
@@ -7298,7 +7298,7 @@ pub mod api {
 						>,
 					>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -7306,7 +7306,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -7320,9 +7320,9 @@ pub mod api {
 							189u8, 248u8, 2u8, 71u8, 49u8, 220u8, 212u8, 253u8, 235u8, 67u8,
 						] {
 						let call = SetUncles { new_uncles };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -7363,10 +7363,10 @@ pub mod api {
 				}
 			}
 			pub struct StorageApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " Uncles"]
@@ -7382,7 +7382,7 @@ pub mod api {
 								::subxt::sp_core::crypto::AccountId32,
 							>,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -7405,7 +7405,7 @@ pub mod api {
 							let entry = Uncles;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -7416,7 +7416,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::core::option::Option<::subxt::sp_core::crypto::AccountId32>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -7439,7 +7439,7 @@ pub mod api {
 							let entry = Author;
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -7448,7 +7448,7 @@ pub mod api {
 					&self,
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
-					Output = ::core::result::Result<::core::primitive::bool, ::subxt::BasicError>,
+					Output = ::core::result::Result<::core::primitive::bool, ::subxt::error::DispatchError>,
 				> + 'a {
 					let client = self.client;
 					async move {
@@ -7470,7 +7470,7 @@ pub mod api {
 							let entry = DidSetUncles;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -7479,10 +7479,10 @@ pub mod api {
 		pub mod constants {
 			use super::runtime_types;
 			pub struct ConstantsApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> ConstantsApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " The number of blocks back we should accept uncles."]
@@ -7490,7 +7490,7 @@ pub mod api {
 				#[doc = " `UncleGenerations + 1` before `now`."]
 				pub fn uncle_generations(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Authorship", "UncleGenerations")? ==
@@ -7501,10 +7501,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Authorship")?;
 						let constant = pallet.constant("UncleGenerations")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -7563,7 +7563,7 @@ pub mod api {
 				const FUNCTION: &'static str = "leave_intent";
 			}
 			pub struct TransactionApi<'a, T: ::subxt::Config, X> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 				marker: ::core::marker::PhantomData<X>,
 			}
 			impl<'a, T, X> TransactionApi<'a, T, X>
@@ -7571,7 +7571,7 @@ pub mod api {
 				T: ::subxt::Config,
 				X: ::subxt::extrinsic::ExtrinsicParams<T>,
 			{
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client, marker: ::core::marker::PhantomData }
 				}
 				#[doc = "Set the list of invulnerable (fixed) collators."]
@@ -7579,7 +7579,7 @@ pub mod api {
 					&self,
 					new: ::std::vec::Vec<::subxt::sp_core::crypto::AccountId32>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -7587,7 +7587,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -7602,9 +7602,9 @@ pub mod api {
 							150u8,
 						] {
 						let call = SetInvulnerables { new };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Set the ideal number of collators (not including the invulnerables)."]
@@ -7614,7 +7614,7 @@ pub mod api {
 					&self,
 					max: ::core::primitive::u32,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -7622,7 +7622,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -7637,9 +7637,9 @@ pub mod api {
 							16u8,
 						] {
 						let call = SetDesiredCandidates { max };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Set the candidacy bond amount."]
@@ -7647,7 +7647,7 @@ pub mod api {
 					&self,
 					bond: ::core::primitive::u128,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -7655,7 +7655,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -7669,9 +7669,9 @@ pub mod api {
 							1u8, 99u8, 17u8, 98u8, 195u8, 131u8, 27u8, 47u8, 209u8, 197u8, 132u8,
 						] {
 						let call = SetCandidacyBond { bond };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Register this account as a collator candidate. The account must (a) already have"]
@@ -7681,7 +7681,7 @@ pub mod api {
 				pub fn register_as_candidate(
 					&self,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -7689,7 +7689,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -7703,9 +7703,9 @@ pub mod api {
 							253u8, 34u8, 245u8, 67u8, 46u8, 240u8, 195u8, 57u8, 81u8, 138u8, 69u8,
 						] {
 						let call = RegisterAsCandidate {};
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Deregister `origin` as a collator candidate. Note that the collator can only leave on"]
@@ -7717,7 +7717,7 @@ pub mod api {
 				pub fn leave_intent(
 					&self,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -7725,7 +7725,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -7740,9 +7740,9 @@ pub mod api {
 							221u8,
 						] {
 						let call = LeaveIntent {};
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -7826,7 +7826,7 @@ pub mod api {
 				const STORAGE: &'static str = "LastAuthoredBlock";
 				type Value = ::core::primitive::u32;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Twox64Concat,
 					)])
@@ -7851,10 +7851,10 @@ pub mod api {
 				}
 			}
 			pub struct StorageApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " The invulnerable, fixed collators."]
@@ -7864,7 +7864,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::std::vec::Vec<::subxt::sp_core::crypto::AccountId32>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -7887,7 +7887,7 @@ pub mod api {
 							let entry = Invulnerables;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -7903,7 +7903,7 @@ pub mod api {
 								::core::primitive::u128,
 							>,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -7926,7 +7926,7 @@ pub mod api {
 							let entry = Candidates;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -7936,7 +7936,7 @@ pub mod api {
 					_0: &'a ::subxt::sp_core::crypto::AccountId32,
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
-					Output = ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>,
+					Output = ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError>,
 				> + 'a {
 					let client = self.client;
 					async move {
@@ -7958,7 +7958,7 @@ pub mod api {
 							let entry = LastAuthoredBlock(_0);
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -7968,8 +7968,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, LastAuthoredBlock<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, LastAuthoredBlock<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -7991,7 +7991,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -8002,7 +8002,7 @@ pub mod api {
 					&self,
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
-					Output = ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>,
+					Output = ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError>,
 				> + 'a {
 					let client = self.client;
 					async move {
@@ -8024,7 +8024,7 @@ pub mod api {
 							let entry = DesiredCandidates;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -8035,7 +8035,7 @@ pub mod api {
 					&self,
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
-					Output = ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>,
+					Output = ::core::result::Result<::core::primitive::u128, ::subxt::error::DispatchError>,
 				> + 'a {
 					let client = self.client;
 					async move {
@@ -8057,7 +8057,7 @@ pub mod api {
 							let entry = CandidacyBond;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -8086,7 +8086,7 @@ pub mod api {
 				const FUNCTION: &'static str = "purge_keys";
 			}
 			pub struct TransactionApi<'a, T: ::subxt::Config, X> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 				marker: ::core::marker::PhantomData<X>,
 			}
 			impl<'a, T, X> TransactionApi<'a, T, X>
@@ -8094,7 +8094,7 @@ pub mod api {
 				T: ::subxt::Config,
 				X: ::subxt::extrinsic::ExtrinsicParams<T>,
 			{
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client, marker: ::core::marker::PhantomData }
 				}
 				#[doc = "Sets the session key(s) of the function caller to `keys`."]
@@ -8116,7 +8116,7 @@ pub mod api {
 					keys: runtime_types::dali_runtime::opaque::SessionKeys,
 					proof: ::std::vec::Vec<::core::primitive::u8>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -8124,7 +8124,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -8139,9 +8139,9 @@ pub mod api {
 							204u8,
 						] {
 						let call = SetKeys { keys, proof };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Removes any session key(s) of the function caller."]
@@ -8163,7 +8163,7 @@ pub mod api {
 				pub fn purge_keys(
 					&self,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -8171,7 +8171,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -8185,9 +8185,9 @@ pub mod api {
 							71u8, 242u8, 207u8, 239u8, 231u8, 37u8, 61u8, 63u8, 190u8, 35u8,
 						] {
 						let call = PurgeKeys {};
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -8268,7 +8268,7 @@ pub mod api {
 				const STORAGE: &'static str = "NextKeys";
 				type Value = runtime_types::dali_runtime::opaque::SessionKeys;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Twox64Concat,
 					)])
@@ -8283,17 +8283,17 @@ pub mod api {
 				const STORAGE: &'static str = "KeyOwner";
 				type Value = ::subxt::sp_core::crypto::AccountId32;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&(&self.0, &self.1),
 						::subxt::StorageHasher::Twox64Concat,
 					)])
 				}
 			}
 			pub struct StorageApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " The current set of validators."]
@@ -8303,7 +8303,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::std::vec::Vec<::subxt::sp_core::crypto::AccountId32>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -8326,7 +8326,7 @@ pub mod api {
 							let entry = Validators;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -8335,7 +8335,7 @@ pub mod api {
 					&self,
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
-					Output = ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>,
+					Output = ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError>,
 				> + 'a {
 					let client = self.client;
 					async move {
@@ -8357,7 +8357,7 @@ pub mod api {
 							let entry = CurrentIndex;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -8367,7 +8367,7 @@ pub mod api {
 					&self,
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
-					Output = ::core::result::Result<::core::primitive::bool, ::subxt::BasicError>,
+					Output = ::core::result::Result<::core::primitive::bool, ::subxt::error::DispatchError>,
 				> + 'a {
 					let client = self.client;
 					async move {
@@ -8389,7 +8389,7 @@ pub mod api {
 							let entry = QueuedChanged;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -8404,7 +8404,7 @@ pub mod api {
 							::subxt::sp_core::crypto::AccountId32,
 							runtime_types::dali_runtime::opaque::SessionKeys,
 						)>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -8427,7 +8427,7 @@ pub mod api {
 							let entry = QueuedKeys;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -8442,7 +8442,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::std::vec::Vec<::core::primitive::u32>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -8465,7 +8465,7 @@ pub mod api {
 							let entry = DisabledValidators;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -8477,7 +8477,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::core::option::Option<runtime_types::dali_runtime::opaque::SessionKeys>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -8500,7 +8500,7 @@ pub mod api {
 							let entry = NextKeys(_0);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -8510,8 +8510,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, NextKeys<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, NextKeys<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -8533,7 +8533,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -8546,7 +8546,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::core::option::Option<::subxt::sp_core::crypto::AccountId32>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -8569,7 +8569,7 @@ pub mod api {
 							let entry = KeyOwner(_0, _1);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -8579,8 +8579,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, KeyOwner<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, KeyOwner<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -8602,7 +8602,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -8635,10 +8635,10 @@ pub mod api {
 				}
 			}
 			pub struct StorageApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " The current authority set."]
@@ -8650,7 +8650,7 @@ pub mod api {
 						runtime_types::frame_support::storage::weak_bounded_vec::WeakBoundedVec<
 							runtime_types::sp_consensus_aura::sr25519::app_sr25519::Public,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -8673,7 +8673,7 @@ pub mod api {
 							let entry = Authorities;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -8686,7 +8686,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						runtime_types::sp_consensus_slots::Slot,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -8709,7 +8709,7 @@ pub mod api {
 							let entry = CurrentSlot;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -8791,7 +8791,7 @@ pub mod api {
 				const FUNCTION: &'static str = "disapprove_proposal";
 			}
 			pub struct TransactionApi<'a, T: ::subxt::Config, X> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 				marker: ::core::marker::PhantomData<X>,
 			}
 			impl<'a, T, X> TransactionApi<'a, T, X>
@@ -8799,7 +8799,7 @@ pub mod api {
 				T: ::subxt::Config,
 				X: ::subxt::extrinsic::ExtrinsicParams<T>,
 			{
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client, marker: ::core::marker::PhantomData }
 				}
 				#[doc = "Set the collective's membership."]
@@ -8840,7 +8840,7 @@ pub mod api {
 					prime: ::core::option::Option<::subxt::sp_core::crypto::AccountId32>,
 					old_count: ::core::primitive::u32,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -8848,7 +8848,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -8862,9 +8862,9 @@ pub mod api {
 							0u8, 163u8, 172u8, 252u8, 221u8, 9u8, 1u8, 222u8, 44u8, 214u8,
 						] {
 						let call = SetMembers { new_members, prime, old_count };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Dispatch a proposal from a member using the `Member` origin."]
@@ -8883,7 +8883,7 @@ pub mod api {
 					proposal: runtime_types::dali_runtime::Call,
 					length_bound: ::core::primitive::u32,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -8891,7 +8891,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -8907,9 +8907,9 @@ pub mod api {
 						] {
 						let call =
 							Execute { proposal: ::std::boxed::Box::new(proposal), length_bound };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Add a new proposal to either be voted on or executed directly."]
@@ -8945,7 +8945,7 @@ pub mod api {
 					proposal: runtime_types::dali_runtime::Call,
 					length_bound: ::core::primitive::u32,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -8953,7 +8953,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -8971,9 +8971,9 @@ pub mod api {
 							proposal: ::std::boxed::Box::new(proposal),
 							length_bound,
 						};
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Add an aye or nay vote for the sender to the given proposal."]
@@ -8997,8 +8997,8 @@ pub mod api {
 					index: ::core::primitive::u32,
 					approve: ::core::primitive::bool,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<'a, T, X, Vote, DispatchError, root_mod::Event>,
-					::subxt::BasicError,
+					::subxt::tx::SubmittableExtrinsic<'a, T, X, Vote, DispatchError, root_mod::Event>,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -9013,9 +9013,9 @@ pub mod api {
 							161u8,
 						] {
 						let call = Vote { proposal, index, approve };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Close a vote that is either approved, disapproved or whose voting period has ended."]
@@ -9057,8 +9057,8 @@ pub mod api {
 					proposal_weight_bound: ::core::primitive::u64,
 					length_bound: ::core::primitive::u32,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<'a, T, X, Close, DispatchError, root_mod::Event>,
-					::subxt::BasicError,
+					::subxt::tx::SubmittableExtrinsic<'a, T, X, Close, DispatchError, root_mod::Event>,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -9073,9 +9073,9 @@ pub mod api {
 						] {
 						let call =
 							Close { proposal_hash, index, proposal_weight_bound, length_bound };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Disapprove a proposal, close, and remove it from the system, regardless of its current"]
@@ -9096,7 +9096,7 @@ pub mod api {
 					&self,
 					proposal_hash: ::subxt::sp_core::H256,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -9104,7 +9104,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -9119,9 +9119,9 @@ pub mod api {
 							133u8,
 						] {
 						let call = DisapproveProposal { proposal_hash };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -9226,7 +9226,7 @@ pub mod api {
 				const STORAGE: &'static str = "ProposalOf";
 				type Value = runtime_types::dali_runtime::Call;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Identity,
 					)])
@@ -9241,7 +9241,7 @@ pub mod api {
 					::core::primitive::u32,
 				>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Identity,
 					)])
@@ -9275,10 +9275,10 @@ pub mod api {
 				}
 			}
 			pub struct StorageApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " The hashes of the active proposals."]
@@ -9290,7 +9290,7 @@ pub mod api {
 						runtime_types::frame_support::storage::bounded_vec::BoundedVec<
 							::subxt::sp_core::H256,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -9313,7 +9313,7 @@ pub mod api {
 							let entry = Proposals;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -9325,7 +9325,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::core::option::Option<runtime_types::dali_runtime::Call>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -9348,7 +9348,7 @@ pub mod api {
 							let entry = ProposalOf(_0);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -9358,8 +9358,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, ProposalOf<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, ProposalOf<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -9381,7 +9381,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -9398,7 +9398,7 @@ pub mod api {
 								::core::primitive::u32,
 							>,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -9421,7 +9421,7 @@ pub mod api {
 							let entry = Voting(_0);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -9431,8 +9431,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, Voting<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, Voting<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -9454,7 +9454,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -9463,7 +9463,7 @@ pub mod api {
 					&self,
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
-					Output = ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>,
+					Output = ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError>,
 				> + 'a {
 					let client = self.client;
 					async move {
@@ -9485,7 +9485,7 @@ pub mod api {
 							let entry = ProposalCount;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -9496,7 +9496,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::std::vec::Vec<::subxt::sp_core::crypto::AccountId32>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -9519,7 +9519,7 @@ pub mod api {
 							let entry = Members;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -9530,7 +9530,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::core::option::Option<::subxt::sp_core::crypto::AccountId32>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -9553,7 +9553,7 @@ pub mod api {
 							let entry = Prime;
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -9622,7 +9622,7 @@ pub mod api {
 				const FUNCTION: &'static str = "clear_prime";
 			}
 			pub struct TransactionApi<'a, T: ::subxt::Config, X> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 				marker: ::core::marker::PhantomData<X>,
 			}
 			impl<'a, T, X> TransactionApi<'a, T, X>
@@ -9630,7 +9630,7 @@ pub mod api {
 				T: ::subxt::Config,
 				X: ::subxt::extrinsic::ExtrinsicParams<T>,
 			{
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client, marker: ::core::marker::PhantomData }
 				}
 				#[doc = "Add a member `who` to the set."]
@@ -9640,7 +9640,7 @@ pub mod api {
 					&self,
 					who: ::subxt::sp_core::crypto::AccountId32,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -9648,7 +9648,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -9663,9 +9663,9 @@ pub mod api {
 							166u8,
 						] {
 						let call = AddMember { who };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Remove a member `who` from the set."]
@@ -9675,7 +9675,7 @@ pub mod api {
 					&self,
 					who: ::subxt::sp_core::crypto::AccountId32,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -9683,7 +9683,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -9698,9 +9698,9 @@ pub mod api {
 							45u8, 211u8,
 						] {
 						let call = RemoveMember { who };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Swap out one member `remove` for another `add`."]
@@ -9713,7 +9713,7 @@ pub mod api {
 					remove: ::subxt::sp_core::crypto::AccountId32,
 					add: ::subxt::sp_core::crypto::AccountId32,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -9721,7 +9721,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -9735,9 +9735,9 @@ pub mod api {
 							11u8, 183u8, 33u8, 84u8, 133u8, 4u8, 5u8, 13u8, 188u8, 123u8,
 						] {
 						let call = SwapMember { remove, add };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Change the membership to a new set, disregarding the existing membership. Be nice and"]
@@ -9748,7 +9748,7 @@ pub mod api {
 					&self,
 					members: ::std::vec::Vec<::subxt::sp_core::crypto::AccountId32>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -9756,7 +9756,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -9770,9 +9770,9 @@ pub mod api {
 							229u8, 81u8, 103u8, 217u8, 173u8, 151u8, 31u8, 118u8, 151u8, 217u8,
 						] {
 						let call = ResetMembers { members };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Swap out the sending member for some other key `new`."]
@@ -9784,7 +9784,7 @@ pub mod api {
 					&self,
 					new: ::subxt::sp_core::crypto::AccountId32,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -9792,7 +9792,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -9806,9 +9806,9 @@ pub mod api {
 							33u8, 167u8, 200u8, 23u8, 150u8, 235u8, 130u8, 172u8, 202u8, 216u8,
 						] {
 						let call = ChangeKey { new };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Set the prime member. Must be a current member."]
@@ -9818,7 +9818,7 @@ pub mod api {
 					&self,
 					who: ::subxt::sp_core::crypto::AccountId32,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -9826,7 +9826,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -9841,9 +9841,9 @@ pub mod api {
 							15u8,
 						] {
 						let call = SetPrime { who };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Remove the prime member if it exists."]
@@ -9852,7 +9852,7 @@ pub mod api {
 				pub fn clear_prime(
 					&self,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -9860,7 +9860,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -9874,9 +9874,9 @@ pub mod api {
 							155u8, 62u8, 35u8, 135u8, 48u8, 61u8, 88u8, 160u8, 183u8, 72u8,
 						] {
 						let call = ClearPrime {};
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -9949,10 +9949,10 @@ pub mod api {
 				}
 			}
 			pub struct StorageApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " The current membership, stored as an ordered Vec."]
@@ -9962,7 +9962,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::std::vec::Vec<::subxt::sp_core::crypto::AccountId32>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -9985,7 +9985,7 @@ pub mod api {
 							let entry = Members;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -9996,7 +9996,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::core::option::Option<::subxt::sp_core::crypto::AccountId32>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -10019,7 +10019,7 @@ pub mod api {
 							let entry = Prime;
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -10073,7 +10073,7 @@ pub mod api {
 				const FUNCTION: &'static str = "remove_approval";
 			}
 			pub struct TransactionApi<'a, T: ::subxt::Config, X> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 				marker: ::core::marker::PhantomData<X>,
 			}
 			impl<'a, T, X> TransactionApi<'a, T, X>
@@ -10081,7 +10081,7 @@ pub mod api {
 				T: ::subxt::Config,
 				X: ::subxt::extrinsic::ExtrinsicParams<T>,
 			{
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client, marker: ::core::marker::PhantomData }
 				}
 				#[doc = "Put forward a suggestion for spending. A deposit proportional to the value"]
@@ -10101,7 +10101,7 @@ pub mod api {
 						::core::primitive::u32,
 					>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -10109,7 +10109,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -10123,9 +10123,9 @@ pub mod api {
 							224u8, 6u8, 25u8, 245u8, 137u8, 136u8, 196u8, 86u8, 28u8, 154u8,
 						] {
 						let call = ProposeSpend { value, beneficiary };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Reject a proposed spend. The original deposit will be slashed."]
@@ -10141,7 +10141,7 @@ pub mod api {
 					&self,
 					proposal_id: ::core::primitive::u32,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -10149,7 +10149,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -10164,9 +10164,9 @@ pub mod api {
 							242u8,
 						] {
 						let call = RejectProposal { proposal_id };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Approve a proposal. At a later time, the proposal will be allocated to the beneficiary"]
@@ -10183,7 +10183,7 @@ pub mod api {
 					&self,
 					proposal_id: ::core::primitive::u32,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -10191,7 +10191,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -10206,9 +10206,9 @@ pub mod api {
 							231u8,
 						] {
 						let call = ApproveProposal { proposal_id };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Force a previously approved proposal to be removed from the approval queue."]
@@ -10230,7 +10230,7 @@ pub mod api {
 					&self,
 					proposal_id: ::core::primitive::u32,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -10238,7 +10238,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -10252,9 +10252,9 @@ pub mod api {
 							155u8, 80u8, 175u8, 88u8, 85u8, 83u8, 8u8, 138u8, 130u8, 12u8, 228u8,
 						] {
 						let call = RemoveApproval { proposal_id };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -10375,7 +10375,7 @@ pub mod api {
 					::core::primitive::u128,
 				>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Twox64Concat,
 					)])
@@ -10393,10 +10393,10 @@ pub mod api {
 				}
 			}
 			pub struct StorageApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " Number of proposals that have been made."]
@@ -10404,7 +10404,7 @@ pub mod api {
 					&self,
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
-					Output = ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>,
+					Output = ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError>,
 				> + 'a {
 					let client = self.client;
 					async move {
@@ -10426,7 +10426,7 @@ pub mod api {
 							let entry = ProposalCount;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -10443,7 +10443,7 @@ pub mod api {
 								::core::primitive::u128,
 							>,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -10466,7 +10466,7 @@ pub mod api {
 							let entry = Proposals(_0);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -10476,8 +10476,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, Proposals<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, Proposals<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -10499,7 +10499,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -10512,7 +10512,7 @@ pub mod api {
 						runtime_types::frame_support::storage::bounded_vec::BoundedVec<
 							::core::primitive::u32,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -10535,7 +10535,7 @@ pub mod api {
 							let entry = Approvals;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -10544,10 +10544,10 @@ pub mod api {
 		pub mod constants {
 			use super::runtime_types;
 			pub struct ConstantsApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> ConstantsApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " Fraction of a proposal's value that should be bonded in order to place the proposal."]
@@ -10556,7 +10556,7 @@ pub mod api {
 					&self,
 				) -> ::core::result::Result<
 					runtime_types::sp_arithmetic::per_things::Permill,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
@@ -10568,16 +10568,16 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Treasury")?;
 						let constant = pallet.constant("ProposalBond")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " Minimum amount of funds that should be placed in a deposit for making a proposal."]
 				pub fn proposal_bond_minimum(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u128, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Treasury", "ProposalBondMinimum")? ==
@@ -10589,10 +10589,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Treasury")?;
 						let constant = pallet.constant("ProposalBondMinimum")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " Maximum amount of funds that should be placed in a deposit for making a proposal."]
@@ -10600,7 +10600,7 @@ pub mod api {
 					&self,
 				) -> ::core::result::Result<
 					::core::option::Option<::core::primitive::u128>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
@@ -10613,16 +10613,16 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Treasury")?;
 						let constant = pallet.constant("ProposalBondMaximum")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " Period between successive spends."]
 				pub fn spend_period(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Treasury", "SpendPeriod")? ==
@@ -10634,10 +10634,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Treasury")?;
 						let constant = pallet.constant("SpendPeriod")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " Percentage of spare funds (if any) that are burnt per spend period."]
@@ -10645,7 +10645,7 @@ pub mod api {
 					&self,
 				) -> ::core::result::Result<
 					runtime_types::sp_arithmetic::per_things::Permill,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
@@ -10658,10 +10658,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Treasury")?;
 						let constant = pallet.constant("Burn")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " The treasury's pallet id, used for deriving its sovereign account ID."]
@@ -10669,7 +10669,7 @@ pub mod api {
 					&self,
 				) -> ::core::result::Result<
 					runtime_types::frame_support::PalletId,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
@@ -10682,10 +10682,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Treasury")?;
 						let constant = pallet.constant("PalletId")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " The maximum number of approvals that can wait in the spending queue."]
@@ -10693,7 +10693,7 @@ pub mod api {
 				#[doc = " NOTE: This parameter is also used within the Bounties Pallet extension if enabled."]
 				pub fn max_approvals(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Treasury", "MaxApprovals")? ==
@@ -10705,10 +10705,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Treasury")?;
 						let constant = pallet.constant("MaxApprovals")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -10951,7 +10951,7 @@ pub mod api {
 				const FUNCTION: &'static str = "cancel_proposal";
 			}
 			pub struct TransactionApi<'a, T: ::subxt::Config, X> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 				marker: ::core::marker::PhantomData<X>,
 			}
 			impl<'a, T, X> TransactionApi<'a, T, X>
@@ -10959,7 +10959,7 @@ pub mod api {
 				T: ::subxt::Config,
 				X: ::subxt::extrinsic::ExtrinsicParams<T>,
 			{
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client, marker: ::core::marker::PhantomData }
 				}
 				#[doc = "Propose a sensitive action to be taken."]
@@ -10978,7 +10978,7 @@ pub mod api {
 					proposal_hash: ::subxt::sp_core::H256,
 					value: ::core::primitive::u128,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -10986,7 +10986,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -11000,9 +11000,9 @@ pub mod api {
 							90u8, 109u8, 112u8, 29u8, 226u8, 208u8, 230u8, 101u8, 8u8, 79u8, 12u8,
 						] {
 						let call = Propose { proposal_hash, value };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Signals agreement with a particular proposal."]
@@ -11020,8 +11020,8 @@ pub mod api {
 					proposal: ::core::primitive::u32,
 					seconds_upper_bound: ::core::primitive::u32,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<'a, T, X, Second, DispatchError, root_mod::Event>,
-					::subxt::BasicError,
+					::subxt::tx::SubmittableExtrinsic<'a, T, X, Second, DispatchError, root_mod::Event>,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -11035,9 +11035,9 @@ pub mod api {
 							52u8, 22u8, 234u8, 124u8, 254u8, 223u8, 56u8, 215u8, 255u8, 79u8,
 						] {
 						let call = Second { proposal, seconds_upper_bound };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Vote in a referendum. If `vote.is_aye()`, the vote is to enact the proposal;"]
@@ -11056,8 +11056,8 @@ pub mod api {
 						::core::primitive::u128,
 					>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<'a, T, X, Vote, DispatchError, root_mod::Event>,
-					::subxt::BasicError,
+					::subxt::tx::SubmittableExtrinsic<'a, T, X, Vote, DispatchError, root_mod::Event>,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -11072,9 +11072,9 @@ pub mod api {
 							16u8,
 						] {
 						let call = Vote { ref_index, vote };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Schedule an emergency cancellation of a referendum. Cannot happen twice to the same"]
@@ -11089,7 +11089,7 @@ pub mod api {
 					&self,
 					ref_index: ::core::primitive::u32,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -11097,7 +11097,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -11112,9 +11112,9 @@ pub mod api {
 							161u8,
 						] {
 						let call = EmergencyCancel { ref_index };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Schedule a referendum to be tabled once it is legal to schedule an external"]
@@ -11130,7 +11130,7 @@ pub mod api {
 					&self,
 					proposal_hash: ::subxt::sp_core::H256,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -11138,7 +11138,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -11152,9 +11152,9 @@ pub mod api {
 							192u8, 92u8, 253u8, 56u8, 207u8, 29u8, 252u8, 77u8, 245u8, 113u8,
 						] {
 						let call = ExternalPropose { proposal_hash };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Schedule a majority-carries referendum to be tabled next once it is legal to schedule"]
@@ -11172,7 +11172,7 @@ pub mod api {
 					&self,
 					proposal_hash: ::subxt::sp_core::H256,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -11180,7 +11180,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -11195,9 +11195,9 @@ pub mod api {
 							220u8,
 						] {
 						let call = ExternalProposeMajority { proposal_hash };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Schedule a negative-turnout-bias referendum to be tabled next once it is legal to"]
@@ -11215,7 +11215,7 @@ pub mod api {
 					&self,
 					proposal_hash: ::subxt::sp_core::H256,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -11223,7 +11223,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -11237,9 +11237,9 @@ pub mod api {
 							70u8, 219u8, 133u8, 88u8, 78u8, 87u8, 228u8, 177u8, 53u8, 111u8, 115u8,
 						] {
 						let call = ExternalProposeDefault { proposal_hash };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Schedule the currently externally-proposed majority-carries referendum to be tabled"]
@@ -11263,7 +11263,7 @@ pub mod api {
 					voting_period: ::core::primitive::u32,
 					delay: ::core::primitive::u32,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -11271,7 +11271,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -11286,9 +11286,9 @@ pub mod api {
 							135u8,
 						] {
 						let call = FastTrack { proposal_hash, voting_period, delay };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Veto and blacklist the external proposal hash."]
@@ -11304,7 +11304,7 @@ pub mod api {
 					&self,
 					proposal_hash: ::subxt::sp_core::H256,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -11312,7 +11312,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -11327,9 +11327,9 @@ pub mod api {
 							180u8,
 						] {
 						let call = VetoExternal { proposal_hash };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Remove a referendum."]
@@ -11343,7 +11343,7 @@ pub mod api {
 					&self,
 					ref_index: ::core::primitive::u32,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -11351,7 +11351,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -11366,9 +11366,9 @@ pub mod api {
 							225u8,
 						] {
 						let call = CancelReferendum { ref_index };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Cancel a proposal queued for enactment."]
@@ -11382,7 +11382,7 @@ pub mod api {
 					&self,
 					which: ::core::primitive::u32,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -11390,7 +11390,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -11405,9 +11405,9 @@ pub mod api {
 							143u8,
 						] {
 						let call = CancelQueued { which };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Delegate the voting power (with some given conviction) of the sending account."]
@@ -11436,7 +11436,7 @@ pub mod api {
 					conviction: runtime_types::pallet_democracy::conviction::Conviction,
 					balance: ::core::primitive::u128,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -11444,7 +11444,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -11458,9 +11458,9 @@ pub mod api {
 							16u8, 98u8, 114u8, 250u8, 145u8, 176u8, 244u8, 39u8, 64u8, 11u8,
 						] {
 						let call = Delegate { to, conviction, balance };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Undelegate the voting power of the sending account."]
@@ -11478,7 +11478,7 @@ pub mod api {
 				pub fn undelegate(
 					&self,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -11486,7 +11486,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -11501,9 +11501,9 @@ pub mod api {
 							153u8,
 						] {
 						let call = Undelegate {};
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Clears all public proposals."]
@@ -11514,7 +11514,7 @@ pub mod api {
 				pub fn clear_public_proposals(
 					&self,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -11522,7 +11522,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -11537,9 +11537,9 @@ pub mod api {
 							184u8, 204u8,
 						] {
 						let call = ClearPublicProposals {};
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Register the preimage for an upcoming proposal. This doesn't require the proposal to be"]
@@ -11556,7 +11556,7 @@ pub mod api {
 					&self,
 					encoded_proposal: ::std::vec::Vec<::core::primitive::u8>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -11564,7 +11564,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -11579,9 +11579,9 @@ pub mod api {
 							148u8, 232u8,
 						] {
 						let call = NotePreimage { encoded_proposal };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Same as `note_preimage` but origin is `OperationalPreimageOrigin`."]
@@ -11589,7 +11589,7 @@ pub mod api {
 					&self,
 					encoded_proposal: ::std::vec::Vec<::core::primitive::u8>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -11597,7 +11597,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -11612,9 +11612,9 @@ pub mod api {
 							12u8,
 						] {
 						let call = NotePreimageOperational { encoded_proposal };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Register the preimage for an upcoming proposal. This requires the proposal to be"]
@@ -11633,7 +11633,7 @@ pub mod api {
 					&self,
 					encoded_proposal: ::std::vec::Vec<::core::primitive::u8>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -11641,7 +11641,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -11655,9 +11655,9 @@ pub mod api {
 							234u8, 95u8, 73u8, 86u8, 37u8, 148u8, 150u8, 6u8, 50u8, 239u8, 64u8,
 						] {
 						let call = NoteImminentPreimage { encoded_proposal };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Same as `note_imminent_preimage` but origin is `OperationalPreimageOrigin`."]
@@ -11665,7 +11665,7 @@ pub mod api {
 					&self,
 					encoded_proposal: ::std::vec::Vec<::core::primitive::u8>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -11673,7 +11673,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -11688,9 +11688,9 @@ pub mod api {
 							195u8,
 						] {
 						let call = NoteImminentPreimageOperational { encoded_proposal };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Remove an expired proposal preimage and collect the deposit."]
@@ -11713,7 +11713,7 @@ pub mod api {
 					proposal_hash: ::subxt::sp_core::H256,
 					proposal_len_upper_bound: ::core::primitive::u32,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -11721,7 +11721,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -11735,9 +11735,9 @@ pub mod api {
 							251u8, 49u8, 1u8, 234u8, 99u8, 142u8, 76u8, 182u8, 134u8, 173u8,
 						] {
 						let call = ReapPreimage { proposal_hash, proposal_len_upper_bound };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Unlock tokens that have an expired lock."]
@@ -11751,8 +11751,8 @@ pub mod api {
 					&self,
 					target: ::subxt::sp_core::crypto::AccountId32,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<'a, T, X, Unlock, DispatchError, root_mod::Event>,
-					::subxt::BasicError,
+					::subxt::tx::SubmittableExtrinsic<'a, T, X, Unlock, DispatchError, root_mod::Event>,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -11766,9 +11766,9 @@ pub mod api {
 							81u8, 65u8, 246u8, 210u8, 43u8, 1u8, 226u8, 143u8, 149u8, 210u8, 192u8,
 						] {
 						let call = Unlock { target };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Remove a vote for a referendum."]
@@ -11802,7 +11802,7 @@ pub mod api {
 					&self,
 					index: ::core::primitive::u32,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -11810,7 +11810,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -11825,9 +11825,9 @@ pub mod api {
 							226u8,
 						] {
 						let call = RemoveVote { index };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Remove a vote for a referendum."]
@@ -11850,7 +11850,7 @@ pub mod api {
 					target: ::subxt::sp_core::crypto::AccountId32,
 					index: ::core::primitive::u32,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -11858,7 +11858,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -11873,9 +11873,9 @@ pub mod api {
 							244u8,
 						] {
 						let call = RemoveOtherVote { target, index };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Enact a proposal from a referendum. For now we just make the weight be the maximum."]
@@ -11884,7 +11884,7 @@ pub mod api {
 					proposal_hash: ::subxt::sp_core::H256,
 					index: ::core::primitive::u32,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -11892,7 +11892,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -11906,9 +11906,9 @@ pub mod api {
 							249u8, 167u8, 243u8, 49u8, 119u8, 167u8, 28u8, 31u8, 60u8, 75u8,
 						] {
 						let call = EnactProposal { proposal_hash, index };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Permanently place a proposal into the blacklist. This prevents it from ever being"]
@@ -11931,7 +11931,7 @@ pub mod api {
 					proposal_hash: ::subxt::sp_core::H256,
 					maybe_ref_index: ::core::option::Option<::core::primitive::u32>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -11939,7 +11939,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -11953,9 +11953,9 @@ pub mod api {
 							75u8, 28u8, 214u8, 111u8, 26u8, 40u8, 141u8, 68u8, 57u8, 217u8, 244u8,
 						] {
 						let call = Blacklist { proposal_hash, maybe_ref_index };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Remove a proposal."]
@@ -11969,7 +11969,7 @@ pub mod api {
 					&self,
 					prop_index: ::core::primitive::u32,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -11977,7 +11977,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -11991,9 +11991,9 @@ pub mod api {
 							216u8, 190u8, 240u8, 64u8, 121u8, 104u8, 147u8, 141u8, 128u8, 82u8,
 						] {
 						let call = CancelProposal { prop_index };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -12241,7 +12241,7 @@ pub mod api {
 					::core::primitive::u128,
 				);
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Twox64Concat,
 					)])
@@ -12257,7 +12257,7 @@ pub mod api {
 					::core::primitive::u32,
 				>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Identity,
 					)])
@@ -12291,7 +12291,7 @@ pub mod api {
 					::core::primitive::u128,
 				>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Twox64Concat,
 					)])
@@ -12307,7 +12307,7 @@ pub mod api {
 					::core::primitive::u32,
 				>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Twox64Concat,
 					)])
@@ -12343,7 +12343,7 @@ pub mod api {
 					::std::vec::Vec<::subxt::sp_core::crypto::AccountId32>,
 				);
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Identity,
 					)])
@@ -12355,7 +12355,7 @@ pub mod api {
 				const STORAGE: &'static str = "Cancellations";
 				type Value = ::core::primitive::bool;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Identity,
 					)])
@@ -12371,10 +12371,10 @@ pub mod api {
 				}
 			}
 			pub struct StorageApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " The number of (public) proposals that have been made so far."]
@@ -12382,7 +12382,7 @@ pub mod api {
 					&self,
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
-					Output = ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>,
+					Output = ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError>,
 				> + 'a {
 					let client = self.client;
 					async move {
@@ -12404,7 +12404,7 @@ pub mod api {
 							let entry = PublicPropCount;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -12419,7 +12419,7 @@ pub mod api {
 							::subxt::sp_core::H256,
 							::subxt::sp_core::crypto::AccountId32,
 						)>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -12442,7 +12442,7 @@ pub mod api {
 							let entry = PublicProps;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -12459,7 +12459,7 @@ pub mod api {
 							::std::vec::Vec<::subxt::sp_core::crypto::AccountId32>,
 							::core::primitive::u128,
 						)>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -12482,7 +12482,7 @@ pub mod api {
 							let entry = DepositOf(_0);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -12494,8 +12494,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, DepositOf<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, DepositOf<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -12517,7 +12517,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -12536,7 +12536,7 @@ pub mod api {
 								::core::primitive::u32,
 							>,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -12559,7 +12559,7 @@ pub mod api {
 							let entry = Preimages(_0);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -12570,8 +12570,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, Preimages<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, Preimages<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -12593,7 +12593,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -12602,7 +12602,7 @@ pub mod api {
 					&self,
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
-					Output = ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>,
+					Output = ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError>,
 				> + 'a {
 					let client = self.client;
 					async move {
@@ -12624,7 +12624,7 @@ pub mod api {
 							let entry = ReferendumCount;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -12634,7 +12634,7 @@ pub mod api {
 					&self,
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
-					Output = ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>,
+					Output = ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError>,
 				> + 'a {
 					let client = self.client;
 					async move {
@@ -12656,7 +12656,7 @@ pub mod api {
 							let entry = LowestUnbaked;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -12676,7 +12676,7 @@ pub mod api {
 								::core::primitive::u128,
 							>,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -12699,7 +12699,7 @@ pub mod api {
 							let entry = ReferendumInfoOf(_0);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -12711,8 +12711,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, ReferendumInfoOf<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, ReferendumInfoOf<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -12734,7 +12734,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -12753,7 +12753,7 @@ pub mod api {
 							::subxt::sp_core::crypto::AccountId32,
 							::core::primitive::u32,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -12776,7 +12776,7 @@ pub mod api {
 							let entry = VotingOf(_0);
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -12789,8 +12789,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, VotingOf<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, VotingOf<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -12812,7 +12812,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -12822,7 +12822,7 @@ pub mod api {
 					&self,
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
-					Output = ::core::result::Result<::core::primitive::bool, ::subxt::BasicError>,
+					Output = ::core::result::Result<::core::primitive::bool, ::subxt::error::DispatchError>,
 				> + 'a {
 					let client = self.client;
 					async move {
@@ -12844,7 +12844,7 @@ pub mod api {
 							let entry = LastTabledWasExternal;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -12861,7 +12861,7 @@ pub mod api {
 							::subxt::sp_core::H256,
 							runtime_types::pallet_democracy::vote_threshold::VoteThreshold,
 						)>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -12884,7 +12884,7 @@ pub mod api {
 							let entry = NextExternal;
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -12900,7 +12900,7 @@ pub mod api {
 							::core::primitive::u32,
 							::std::vec::Vec<::subxt::sp_core::crypto::AccountId32>,
 						)>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -12923,7 +12923,7 @@ pub mod api {
 							let entry = Blacklist(_0);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -12934,8 +12934,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, Blacklist<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, Blacklist<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -12957,7 +12957,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -12967,7 +12967,7 @@ pub mod api {
 					_0: &'a ::subxt::sp_core::H256,
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
-					Output = ::core::result::Result<::core::primitive::bool, ::subxt::BasicError>,
+					Output = ::core::result::Result<::core::primitive::bool, ::subxt::error::DispatchError>,
 				> + 'a {
 					let client = self.client;
 					async move {
@@ -12989,7 +12989,7 @@ pub mod api {
 							let entry = Cancellations(_0);
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -12999,8 +12999,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, Cancellations<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, Cancellations<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -13022,7 +13022,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -13035,7 +13035,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::core::option::Option<runtime_types::pallet_democracy::Releases>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -13058,7 +13058,7 @@ pub mod api {
 							let entry = StorageVersion;
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -13067,10 +13067,10 @@ pub mod api {
 		pub mod constants {
 			use super::runtime_types;
 			pub struct ConstantsApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> ConstantsApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " The period between a proposal being approved and enacted."]
@@ -13080,7 +13080,7 @@ pub mod api {
 				#[doc = " where they are on the losing side of a vote."]
 				pub fn enactment_period(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Democracy", "EnactmentPeriod")? ==
@@ -13092,16 +13092,16 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Democracy")?;
 						let constant = pallet.constant("EnactmentPeriod")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " How often (in blocks) new public referenda are launched."]
 				pub fn launch_period(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Democracy", "LaunchPeriod")? ==
@@ -13113,16 +13113,16 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Democracy")?;
 						let constant = pallet.constant("LaunchPeriod")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " How often (in blocks) to check for new votes."]
 				pub fn voting_period(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Democracy", "VotingPeriod")? ==
@@ -13134,10 +13134,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Democracy")?;
 						let constant = pallet.constant("VotingPeriod")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " The minimum period of vote locking."]
@@ -13146,7 +13146,7 @@ pub mod api {
 				#[doc = " those successful voters are locked into the consequences that their votes entail."]
 				pub fn vote_locking_period(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Democracy", "VoteLockingPeriod")? ==
@@ -13157,16 +13157,16 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Democracy")?;
 						let constant = pallet.constant("VoteLockingPeriod")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " The minimum amount to be used as a deposit for a public referendum proposal."]
 				pub fn minimum_deposit(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u128, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Democracy", "MinimumDeposit")? ==
@@ -13178,10 +13178,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Democracy")?;
 						let constant = pallet.constant("MinimumDeposit")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " Indicator for whether an emergency origin is even allowed to happen. Some chains may"]
@@ -13189,7 +13189,7 @@ pub mod api {
 				#[doc = " as an upgrade having happened recently."]
 				pub fn instant_allowed(
 					&self,
-				) -> ::core::result::Result<::core::primitive::bool, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::bool, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Democracy", "InstantAllowed")? ==
@@ -13200,16 +13200,16 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Democracy")?;
 						let constant = pallet.constant("InstantAllowed")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " Minimum voting period allowed for a fast-track referendum."]
 				pub fn fast_track_voting_period(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Democracy", "FastTrackVotingPeriod")? ==
@@ -13220,16 +13220,16 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Democracy")?;
 						let constant = pallet.constant("FastTrackVotingPeriod")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " Period in blocks where an external proposal may not be re-submitted after being vetoed."]
 				pub fn cooloff_period(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Democracy", "CooloffPeriod")? ==
@@ -13241,16 +13241,16 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Democracy")?;
 						let constant = pallet.constant("CooloffPeriod")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " The amount of balance that must be deposited per byte of preimage stored."]
 				pub fn preimage_byte_deposit(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u128, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Democracy", "PreimageByteDeposit")? ==
@@ -13261,10 +13261,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Democracy")?;
 						let constant = pallet.constant("PreimageByteDeposit")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " The maximum number of votes for an account."]
@@ -13273,7 +13273,7 @@ pub mod api {
 				#[doc = " lead to extrinsic with very big weight: see `delegate` for instance."]
 				pub fn max_votes(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Democracy", "MaxVotes")? ==
@@ -13285,16 +13285,16 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Democracy")?;
 						let constant = pallet.constant("MaxVotes")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " The maximum number of public proposals that can exist at any time."]
 				pub fn max_proposals(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Democracy", "MaxProposals")? ==
@@ -13306,10 +13306,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Democracy")?;
 						let constant = pallet.constant("MaxProposals")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -13409,7 +13409,7 @@ pub mod api {
 				const FUNCTION: &'static str = "schedule_named_after";
 			}
 			pub struct TransactionApi<'a, T: ::subxt::Config, X> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 				marker: ::core::marker::PhantomData<X>,
 			}
 			impl<'a, T, X> TransactionApi<'a, T, X>
@@ -13417,7 +13417,7 @@ pub mod api {
 				T: ::subxt::Config,
 				X: ::subxt::extrinsic::ExtrinsicParams<T>,
 			{
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client, marker: ::core::marker::PhantomData }
 				}
 				#[doc = "Anonymously schedule a task."]
@@ -13434,7 +13434,7 @@ pub mod api {
 						::subxt::sp_core::H256,
 					>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -13442,7 +13442,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -13461,9 +13461,9 @@ pub mod api {
 							priority,
 							call: ::std::boxed::Box::new(call),
 						};
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Cancel an anonymously scheduled task."]
@@ -13472,8 +13472,8 @@ pub mod api {
 					when: ::core::primitive::u32,
 					index: ::core::primitive::u32,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<'a, T, X, Cancel, DispatchError, root_mod::Event>,
-					::subxt::BasicError,
+					::subxt::tx::SubmittableExtrinsic<'a, T, X, Cancel, DispatchError, root_mod::Event>,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -13487,9 +13487,9 @@ pub mod api {
 							114u8, 243u8, 69u8, 103u8, 60u8, 99u8, 135u8, 21u8, 8u8, 19u8, 225u8,
 						] {
 						let call = Cancel { when, index };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Schedule a named task."]
@@ -13507,7 +13507,7 @@ pub mod api {
 						::subxt::sp_core::H256,
 					>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -13515,7 +13515,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -13536,9 +13536,9 @@ pub mod api {
 							priority,
 							call: ::std::boxed::Box::new(call),
 						};
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Cancel a named scheduled task."]
@@ -13546,7 +13546,7 @@ pub mod api {
 					&self,
 					id: ::std::vec::Vec<::core::primitive::u8>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -13554,7 +13554,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -13568,9 +13568,9 @@ pub mod api {
 							241u8, 194u8, 120u8, 5u8, 109u8, 74u8, 205u8, 42u8, 244u8, 99u8, 54u8,
 						] {
 						let call = CancelNamed { id };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Anonymously schedule a task after a delay."]
@@ -13591,7 +13591,7 @@ pub mod api {
 						::subxt::sp_core::H256,
 					>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -13599,7 +13599,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -13618,9 +13618,9 @@ pub mod api {
 							priority,
 							call: ::std::boxed::Box::new(call),
 						};
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Schedule a named task after a delay."]
@@ -13642,7 +13642,7 @@ pub mod api {
 						::subxt::sp_core::H256,
 					>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -13650,7 +13650,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -13670,9 +13670,9 @@ pub mod api {
 							priority,
 							call: ::std::boxed::Box::new(call),
 						};
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -13744,7 +13744,7 @@ pub mod api {
 					>,
 				>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Twox64Concat,
 					)])
@@ -13756,17 +13756,17 @@ pub mod api {
 				const STORAGE: &'static str = "Lookup";
 				type Value = (::core::primitive::u32, ::core::primitive::u32);
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Twox64Concat,
 					)])
 				}
 			}
 			pub struct StorageApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " Items to be executed, indexed by the block number that they should be executed on."]
@@ -13789,7 +13789,7 @@ pub mod api {
 								>,
 							>,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -13812,7 +13812,7 @@ pub mod api {
 							let entry = Agenda(_0);
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -13822,8 +13822,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, Agenda<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, Agenda<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -13845,7 +13845,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -13857,7 +13857,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::core::option::Option<(::core::primitive::u32, ::core::primitive::u32)>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -13880,7 +13880,7 @@ pub mod api {
 							let entry = Lookup(_0);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -13890,8 +13890,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, Lookup<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, Lookup<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -13913,7 +13913,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -13922,17 +13922,17 @@ pub mod api {
 		pub mod constants {
 			use super::runtime_types;
 			pub struct ConstantsApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> ConstantsApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " The maximum weight that may be scheduled per block for any dispatchables of less"]
 				#[doc = " priority than `schedule::HARD_DEADLINE`."]
 				pub fn maximum_weight(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u64, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u64, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Scheduler", "MaximumWeight")? ==
@@ -13944,17 +13944,17 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Scheduler")?;
 						let constant = pallet.constant("MaximumWeight")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " The maximum number of scheduled calls in the queue for a single block."]
 				#[doc = " Not strictly enforced, but used for weight estimation."]
 				pub fn max_scheduled_per_block(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Scheduler", "MaxScheduledPerBlock")? ==
@@ -13966,10 +13966,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Scheduler")?;
 						let constant = pallet.constant("MaxScheduledPerBlock")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -14024,7 +14024,7 @@ pub mod api {
 				const FUNCTION: &'static str = "force_batch";
 			}
 			pub struct TransactionApi<'a, T: ::subxt::Config, X> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 				marker: ::core::marker::PhantomData<X>,
 			}
 			impl<'a, T, X> TransactionApi<'a, T, X>
@@ -14032,7 +14032,7 @@ pub mod api {
 				T: ::subxt::Config,
 				X: ::subxt::extrinsic::ExtrinsicParams<T>,
 			{
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client, marker: ::core::marker::PhantomData }
 				}
 				#[doc = "Send a batch of dispatch calls."]
@@ -14058,8 +14058,8 @@ pub mod api {
 					&self,
 					calls: ::std::vec::Vec<runtime_types::dali_runtime::Call>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<'a, T, X, Batch, DispatchError, root_mod::Event>,
-					::subxt::BasicError,
+					::subxt::tx::SubmittableExtrinsic<'a, T, X, Batch, DispatchError, root_mod::Event>,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -14074,9 +14074,9 @@ pub mod api {
 							232u8, 244u8,
 						] {
 						let call = Batch { calls };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Send a call through an indexed pseudonym of the sender."]
@@ -14097,7 +14097,7 @@ pub mod api {
 					index: ::core::primitive::u16,
 					call: runtime_types::dali_runtime::Call,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -14105,7 +14105,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -14119,9 +14119,9 @@ pub mod api {
 							9u8, 225u8, 103u8, 185u8, 61u8, 217u8, 53u8, 194u8, 10u8, 102u8, 238u8,
 						] {
 						let call = AsDerivative { index, call: ::std::boxed::Box::new(call) };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Send a batch of dispatch calls and atomically execute them."]
@@ -14142,7 +14142,7 @@ pub mod api {
 					&self,
 					calls: ::std::vec::Vec<runtime_types::dali_runtime::Call>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -14150,7 +14150,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -14165,9 +14165,9 @@ pub mod api {
 							38u8,
 						] {
 						let call = BatchAll { calls };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Dispatches a function call with a provided origin."]
@@ -14185,7 +14185,7 @@ pub mod api {
 					as_origin: runtime_types::dali_runtime::OriginCaller,
 					call: runtime_types::dali_runtime::Call,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -14193,7 +14193,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -14210,9 +14210,9 @@ pub mod api {
 							as_origin: ::std::boxed::Box::new(as_origin),
 							call: ::std::boxed::Box::new(call),
 						};
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Send a batch of dispatch calls."]
@@ -14233,7 +14233,7 @@ pub mod api {
 					&self,
 					calls: ::std::vec::Vec<runtime_types::dali_runtime::Call>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -14241,7 +14241,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -14255,9 +14255,9 @@ pub mod api {
 							145u8, 62u8, 92u8, 30u8, 152u8, 188u8, 21u8, 155u8, 199u8, 230u8, 41u8,
 						] {
 						let call = ForceBatch { calls };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -14320,16 +14320,16 @@ pub mod api {
 		pub mod constants {
 			use super::runtime_types;
 			pub struct ConstantsApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> ConstantsApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " The limit on the number of batched calls."]
 				pub fn batched_calls_limit(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Utility", "batched_calls_limit")? ==
@@ -14340,10 +14340,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Utility")?;
 						let constant = pallet.constant("batched_calls_limit")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -14388,7 +14388,7 @@ pub mod api {
 				const FUNCTION: &'static str = "unrequest_preimage";
 			}
 			pub struct TransactionApi<'a, T: ::subxt::Config, X> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 				marker: ::core::marker::PhantomData<X>,
 			}
 			impl<'a, T, X> TransactionApi<'a, T, X>
@@ -14396,7 +14396,7 @@ pub mod api {
 				T: ::subxt::Config,
 				X: ::subxt::extrinsic::ExtrinsicParams<T>,
 			{
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client, marker: ::core::marker::PhantomData }
 				}
 				#[doc = "Register a preimage on-chain."]
@@ -14407,7 +14407,7 @@ pub mod api {
 					&self,
 					bytes: ::std::vec::Vec<::core::primitive::u8>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -14415,7 +14415,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -14430,9 +14430,9 @@ pub mod api {
 							131u8,
 						] {
 						let call = NotePreimage { bytes };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Clear an unrequested preimage from the runtime storage."]
@@ -14440,7 +14440,7 @@ pub mod api {
 					&self,
 					hash: ::subxt::sp_core::H256,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -14448,7 +14448,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -14462,9 +14462,9 @@ pub mod api {
 							248u8, 179u8, 99u8, 158u8, 252u8, 89u8, 59u8, 115u8, 130u8, 73u8, 21u8,
 						] {
 						let call = UnnotePreimage { hash };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Request a preimage be uploaded to the chain without paying any fees or deposits."]
@@ -14475,7 +14475,7 @@ pub mod api {
 					&self,
 					hash: ::subxt::sp_core::H256,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -14483,7 +14483,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -14498,9 +14498,9 @@ pub mod api {
 							180u8,
 						] {
 						let call = RequestPreimage { hash };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Clear a previously made request for a preimage."]
@@ -14510,7 +14510,7 @@ pub mod api {
 					&self,
 					hash: ::subxt::sp_core::H256,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -14518,7 +14518,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -14533,9 +14533,9 @@ pub mod api {
 							152u8,
 						] {
 						let call = UnrequestPreimage { hash };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -14583,7 +14583,7 @@ pub mod api {
 					::core::primitive::u128,
 				>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Identity,
 					)])
@@ -14597,17 +14597,17 @@ pub mod api {
 					::core::primitive::u8,
 				>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Identity,
 					)])
 				}
 			}
 			pub struct StorageApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " The request status of a given hash."]
@@ -14623,7 +14623,7 @@ pub mod api {
 								::core::primitive::u128,
 							>,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -14646,7 +14646,7 @@ pub mod api {
 							let entry = StatusFor(_0);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -14656,8 +14656,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, StatusFor<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, StatusFor<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -14679,7 +14679,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -14695,7 +14695,7 @@ pub mod api {
 								::core::primitive::u8,
 							>,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -14718,7 +14718,7 @@ pub mod api {
 							let entry = PreimageFor(_0);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -14728,8 +14728,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, PreimageFor<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, PreimageFor<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -14751,7 +14751,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -14863,7 +14863,7 @@ pub mod api {
 				const FUNCTION: &'static str = "proxy_announced";
 			}
 			pub struct TransactionApi<'a, T: ::subxt::Config, X> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 				marker: ::core::marker::PhantomData<X>,
 			}
 			impl<'a, T, X> TransactionApi<'a, T, X>
@@ -14871,7 +14871,7 @@ pub mod api {
 				T: ::subxt::Config,
 				X: ::subxt::extrinsic::ExtrinsicParams<T>,
 			{
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client, marker: ::core::marker::PhantomData }
 				}
 				#[doc = "Dispatch the given `call` from an account that the sender is authorised for through"]
@@ -14895,8 +14895,8 @@ pub mod api {
 					force_proxy_type: ::core::option::Option<()>,
 					call: runtime_types::dali_runtime::Call,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<'a, T, X, Proxy, DispatchError, root_mod::Event>,
-					::subxt::BasicError,
+					::subxt::tx::SubmittableExtrinsic<'a, T, X, Proxy, DispatchError, root_mod::Event>,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -14911,9 +14911,9 @@ pub mod api {
 						] {
 						let call =
 							Proxy { real, force_proxy_type, call: ::std::boxed::Box::new(call) };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Register a proxy account for the sender that is able to make calls on its behalf."]
@@ -14935,7 +14935,7 @@ pub mod api {
 					proxy_type: (),
 					delay: ::core::primitive::u32,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -14943,7 +14943,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -14958,9 +14958,9 @@ pub mod api {
 							154u8,
 						] {
 						let call = AddProxy { delegate, proxy_type, delay };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Unregister a proxy account for the sender."]
@@ -14980,7 +14980,7 @@ pub mod api {
 					proxy_type: (),
 					delay: ::core::primitive::u32,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -14988,7 +14988,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -15002,9 +15002,9 @@ pub mod api {
 							128u8, 46u8, 182u8, 216u8, 220u8, 125u8, 150u8, 101u8, 221u8, 166u8,
 						] {
 						let call = RemoveProxy { delegate, proxy_type, delay };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Unregister all proxy accounts for the sender."]
@@ -15020,7 +15020,7 @@ pub mod api {
 				pub fn remove_proxies(
 					&self,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -15028,7 +15028,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -15042,9 +15042,9 @@ pub mod api {
 							40u8, 253u8, 187u8, 225u8, 192u8, 26u8, 19u8, 23u8, 121u8, 129u8,
 						] {
 						let call = RemoveProxies {};
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Spawn a fresh new account that is guaranteed to be otherwise inaccessible, and"]
@@ -15076,7 +15076,7 @@ pub mod api {
 					delay: ::core::primitive::u32,
 					index: ::core::primitive::u16,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -15084,7 +15084,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -15099,9 +15099,9 @@ pub mod api {
 							133u8, 149u8,
 						] {
 						let call = Anonymous { proxy_type, delay, index };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Removes a previously spawned anonymous proxy."]
@@ -15132,7 +15132,7 @@ pub mod api {
 					height: ::core::primitive::u32,
 					ext_index: ::core::primitive::u32,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -15140,7 +15140,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -15154,9 +15154,9 @@ pub mod api {
 							171u8, 40u8, 244u8, 247u8, 152u8, 40u8, 93u8, 55u8, 154u8, 61u8,
 						] {
 						let call = KillAnonymous { spawner, proxy_type, index, height, ext_index };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Publish the hash of a proxy-call that will be made in the future."]
@@ -15185,7 +15185,7 @@ pub mod api {
 					real: ::subxt::sp_core::crypto::AccountId32,
 					call_hash: ::subxt::sp_core::H256,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -15193,7 +15193,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -15207,9 +15207,9 @@ pub mod api {
 							201u8, 180u8, 231u8, 122u8, 198u8, 190u8, 188u8, 127u8, 228u8, 218u8,
 						] {
 						let call = Announce { real, call_hash };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Remove a given announcement."]
@@ -15233,7 +15233,7 @@ pub mod api {
 					real: ::subxt::sp_core::crypto::AccountId32,
 					call_hash: ::subxt::sp_core::H256,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -15241,7 +15241,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -15256,9 +15256,9 @@ pub mod api {
 							187u8, 253u8,
 						] {
 						let call = RemoveAnnouncement { real, call_hash };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Remove the given announcement of a delegate."]
@@ -15282,7 +15282,7 @@ pub mod api {
 					delegate: ::subxt::sp_core::crypto::AccountId32,
 					call_hash: ::subxt::sp_core::H256,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -15290,7 +15290,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -15304,9 +15304,9 @@ pub mod api {
 							20u8, 67u8, 76u8, 51u8, 81u8, 54u8, 244u8, 44u8, 94u8, 52u8,
 						] {
 						let call = RejectAnnouncement { delegate, call_hash };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Dispatch the given `call` from an account that the sender is authorized for through"]
@@ -15333,7 +15333,7 @@ pub mod api {
 					force_proxy_type: ::core::option::Option<()>,
 					call: runtime_types::dali_runtime::Call,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -15341,7 +15341,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -15360,9 +15360,9 @@ pub mod api {
 							force_proxy_type,
 							call: ::std::boxed::Box::new(call),
 						};
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -15446,7 +15446,7 @@ pub mod api {
 					::core::primitive::u128,
 				);
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Twox64Concat,
 					)])
@@ -15467,17 +15467,17 @@ pub mod api {
 					::core::primitive::u128,
 				);
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Twox64Concat,
 					)])
 				}
 			}
 			pub struct StorageApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " The set of account proxies. Maps the account which has delegated to the accounts"]
@@ -15498,7 +15498,7 @@ pub mod api {
 							>,
 							::core::primitive::u128,
 						),
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -15521,7 +15521,7 @@ pub mod api {
 							let entry = Proxies(_0);
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -15532,8 +15532,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, Proxies<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, Proxies<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -15555,7 +15555,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -15576,7 +15576,7 @@ pub mod api {
 							>,
 							::core::primitive::u128,
 						),
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -15599,7 +15599,7 @@ pub mod api {
 							let entry = Announcements(_0);
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -15609,8 +15609,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, Announcements<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, Announcements<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -15632,7 +15632,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -15641,10 +15641,10 @@ pub mod api {
 		pub mod constants {
 			use super::runtime_types;
 			pub struct ConstantsApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> ConstantsApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " The base amount of currency needed to reserve for creating a proxy."]
@@ -15653,7 +15653,7 @@ pub mod api {
 				#[doc = " `sizeof(Balance)` bytes and whose key size is `sizeof(AccountId)` bytes."]
 				pub fn proxy_deposit_base(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u128, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Proxy", "ProxyDepositBase")? ==
@@ -15664,10 +15664,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Proxy")?;
 						let constant = pallet.constant("ProxyDepositBase")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " The amount of currency needed per proxy added."]
@@ -15677,7 +15677,7 @@ pub mod api {
 				#[doc = " into account `32 + proxy_type.encode().len()` bytes of data."]
 				pub fn proxy_deposit_factor(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u128, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Proxy", "ProxyDepositFactor")? ==
@@ -15688,16 +15688,16 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Proxy")?;
 						let constant = pallet.constant("ProxyDepositFactor")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " The maximum amount of proxies allowed for a single account."]
 				pub fn max_proxies(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Proxy", "MaxProxies")? ==
@@ -15709,16 +15709,16 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Proxy")?;
 						let constant = pallet.constant("MaxProxies")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " The maximum amount of time-delayed announcements that are allowed to be pending."]
 				pub fn max_pending(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Proxy", "MaxPending")? ==
@@ -15729,10 +15729,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Proxy")?;
 						let constant = pallet.constant("MaxPending")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " The base amount of currency needed to reserve for creating an announcement."]
@@ -15741,7 +15741,7 @@ pub mod api {
 				#[doc = " bytes)."]
 				pub fn announcement_deposit_base(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u128, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Proxy", "AnnouncementDepositBase")? ==
@@ -15753,10 +15753,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Proxy")?;
 						let constant = pallet.constant("AnnouncementDepositBase")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " The amount of currency needed per announcement made."]
@@ -15765,7 +15765,7 @@ pub mod api {
 				#[doc = " into a pre-existing storage value."]
 				pub fn announcement_deposit_factor(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u128, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Proxy", "AnnouncementDepositFactor")? ==
@@ -15776,10 +15776,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Proxy")?;
 						let constant = pallet.constant("AnnouncementDepositFactor")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -15891,7 +15891,7 @@ pub mod api {
 				const FUNCTION: &'static str = "update_xcmp_max_individual_weight";
 			}
 			pub struct TransactionApi<'a, T: ::subxt::Config, X> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 				marker: ::core::marker::PhantomData<X>,
 			}
 			impl<'a, T, X> TransactionApi<'a, T, X>
@@ -15899,7 +15899,7 @@ pub mod api {
 				T: ::subxt::Config,
 				X: ::subxt::extrinsic::ExtrinsicParams<T>,
 			{
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client, marker: ::core::marker::PhantomData }
 				}
 				#[doc = "Services a single overweight XCM."]
@@ -15920,7 +15920,7 @@ pub mod api {
 					index: ::core::primitive::u64,
 					weight_limit: ::core::primitive::u64,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -15928,7 +15928,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -15942,9 +15942,9 @@ pub mod api {
 							149u8, 120u8, 42u8, 130u8, 100u8, 133u8, 214u8, 48u8, 99u8, 146u8,
 						] {
 						let call = ServiceOverweight { index, weight_limit };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Suspends all XCM executions for the XCMP queue, regardless of the sender's origin."]
@@ -15953,7 +15953,7 @@ pub mod api {
 				pub fn suspend_xcm_execution(
 					&self,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -15961,7 +15961,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -15975,9 +15975,9 @@ pub mod api {
 							108u8, 197u8, 226u8, 43u8, 103u8, 92u8, 186u8, 12u8, 51u8, 153u8,
 						] {
 						let call = SuspendXcmExecution {};
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Resumes all XCM executions for the XCMP queue."]
@@ -15988,7 +15988,7 @@ pub mod api {
 				pub fn resume_xcm_execution(
 					&self,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -15996,7 +15996,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -16011,9 +16011,9 @@ pub mod api {
 							245u8,
 						] {
 						let call = ResumeXcmExecution {};
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Overwrites the number of pages of messages which must be in the queue for the other side to be told to"]
@@ -16025,7 +16025,7 @@ pub mod api {
 					&self,
 					new: ::core::primitive::u32,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -16033,7 +16033,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -16047,9 +16047,9 @@ pub mod api {
 							159u8, 69u8, 112u8, 227u8, 24u8, 166u8, 201u8, 162u8, 21u8, 31u8, 61u8,
 						] {
 						let call = UpdateSuspendThreshold { new };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Overwrites the number of pages of messages which must be in the queue after which we drop any further"]
@@ -16061,7 +16061,7 @@ pub mod api {
 					&self,
 					new: ::core::primitive::u32,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -16069,7 +16069,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -16083,9 +16083,9 @@ pub mod api {
 							167u8, 49u8, 56u8, 77u8, 72u8, 202u8, 80u8, 133u8, 87u8, 224u8,
 						] {
 						let call = UpdateDropThreshold { new };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Overwrites the number of pages of messages which the queue must be reduced to before it signals that"]
@@ -16097,7 +16097,7 @@ pub mod api {
 					&self,
 					new: ::core::primitive::u32,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -16105,7 +16105,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -16120,9 +16120,9 @@ pub mod api {
 							183u8,
 						] {
 						let call = UpdateResumeThreshold { new };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Overwrites the amount of remaining weight under which we stop processing messages."]
@@ -16133,7 +16133,7 @@ pub mod api {
 					&self,
 					new: ::core::primitive::u64,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -16141,7 +16141,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -16155,9 +16155,9 @@ pub mod api {
 							216u8, 137u8, 158u8, 35u8, 245u8, 169u8, 114u8, 48u8, 252u8, 8u8,
 						] {
 						let call = UpdateThresholdWeight { new };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Overwrites the speed to which the available weight approaches the maximum weight."]
@@ -16169,7 +16169,7 @@ pub mod api {
 					&self,
 					new: ::core::primitive::u64,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -16177,7 +16177,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -16191,9 +16191,9 @@ pub mod api {
 							152u8, 224u8, 63u8, 119u8, 77u8, 3u8, 5u8, 52u8, 33u8, 62u8,
 						] {
 						let call = UpdateWeightRestrictDecay { new };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Overwrite the maximum amount of weight any individual message may consume."]
@@ -16205,7 +16205,7 @@ pub mod api {
 					&self,
 					new: ::core::primitive::u64,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -16213,7 +16213,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -16227,9 +16227,9 @@ pub mod api {
 							54u8, 27u8, 95u8, 119u8, 125u8, 127u8, 124u8, 16u8, 188u8, 88u8, 224u8,
 						] {
 						let call = UpdateXcmpMaxIndividualWeight { new };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -16326,11 +16326,11 @@ pub mod api {
 				type Value = ::std::vec::Vec<::core::primitive::u8>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
 					::subxt::StorageEntryKey::Map(vec![
-						::subxt::StorageMapKey::new(
+						::subxt::storage::address::StorageMapKey::new(
 							&self.0,
 							::subxt::StorageHasher::Blake2_128Concat,
 						),
-						::subxt::StorageMapKey::new(&self.1, ::subxt::StorageHasher::Twox64Concat),
+						::subxt::storage::address::StorageMapKey::new(&self.1, ::subxt::StorageHasher::Twox64Concat),
 					])
 				}
 			}
@@ -16355,11 +16355,11 @@ pub mod api {
 				type Value = ::std::vec::Vec<::core::primitive::u8>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
 					::subxt::StorageEntryKey::Map(vec![
-						::subxt::StorageMapKey::new(
+						::subxt::storage::address::StorageMapKey::new(
 							&self.0,
 							::subxt::StorageHasher::Blake2_128Concat,
 						),
-						::subxt::StorageMapKey::new(&self.1, ::subxt::StorageHasher::Twox64Concat),
+						::subxt::storage::address::StorageMapKey::new(&self.1, ::subxt::StorageHasher::Twox64Concat),
 					])
 				}
 			}
@@ -16371,7 +16371,7 @@ pub mod api {
 				const STORAGE: &'static str = "SignalMessages";
 				type Value = ::std::vec::Vec<::core::primitive::u8>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Blake2_128Concat,
 					)])
@@ -16396,7 +16396,7 @@ pub mod api {
 					::std::vec::Vec<::core::primitive::u8>,
 				);
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Twox64Concat,
 					)])
@@ -16421,10 +16421,10 @@ pub mod api {
 				}
 			}
 			pub struct StorageApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " Status of the inbound XCMP channels."]
@@ -16436,7 +16436,7 @@ pub mod api {
 						::std::vec::Vec<
 							runtime_types::cumulus_pallet_xcmp_queue::InboundChannelDetails,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -16459,7 +16459,7 @@ pub mod api {
 							let entry = InboundXcmpStatus;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -16472,7 +16472,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::std::vec::Vec<::core::primitive::u8>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -16495,7 +16495,7 @@ pub mod api {
 							let entry = InboundXcmpMessages(_0, _1);
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -16505,8 +16505,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, InboundXcmpMessages<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, InboundXcmpMessages<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -16528,7 +16528,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -16546,7 +16546,7 @@ pub mod api {
 						::std::vec::Vec<
 							runtime_types::cumulus_pallet_xcmp_queue::OutboundChannelDetails,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -16569,7 +16569,7 @@ pub mod api {
 							let entry = OutboundXcmpStatus;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -16582,7 +16582,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::std::vec::Vec<::core::primitive::u8>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -16605,7 +16605,7 @@ pub mod api {
 							let entry = OutboundXcmpMessages(_0, _1);
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -16615,8 +16615,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, OutboundXcmpMessages<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, OutboundXcmpMessages<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -16638,7 +16638,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -16650,7 +16650,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::std::vec::Vec<::core::primitive::u8>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -16673,7 +16673,7 @@ pub mod api {
 							let entry = SignalMessages(_0);
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -16683,8 +16683,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, SignalMessages<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, SignalMessages<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -16706,7 +16706,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -16717,7 +16717,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						runtime_types::cumulus_pallet_xcmp_queue::QueueConfigData,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -16740,7 +16740,7 @@ pub mod api {
 							let entry = QueueConfig;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -16759,7 +16759,7 @@ pub mod api {
 							::core::primitive::u32,
 							::std::vec::Vec<::core::primitive::u8>,
 						)>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -16782,7 +16782,7 @@ pub mod api {
 							let entry = Overweight(_0);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -16795,8 +16795,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, Overweight<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, Overweight<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -16818,7 +16818,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -16828,7 +16828,7 @@ pub mod api {
 					&self,
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
-					Output = ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>,
+					Output = ::core::result::Result<::core::primitive::u64, ::subxt::error::DispatchError>,
 				> + 'a {
 					let client = self.client;
 					async move {
@@ -16850,7 +16850,7 @@ pub mod api {
 							let entry = OverweightCount;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -16859,7 +16859,7 @@ pub mod api {
 					&self,
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
-					Output = ::core::result::Result<::core::primitive::bool, ::subxt::BasicError>,
+					Output = ::core::result::Result<::core::primitive::bool, ::subxt::error::DispatchError>,
 				> + 'a {
 					let client = self.client;
 					async move {
@@ -16881,7 +16881,7 @@ pub mod api {
 							let entry = QueueSuspended;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -16993,7 +16993,7 @@ pub mod api {
 				const FUNCTION: &'static str = "limited_teleport_assets";
 			}
 			pub struct TransactionApi<'a, T: ::subxt::Config, X> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 				marker: ::core::marker::PhantomData<X>,
 			}
 			impl<'a, T, X> TransactionApi<'a, T, X>
@@ -17001,7 +17001,7 @@ pub mod api {
 				T: ::subxt::Config,
 				X: ::subxt::extrinsic::ExtrinsicParams<T>,
 			{
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client, marker: ::core::marker::PhantomData }
 				}
 				pub fn send(
@@ -17009,8 +17009,8 @@ pub mod api {
 					dest: runtime_types::xcm::VersionedMultiLocation,
 					message: runtime_types::xcm::VersionedXcm,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<'a, T, X, Send, DispatchError, root_mod::Event>,
-					::subxt::BasicError,
+					::subxt::tx::SubmittableExtrinsic<'a, T, X, Send, DispatchError, root_mod::Event>,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -17027,9 +17027,9 @@ pub mod api {
 							dest: ::std::boxed::Box::new(dest),
 							message: ::std::boxed::Box::new(message),
 						};
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Teleport some assets from the local chain to some destination chain."]
@@ -17054,7 +17054,7 @@ pub mod api {
 					assets: runtime_types::xcm::VersionedMultiAssets,
 					fee_asset_item: ::core::primitive::u32,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -17062,7 +17062,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -17082,9 +17082,9 @@ pub mod api {
 							assets: ::std::boxed::Box::new(assets),
 							fee_asset_item,
 						};
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Transfer some assets from the local chain to the sovereign account of a destination"]
@@ -17110,7 +17110,7 @@ pub mod api {
 					assets: runtime_types::xcm::VersionedMultiAssets,
 					fee_asset_item: ::core::primitive::u32,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -17118,7 +17118,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -17137,9 +17137,9 @@ pub mod api {
 							assets: ::std::boxed::Box::new(assets),
 							fee_asset_item,
 						};
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Execute an XCM message from a local, signed, origin."]
@@ -17158,7 +17158,7 @@ pub mod api {
 					message: runtime_types::xcm::VersionedXcm,
 					max_weight: ::core::primitive::u64,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -17166,7 +17166,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -17180,9 +17180,9 @@ pub mod api {
 							230u8, 243u8, 68u8, 39u8, 133u8, 233u8, 108u8, 226u8, 87u8, 5u8, 247u8,
 						] {
 						let call = Execute { message: ::std::boxed::Box::new(message), max_weight };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Extoll that a particular destination can be communicated with through a particular"]
@@ -17196,7 +17196,7 @@ pub mod api {
 					location: runtime_types::xcm::v1::multilocation::MultiLocation,
 					xcm_version: ::core::primitive::u32,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -17204,7 +17204,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -17221,9 +17221,9 @@ pub mod api {
 							location: ::std::boxed::Box::new(location),
 							xcm_version,
 						};
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Set a safe XCM version (the version that XCM should be encoded with if the most recent"]
@@ -17235,7 +17235,7 @@ pub mod api {
 					&self,
 					maybe_xcm_version: ::core::option::Option<::core::primitive::u32>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -17243,7 +17243,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -17257,9 +17257,9 @@ pub mod api {
 							205u8, 250u8, 211u8, 150u8, 237u8, 160u8, 239u8, 226u8, 233u8, 29u8,
 						] {
 						let call = ForceDefaultXcmVersion { maybe_xcm_version };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Ask a location to notify us regarding their XCM version and any changes to it."]
@@ -17270,7 +17270,7 @@ pub mod api {
 					&self,
 					location: runtime_types::xcm::VersionedMultiLocation,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -17278,7 +17278,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -17295,9 +17295,9 @@ pub mod api {
 						let call = ForceSubscribeVersionNotify {
 							location: ::std::boxed::Box::new(location),
 						};
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Require that a particular destination should no longer notify us regarding any XCM"]
@@ -17310,7 +17310,7 @@ pub mod api {
 					&self,
 					location: runtime_types::xcm::VersionedMultiLocation,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -17318,7 +17318,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -17334,9 +17334,9 @@ pub mod api {
 						let call = ForceUnsubscribeVersionNotify {
 							location: ::std::boxed::Box::new(location),
 						};
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Transfer some assets from the local chain to the sovereign account of a destination"]
@@ -17365,7 +17365,7 @@ pub mod api {
 					fee_asset_item: ::core::primitive::u32,
 					weight_limit: runtime_types::xcm::v2::WeightLimit,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -17373,7 +17373,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -17394,9 +17394,9 @@ pub mod api {
 							fee_asset_item,
 							weight_limit,
 						};
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Teleport some assets from the local chain to some destination chain."]
@@ -17424,7 +17424,7 @@ pub mod api {
 					fee_asset_item: ::core::primitive::u32,
 					weight_limit: runtime_types::xcm::v2::WeightLimit,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -17432,7 +17432,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -17453,9 +17453,9 @@ pub mod api {
 							fee_asset_item,
 							weight_limit,
 						};
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -17694,7 +17694,7 @@ pub mod api {
 			use super::{root_mod, runtime_types};
 			type DispatchError = runtime_types::sp_runtime::DispatchError;
 			pub struct TransactionApi<'a, T: ::subxt::Config, X> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 				marker: ::core::marker::PhantomData<X>,
 			}
 			impl<'a, T, X> TransactionApi<'a, T, X>
@@ -17702,7 +17702,7 @@ pub mod api {
 				T: ::subxt::Config,
 				X: ::subxt::extrinsic::ExtrinsicParams<T>,
 			{
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client, marker: ::core::marker::PhantomData }
 				}
 			}
@@ -17756,7 +17756,7 @@ pub mod api {
 				const FUNCTION: &'static str = "service_overweight";
 			}
 			pub struct TransactionApi<'a, T: ::subxt::Config, X> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 				marker: ::core::marker::PhantomData<X>,
 			}
 			impl<'a, T, X> TransactionApi<'a, T, X>
@@ -17764,7 +17764,7 @@ pub mod api {
 				T: ::subxt::Config,
 				X: ::subxt::extrinsic::ExtrinsicParams<T>,
 			{
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client, marker: ::core::marker::PhantomData }
 				}
 				#[doc = "Service a single overweight message."]
@@ -17784,7 +17784,7 @@ pub mod api {
 					index: ::core::primitive::u64,
 					weight_limit: ::core::primitive::u64,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -17792,7 +17792,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -17806,9 +17806,9 @@ pub mod api {
 							149u8, 120u8, 42u8, 130u8, 100u8, 133u8, 214u8, 48u8, 99u8, 146u8,
 						] {
 						let call = ServiceOverweight { index, weight_limit };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -17906,7 +17906,7 @@ pub mod api {
 					::std::vec::Vec<::core::primitive::u8>,
 				)>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Blake2_128Concat,
 					)])
@@ -17918,17 +17918,17 @@ pub mod api {
 				const STORAGE: &'static str = "Overweight";
 				type Value = (::core::primitive::u32, ::std::vec::Vec<::core::primitive::u8>);
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Blake2_128Concat,
 					)])
 				}
 			}
 			pub struct StorageApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " The configuration."]
@@ -17938,7 +17938,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						runtime_types::cumulus_pallet_dmp_queue::ConfigData,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -17961,7 +17961,7 @@ pub mod api {
 							let entry = Configuration;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -17972,7 +17972,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						runtime_types::cumulus_pallet_dmp_queue::PageIndexData,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -17995,7 +17995,7 @@ pub mod api {
 							let entry = PageIndex;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -18010,7 +18010,7 @@ pub mod api {
 							::core::primitive::u32,
 							::std::vec::Vec<::core::primitive::u8>,
 						)>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -18033,7 +18033,7 @@ pub mod api {
 							let entry = Pages(_0);
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -18043,8 +18043,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, Pages<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, Pages<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -18066,7 +18066,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -18081,7 +18081,7 @@ pub mod api {
 							::core::primitive::u32,
 							::std::vec::Vec<::core::primitive::u8>,
 						)>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -18104,7 +18104,7 @@ pub mod api {
 							let entry = Overweight(_0);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -18114,8 +18114,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, Overweight<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, Overweight<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -18137,7 +18137,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -18220,7 +18220,7 @@ pub mod api {
 				const FUNCTION: &'static str = "transfer_multiassets";
 			}
 			pub struct TransactionApi<'a, T: ::subxt::Config, X> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 				marker: ::core::marker::PhantomData<X>,
 			}
 			impl<'a, T, X> TransactionApi<'a, T, X>
@@ -18228,7 +18228,7 @@ pub mod api {
 				T: ::subxt::Config,
 				X: ::subxt::extrinsic::ExtrinsicParams<T>,
 			{
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client, marker: ::core::marker::PhantomData }
 				}
 				#[doc = "Transfer native currencies."]
@@ -18250,7 +18250,7 @@ pub mod api {
 					dest: runtime_types::xcm::VersionedMultiLocation,
 					dest_weight: ::core::primitive::u64,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -18258,7 +18258,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -18277,9 +18277,9 @@ pub mod api {
 							dest: ::std::boxed::Box::new(dest),
 							dest_weight,
 						};
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Transfer `MultiAsset`."]
@@ -18300,7 +18300,7 @@ pub mod api {
 					dest: runtime_types::xcm::VersionedMultiLocation,
 					dest_weight: ::core::primitive::u64,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -18308,7 +18308,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -18326,9 +18326,9 @@ pub mod api {
 							dest: ::std::boxed::Box::new(dest),
 							dest_weight,
 						};
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Transfer native currencies specifying the fee and amount as"]
@@ -18360,7 +18360,7 @@ pub mod api {
 					dest: runtime_types::xcm::VersionedMultiLocation,
 					dest_weight: ::core::primitive::u64,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -18368,7 +18368,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -18388,9 +18388,9 @@ pub mod api {
 							dest: ::std::boxed::Box::new(dest),
 							dest_weight,
 						};
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Transfer `MultiAsset` specifying the fee and amount as separate."]
@@ -18421,7 +18421,7 @@ pub mod api {
 					dest: runtime_types::xcm::VersionedMultiLocation,
 					dest_weight: ::core::primitive::u64,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -18429,7 +18429,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -18448,9 +18448,9 @@ pub mod api {
 							dest: ::std::boxed::Box::new(dest),
 							dest_weight,
 						};
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Transfer several currencies specifying the item to be used as fee"]
@@ -18478,7 +18478,7 @@ pub mod api {
 					dest: runtime_types::xcm::VersionedMultiLocation,
 					dest_weight: ::core::primitive::u64,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -18486,7 +18486,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -18505,9 +18505,9 @@ pub mod api {
 							dest: ::std::boxed::Box::new(dest),
 							dest_weight,
 						};
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Transfer several `MultiAsset` specifying the item to be used as fee"]
@@ -18532,7 +18532,7 @@ pub mod api {
 					dest: runtime_types::xcm::VersionedMultiLocation,
 					dest_weight: ::core::primitive::u64,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -18540,7 +18540,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -18559,9 +18559,9 @@ pub mod api {
 							dest: ::std::boxed::Box::new(dest),
 							dest_weight,
 						};
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -18586,10 +18586,10 @@ pub mod api {
 		pub mod storage {
 			use super::runtime_types;
 			pub struct StorageApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 			}
@@ -18597,10 +18597,10 @@ pub mod api {
 		pub mod constants {
 			use super::runtime_types;
 			pub struct ConstantsApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> ConstantsApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " Self chain location."]
@@ -18608,7 +18608,7 @@ pub mod api {
 					&self,
 				) -> ::core::result::Result<
 					runtime_types::xcm::v1::multilocation::MultiLocation,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
@@ -18621,10 +18621,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("XTokens")?;
 						let constant = pallet.constant("SelfLocation")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " Base XCM weight."]
@@ -18633,7 +18633,7 @@ pub mod api {
 				#[doc = " T::Weigher::weight(&msg)`."]
 				pub fn base_xcm_weight(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u64, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u64, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("XTokens", "BaseXcmWeight")? ==
@@ -18645,10 +18645,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("XTokens")?;
 						let constant = pallet.constant("BaseXcmWeight")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -18693,11 +18693,11 @@ pub mod api {
 				type Value = ::core::primitive::u128;
 				fn key(&self) -> ::subxt::StorageEntryKey {
 					::subxt::StorageEntryKey::Map(vec![
-						::subxt::StorageMapKey::new(
+						::subxt::storage::address::StorageMapKey::new(
 							&self.0,
 							::subxt::StorageHasher::Blake2_128Concat,
 						),
-						::subxt::StorageMapKey::new(
+						::subxt::storage::address::StorageMapKey::new(
 							&self.1,
 							::subxt::StorageHasher::Blake2_128Concat,
 						),
@@ -18714,11 +18714,11 @@ pub mod api {
 				type Value = ::core::primitive::u128;
 				fn key(&self) -> ::subxt::StorageEntryKey {
 					::subxt::StorageEntryKey::Map(vec![
-						::subxt::StorageMapKey::new(
+						::subxt::storage::address::StorageMapKey::new(
 							&self.0,
 							::subxt::StorageHasher::Blake2_128Concat,
 						),
-						::subxt::StorageMapKey::new(
+						::subxt::storage::address::StorageMapKey::new(
 							&self.1,
 							::subxt::StorageHasher::Blake2_128Concat,
 						),
@@ -18726,10 +18726,10 @@ pub mod api {
 				}
 			}
 			pub struct StorageApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " Concrete fungible balances under a given location and a concrete"]
@@ -18742,7 +18742,7 @@ pub mod api {
 					_1: &'a runtime_types::xcm::v1::multilocation::MultiLocation,
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
-					Output = ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>,
+					Output = ::core::result::Result<::core::primitive::u128, ::subxt::error::DispatchError>,
 				> + 'a {
 					let client = self.client;
 					async move {
@@ -18764,7 +18764,7 @@ pub mod api {
 							let entry = ConcreteFungibleBalances(_0, _1);
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -18777,8 +18777,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, ConcreteFungibleBalances<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, ConcreteFungibleBalances<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -18800,7 +18800,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -18814,7 +18814,7 @@ pub mod api {
 					_1: &'a [::core::primitive::u8],
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
-					Output = ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>,
+					Output = ::core::result::Result<::core::primitive::u128, ::subxt::error::DispatchError>,
 				> + 'a {
 					let client = self.client;
 					async move {
@@ -18836,7 +18836,7 @@ pub mod api {
 							let entry = AbstractFungibleBalances(_0, _1);
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -18849,8 +18849,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, AbstractFungibleBalances<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, AbstractFungibleBalances<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -18872,7 +18872,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -18961,7 +18961,7 @@ pub mod api {
 				const FUNCTION: &'static str = "set_balance";
 			}
 			pub struct TransactionApi<'a, T: ::subxt::Config, X> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 				marker: ::core::marker::PhantomData<X>,
 			}
 			impl<'a, T, X> TransactionApi<'a, T, X>
@@ -18969,7 +18969,7 @@ pub mod api {
 				T: ::subxt::Config,
 				X: ::subxt::extrinsic::ExtrinsicParams<T>,
 			{
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client, marker: ::core::marker::PhantomData }
 				}
 				#[doc = "Transfer some liquid free balance to another account."]
@@ -18994,7 +18994,7 @@ pub mod api {
 					currency_id: runtime_types::primitives::currency::CurrencyId,
 					amount: ::core::primitive::u128,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -19002,7 +19002,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -19016,9 +19016,9 @@ pub mod api {
 							74u8, 251u8, 48u8, 114u8, 143u8, 142u8, 64u8, 10u8, 90u8, 149u8, 90u8,
 						] {
 						let call = Transfer { dest, currency_id, amount };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Transfer all remaining balance to the given account."]
@@ -19049,7 +19049,7 @@ pub mod api {
 					currency_id: runtime_types::primitives::currency::CurrencyId,
 					keep_alive: ::core::primitive::bool,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -19057,7 +19057,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -19071,9 +19071,9 @@ pub mod api {
 							159u8, 141u8, 29u8, 62u8, 159u8, 202u8, 60u8, 214u8, 68u8, 6u8, 141u8,
 						] {
 						let call = TransferAll { dest, currency_id, keep_alive };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Same as the [`transfer`] call, but with a check that the transfer"]
@@ -19096,7 +19096,7 @@ pub mod api {
 					currency_id: runtime_types::primitives::currency::CurrencyId,
 					amount: ::core::primitive::u128,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -19104,7 +19104,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -19119,9 +19119,9 @@ pub mod api {
 							158u8,
 						] {
 						let call = TransferKeepAlive { dest, currency_id, amount };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Exactly as `transfer`, except the origin must be root and the source"]
@@ -19146,7 +19146,7 @@ pub mod api {
 					currency_id: runtime_types::primitives::currency::CurrencyId,
 					amount: ::core::primitive::u128,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -19154,7 +19154,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -19169,9 +19169,9 @@ pub mod api {
 							66u8,
 						] {
 						let call = ForceTransfer { source, dest, currency_id, amount };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Set the balances of a given account."]
@@ -19192,7 +19192,7 @@ pub mod api {
 					new_free: ::core::primitive::u128,
 					new_reserved: ::core::primitive::u128,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -19200,7 +19200,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -19214,9 +19214,9 @@ pub mod api {
 							45u8, 89u8, 201u8, 113u8, 45u8, 219u8, 188u8, 25u8, 154u8, 215u8, 49u8,
 						] {
 						let call = SetBalance { who, currency_id, new_free, new_reserved };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -19384,7 +19384,7 @@ pub mod api {
 				const STORAGE: &'static str = "TotalIssuance";
 				type Value = ::core::primitive::u128;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Twox64Concat,
 					)])
@@ -19402,11 +19402,11 @@ pub mod api {
 				>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
 					::subxt::StorageEntryKey::Map(vec![
-						::subxt::StorageMapKey::new(
+						::subxt::storage::address::StorageMapKey::new(
 							&self.0,
 							::subxt::StorageHasher::Blake2_128Concat,
 						),
-						::subxt::StorageMapKey::new(&self.1, ::subxt::StorageHasher::Twox64Concat),
+						::subxt::storage::address::StorageMapKey::new(&self.1, ::subxt::StorageHasher::Twox64Concat),
 					])
 				}
 			}
@@ -19420,11 +19420,11 @@ pub mod api {
 				type Value = runtime_types::orml_tokens::AccountData<::core::primitive::u128>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
 					::subxt::StorageEntryKey::Map(vec![
-						::subxt::StorageMapKey::new(
+						::subxt::storage::address::StorageMapKey::new(
 							&self.0,
 							::subxt::StorageHasher::Blake2_128Concat,
 						),
-						::subxt::StorageMapKey::new(&self.1, ::subxt::StorageHasher::Twox64Concat),
+						::subxt::storage::address::StorageMapKey::new(&self.1, ::subxt::StorageHasher::Twox64Concat),
 					])
 				}
 			}
@@ -19443,19 +19443,19 @@ pub mod api {
 				>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
 					::subxt::StorageEntryKey::Map(vec![
-						::subxt::StorageMapKey::new(
+						::subxt::storage::address::StorageMapKey::new(
 							&self.0,
 							::subxt::StorageHasher::Blake2_128Concat,
 						),
-						::subxt::StorageMapKey::new(&self.1, ::subxt::StorageHasher::Twox64Concat),
+						::subxt::storage::address::StorageMapKey::new(&self.1, ::subxt::StorageHasher::Twox64Concat),
 					])
 				}
 			}
 			pub struct StorageApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " The total issuance of a token type."]
@@ -19464,7 +19464,7 @@ pub mod api {
 					_0: &'a runtime_types::primitives::currency::CurrencyId,
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
-					Output = ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>,
+					Output = ::core::result::Result<::core::primitive::u128, ::subxt::error::DispatchError>,
 				> + 'a {
 					let client = self.client;
 					async move {
@@ -19486,7 +19486,7 @@ pub mod api {
 							let entry = TotalIssuance(_0);
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -19496,8 +19496,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, TotalIssuance<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, TotalIssuance<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -19519,7 +19519,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -19535,7 +19535,7 @@ pub mod api {
 						runtime_types::frame_support::storage::bounded_vec::BoundedVec<
 							runtime_types::orml_tokens::BalanceLock<::core::primitive::u128>,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -19558,7 +19558,7 @@ pub mod api {
 							let entry = Locks(_0, _1);
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -19569,8 +19569,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, Locks<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, Locks<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -19592,7 +19592,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -19610,7 +19610,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						runtime_types::orml_tokens::AccountData<::core::primitive::u128>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -19633,7 +19633,7 @@ pub mod api {
 							let entry = Accounts(_0, _1);
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -19648,8 +19648,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, Accounts<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, Accounts<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -19671,7 +19671,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -19689,7 +19689,7 @@ pub mod api {
 								::core::primitive::u128,
 							>,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -19712,7 +19712,7 @@ pub mod api {
 							let entry = Reserves(_0, _1);
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -19722,8 +19722,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, Reserves<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, Reserves<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -19745,7 +19745,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -19754,15 +19754,15 @@ pub mod api {
 		pub mod constants {
 			use super::runtime_types;
 			pub struct ConstantsApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> ConstantsApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				pub fn max_locks(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Tokens", "MaxLocks")? ==
@@ -19773,16 +19773,16 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Tokens")?;
 						let constant = pallet.constant("MaxLocks")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " The maximum number of named reserves that can exist on an account."]
 				pub fn max_reserves(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Tokens", "MaxReserves")? ==
@@ -19794,10 +19794,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Tokens")?;
 						let constant = pallet.constant("MaxReserves")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -19866,7 +19866,7 @@ pub mod api {
 				const FUNCTION: &'static str = "submit_price";
 			}
 			pub struct TransactionApi<'a, T: ::subxt::Config, X> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 				marker: ::core::marker::PhantomData<X>,
 			}
 			impl<'a, T, X> TransactionApi<'a, T, X>
@@ -19874,7 +19874,7 @@ pub mod api {
 				T: ::subxt::Config,
 				X: ::subxt::extrinsic::ExtrinsicParams<T>,
 			{
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client, marker: ::core::marker::PhantomData }
 				}
 				#[doc = "Permissioned call to add an asset"]
@@ -19898,7 +19898,7 @@ pub mod api {
 					reward: ::core::primitive::u128,
 					slash: ::core::primitive::u128,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -19906,7 +19906,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -19928,9 +19928,9 @@ pub mod api {
 							reward,
 							slash,
 						};
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Call for a signer to be set, called from controller, adds stake."]
@@ -19942,7 +19942,7 @@ pub mod api {
 					&self,
 					signer: ::subxt::sp_core::crypto::AccountId32,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -19950,7 +19950,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -19964,9 +19964,9 @@ pub mod api {
 							131u8, 237u8, 19u8, 161u8, 193u8, 181u8, 197u8, 102u8, 159u8, 116u8,
 						] {
 						let call = SetSigner { signer };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "call to add more stake from a controller"]
@@ -19978,7 +19978,7 @@ pub mod api {
 					&self,
 					stake: ::core::primitive::u128,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -19986,7 +19986,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -20000,9 +20000,9 @@ pub mod api {
 							39u8, 216u8, 172u8, 126u8, 50u8, 145u8, 164u8, 73u8, 143u8, 70u8, 80u8,
 						] {
 						let call = AddStake { stake };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Call to put in a claim to remove stake, called from controller"]
@@ -20011,7 +20011,7 @@ pub mod api {
 				pub fn remove_stake(
 					&self,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -20019,7 +20019,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -20034,9 +20034,9 @@ pub mod api {
 							93u8, 80u8,
 						] {
 						let call = RemoveStake {};
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Call to reclaim stake after proper time has passed, called from controller"]
@@ -20045,7 +20045,7 @@ pub mod api {
 				pub fn reclaim_stake(
 					&self,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -20053,7 +20053,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -20067,9 +20067,9 @@ pub mod api {
 							64u8, 72u8, 217u8, 183u8, 6u8, 185u8, 103u8, 176u8, 54u8, 188u8, 149u8,
 						] {
 						let call = ReclaimStake {};
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Call to submit a price, gas is returned if all logic gates passed"]
@@ -20085,7 +20085,7 @@ pub mod api {
 					price: ::core::primitive::u128,
 					asset_id: runtime_types::primitives::currency::CurrencyId,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -20093,7 +20093,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -20108,9 +20108,9 @@ pub mod api {
 							83u8, 138u8,
 						] {
 						let call = SubmitPrice { price, asset_id };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -20238,7 +20238,7 @@ pub mod api {
 				const STORAGE: &'static str = "SignerToController";
 				type Value = ::subxt::sp_core::crypto::AccountId32;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Blake2_128Concat,
 					)])
@@ -20250,7 +20250,7 @@ pub mod api {
 				const STORAGE: &'static str = "ControllerToSigner";
 				type Value = ::subxt::sp_core::crypto::AccountId32;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Blake2_128Concat,
 					)])
@@ -20265,7 +20265,7 @@ pub mod api {
 					::core::primitive::u32,
 				>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Blake2_128Concat,
 					)])
@@ -20277,7 +20277,7 @@ pub mod api {
 				const STORAGE: &'static str = "OracleStake";
 				type Value = ::core::primitive::u128;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Blake2_128Concat,
 					)])
@@ -20289,7 +20289,7 @@ pub mod api {
 				const STORAGE: &'static str = "AnswerInTransit";
 				type Value = ::core::primitive::u128;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Blake2_128Concat,
 					)])
@@ -20304,7 +20304,7 @@ pub mod api {
 					::core::primitive::u32,
 				>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Blake2_128Concat,
 					)])
@@ -20321,7 +20321,7 @@ pub mod api {
 					>,
 				>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Blake2_128Concat,
 					)])
@@ -20339,7 +20339,7 @@ pub mod api {
 					>,
 				>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Blake2_128Concat,
 					)])
@@ -20355,17 +20355,17 @@ pub mod api {
 					::core::primitive::u128,
 				>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Blake2_128Concat,
 					)])
 				}
 			}
 			pub struct StorageApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " Total amount of assets"]
@@ -20373,7 +20373,7 @@ pub mod api {
 					&self,
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
-					Output = ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>,
+					Output = ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError>,
 				> + 'a {
 					let client = self.client;
 					async move {
@@ -20395,7 +20395,7 @@ pub mod api {
 							let entry = AssetsCount;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -20407,7 +20407,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::core::option::Option<::subxt::sp_core::crypto::AccountId32>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -20430,7 +20430,7 @@ pub mod api {
 							let entry = SignerToController(_0);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -20440,8 +20440,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, SignerToController<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, SignerToController<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -20463,7 +20463,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -20475,7 +20475,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::core::option::Option<::subxt::sp_core::crypto::AccountId32>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -20498,7 +20498,7 @@ pub mod api {
 							let entry = ControllerToSigner(_0);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -20508,8 +20508,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, ControllerToSigner<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, ControllerToSigner<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -20531,7 +20531,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -20548,7 +20548,7 @@ pub mod api {
 								::core::primitive::u32,
 							>,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -20571,7 +20571,7 @@ pub mod api {
 							let entry = DeclaredWithdraws(_0);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -20581,8 +20581,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, DeclaredWithdraws<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, DeclaredWithdraws<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -20604,7 +20604,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -20616,7 +20616,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::core::option::Option<::core::primitive::u128>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -20639,7 +20639,7 @@ pub mod api {
 							let entry = OracleStake(_0);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -20649,8 +20649,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, OracleStake<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, OracleStake<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -20672,7 +20672,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -20684,7 +20684,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::core::option::Option<::core::primitive::u128>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -20707,7 +20707,7 @@ pub mod api {
 							let entry = AnswerInTransit(_0);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -20717,8 +20717,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, AnswerInTransit<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, AnswerInTransit<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -20740,7 +20740,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -20755,7 +20755,7 @@ pub mod api {
 							::core::primitive::u128,
 							::core::primitive::u32,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -20778,7 +20778,7 @@ pub mod api {
 							let entry = Prices(_0);
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -20788,8 +20788,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, Prices<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, Prices<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -20811,7 +20811,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -20828,7 +20828,7 @@ pub mod api {
 								::core::primitive::u32,
 							>,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -20851,7 +20851,7 @@ pub mod api {
 							let entry = PriceHistory(_0);
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -20861,8 +20861,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, PriceHistory<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, PriceHistory<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -20884,7 +20884,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -20902,7 +20902,7 @@ pub mod api {
 								::subxt::sp_core::crypto::AccountId32,
 							>,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -20925,7 +20925,7 @@ pub mod api {
 							let entry = PrePrices(_0);
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -20935,8 +20935,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, PrePrices<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, PrePrices<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -20958,7 +20958,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -20976,7 +20976,7 @@ pub mod api {
 								::core::primitive::u128,
 							>,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -20999,7 +20999,7 @@ pub mod api {
 							let entry = AssetsInfo(_0);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -21009,8 +21009,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, AssetsInfo<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, AssetsInfo<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -21032,7 +21032,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -21041,15 +21041,15 @@ pub mod api {
 		pub mod constants {
 			use super::runtime_types;
 			pub struct ConstantsApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> ConstantsApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				pub fn max_history(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Oracle", "MaxHistory")? ==
@@ -21060,15 +21060,15 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Oracle")?;
 						let constant = pallet.constant("MaxHistory")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				pub fn twap_window(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u16, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u16, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Oracle", "TwapWindow")? ==
@@ -21080,15 +21080,15 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Oracle")?;
 						let constant = pallet.constant("TwapWindow")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				pub fn max_pre_prices(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Oracle", "MaxPrePrices")? ==
@@ -21100,10 +21100,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Oracle")?;
 						let constant = pallet.constant("MaxPrePrices")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -21145,7 +21145,7 @@ pub mod api {
 				const STORAGE: &'static str = "AssetEd";
 				type Value = ::core::primitive::u128;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Twox128,
 					)])
@@ -21157,17 +21157,17 @@ pub mod api {
 				const STORAGE: &'static str = "AssetMetadata";
 				type Value = runtime_types::composable_traits::assets::BasicAssetMetadata;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Twox128,
 					)])
 				}
 			}
 			pub struct StorageApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				pub fn asset_id_ranges(
@@ -21178,7 +21178,7 @@ pub mod api {
 						runtime_types::pallet_currency_factory::ranges::Ranges<
 							runtime_types::primitives::currency::CurrencyId,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -21201,7 +21201,7 @@ pub mod api {
 							let entry = AssetIdRanges;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -21212,7 +21212,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::core::option::Option<::core::primitive::u128>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -21235,7 +21235,7 @@ pub mod api {
 							let entry = AssetEd(_0);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -21244,8 +21244,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, AssetEd<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, AssetEd<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -21267,7 +21267,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -21280,7 +21280,7 @@ pub mod api {
 						::core::option::Option<
 							runtime_types::composable_traits::assets::BasicAssetMetadata,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -21303,7 +21303,7 @@ pub mod api {
 							let entry = AssetMetadata(_0);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -21312,8 +21312,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, AssetMetadata<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, AssetMetadata<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -21335,7 +21335,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -21441,7 +21441,7 @@ pub mod api {
 				const FUNCTION: &'static str = "liquidate_strategy";
 			}
 			pub struct TransactionApi<'a, T: ::subxt::Config, X> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 				marker: ::core::marker::PhantomData<X>,
 			}
 			impl<'a, T, X> TransactionApi<'a, T, X>
@@ -21449,7 +21449,7 @@ pub mod api {
 				T: ::subxt::Config,
 				X: ::subxt::extrinsic::ExtrinsicParams<T>,
 			{
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client, marker: ::core::marker::PhantomData }
 				}
 				#[doc = "Creates a new vault, locking up the deposit. If the deposit is greater than the"]
@@ -21472,8 +21472,8 @@ pub mod api {
 					>,
 					deposit_amount: ::core::primitive::u128,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<'a, T, X, Create, DispatchError, root_mod::Event>,
-					::subxt::BasicError,
+					::subxt::tx::SubmittableExtrinsic<'a, T, X, Create, DispatchError, root_mod::Event>,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -21488,9 +21488,9 @@ pub mod api {
 							213u8, 48u8,
 						] {
 						let call = Create { vault, deposit_amount };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Substracts rent from a vault, rewarding the caller if successful with a small fee and"]
@@ -21503,7 +21503,7 @@ pub mod api {
 					dest: ::core::primitive::u64,
 					address: ::core::option::Option<::subxt::sp_core::crypto::AccountId32>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -21511,7 +21511,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -21526,9 +21526,9 @@ pub mod api {
 							170u8, 185u8,
 						] {
 						let call = ClaimSurcharge { dest, address };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				pub fn add_surcharge(
@@ -21536,7 +21536,7 @@ pub mod api {
 					dest: ::core::primitive::u64,
 					amount: ::core::primitive::u128,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -21544,7 +21544,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -21559,9 +21559,9 @@ pub mod api {
 							77u8, 214u8,
 						] {
 						let call = AddSurcharge { dest, amount };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				pub fn delete_tombstoned(
@@ -21569,7 +21569,7 @@ pub mod api {
 					dest: ::core::primitive::u64,
 					address: ::core::option::Option<::subxt::sp_core::crypto::AccountId32>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -21577,7 +21577,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -21592,9 +21592,9 @@ pub mod api {
 							214u8,
 						] {
 						let call = DeleteTombstoned { dest, address };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Deposit funds in the vault and receive LP tokens in return."]
@@ -21609,7 +21609,7 @@ pub mod api {
 					vault: ::core::primitive::u64,
 					asset_amount: ::core::primitive::u128,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -21617,7 +21617,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -21632,9 +21632,9 @@ pub mod api {
 							190u8,
 						] {
 						let call = Deposit { vault, asset_amount };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Withdraw funds"]
@@ -21651,7 +21651,7 @@ pub mod api {
 					vault: ::core::primitive::u64,
 					lp_amount: ::core::primitive::u128,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -21659,7 +21659,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -21673,9 +21673,9 @@ pub mod api {
 							107u8, 106u8, 151u8, 225u8, 24u8, 152u8, 202u8, 8u8, 183u8, 51u8, 23u8,
 						] {
 						let call = Withdraw { vault, lp_amount };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Stops a vault. To be used in case of severe protocol flaws."]
@@ -21690,7 +21690,7 @@ pub mod api {
 					&self,
 					vault: ::core::primitive::u64,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -21698,7 +21698,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -21712,9 +21712,9 @@ pub mod api {
 							23u8, 94u8, 200u8, 64u8, 9u8, 124u8, 175u8, 63u8, 49u8, 52u8, 61u8,
 						] {
 						let call = EmergencyShutdown { vault };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "(Re)starts a vault after emergency shutdown."]
@@ -21729,8 +21729,8 @@ pub mod api {
 					&self,
 					vault: ::core::primitive::u64,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<'a, T, X, Start, DispatchError, root_mod::Event>,
-					::subxt::BasicError,
+					::subxt::tx::SubmittableExtrinsic<'a, T, X, Start, DispatchError, root_mod::Event>,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -21744,9 +21744,9 @@ pub mod api {
 							123u8, 40u8, 143u8, 168u8, 149u8, 12u8, 29u8, 63u8, 217u8, 31u8,
 						] {
 						let call = Start { vault };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Turns an existent strategy account `strategy_account` of a vault determined by"]
@@ -21762,7 +21762,7 @@ pub mod api {
 					vault_idx: ::core::primitive::u64,
 					strategy_account_id: ::subxt::sp_core::crypto::AccountId32,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -21770,7 +21770,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -21785,9 +21785,9 @@ pub mod api {
 							135u8,
 						] {
 						let call = LiquidateStrategy { vault_idx, strategy_account_id };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -21892,7 +21892,7 @@ pub mod api {
 					::core::primitive::u32,
 				>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Twox64Concat,
 					)])
@@ -21906,7 +21906,7 @@ pub mod api {
 				const STORAGE: &'static str = "LpTokensToVaults";
 				type Value = ::core::primitive::u64;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Twox64Concat,
 					)])
@@ -21923,11 +21923,11 @@ pub mod api {
 					runtime_types::pallet_vault::models::StrategyOverview<::core::primitive::u128>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
 					::subxt::StorageEntryKey::Map(vec![
-						::subxt::StorageMapKey::new(
+						::subxt::storage::address::StorageMapKey::new(
 							&self.0,
 							::subxt::StorageHasher::Blake2_128Concat,
 						),
-						::subxt::StorageMapKey::new(
+						::subxt::storage::address::StorageMapKey::new(
 							&self.1,
 							::subxt::StorageHasher::Blake2_128Concat,
 						),
@@ -21935,10 +21935,10 @@ pub mod api {
 				}
 			}
 			pub struct StorageApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " The number of vaults, also used to generate the next vault identifier."]
@@ -21950,7 +21950,7 @@ pub mod api {
 					&self,
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
-					Output = ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>,
+					Output = ::core::result::Result<::core::primitive::u64, ::subxt::error::DispatchError>,
 				> + 'a {
 					let client = self.client;
 					async move {
@@ -21972,7 +21972,7 @@ pub mod api {
 							let entry = VaultCount;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -21991,7 +21991,7 @@ pub mod api {
 								::core::primitive::u32,
 							>,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -22014,7 +22014,7 @@ pub mod api {
 							let entry = Vaults(_0);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -22024,8 +22024,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, Vaults<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, Vaults<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -22047,7 +22047,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -22059,7 +22059,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::core::option::Option<::core::primitive::u64>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -22082,7 +22082,7 @@ pub mod api {
 							let entry = LpTokensToVaults(_0);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -22092,8 +22092,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, LpTokensToVaults<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, LpTokensToVaults<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -22115,7 +22115,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -22131,7 +22131,7 @@ pub mod api {
 						runtime_types::pallet_vault::models::StrategyOverview<
 							::core::primitive::u128,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -22154,7 +22154,7 @@ pub mod api {
 							let entry = CapitalStructure(_0, _1);
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -22165,8 +22165,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, CapitalStructure<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, CapitalStructure<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -22188,7 +22188,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -22197,16 +22197,16 @@ pub mod api {
 		pub mod constants {
 			use super::runtime_types;
 			pub struct ConstantsApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> ConstantsApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " The minimum amount needed to deposit in a vault and receive LP tokens."]
 				pub fn minimum_deposit(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u128, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Vault", "MinimumDeposit")? ==
@@ -22218,16 +22218,16 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Vault")?;
 						let constant = pallet.constant("MinimumDeposit")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " The minimum amount of LP tokens to withdraw funds from a vault."]
 				pub fn minimum_withdrawal(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u128, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Vault", "MinimumWithdrawal")? ==
@@ -22239,16 +22239,16 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Vault")?;
 						let constant = pallet.constant("MinimumWithdrawal")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " The minimum native asset needed to create a vault."]
 				pub fn creation_deposit(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u128, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Vault", "CreationDeposit")? ==
@@ -22259,17 +22259,17 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Vault")?;
 						let constant = pallet.constant("CreationDeposit")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " The deposit needed for a vault to never be cleaned up. Should be significantly higher"]
 				#[doc = " than the rent."]
 				pub fn existential_deposit(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u128, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Vault", "ExistentialDeposit")? ==
@@ -22280,16 +22280,16 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Vault")?;
 						let constant = pallet.constant("ExistentialDeposit")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " The duration that a vault may remain tombstoned before it can be deleted."]
 				pub fn tombstone_duration(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Vault", "TombstoneDuration")? ==
@@ -22300,17 +22300,17 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Vault")?;
 						let constant = pallet.constant("TombstoneDuration")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " The rent being charged per block for vaults which have not committed the"]
 				#[doc = " `ExistentialDeposit`."]
 				pub fn rent_per_block(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u128, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Vault", "RentPerBlock")? ==
@@ -22321,10 +22321,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Vault")?;
 						let constant = pallet.constant("RentPerBlock")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " The id used as the `AccountId` of the vault. This should be unique across all pallets to"]
@@ -22333,7 +22333,7 @@ pub mod api {
 					&self,
 				) -> ::core::result::Result<
 					runtime_types::frame_support::PalletId,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
@@ -22346,10 +22346,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Vault")?;
 						let constant = pallet.constant("PalletId")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -22397,7 +22397,7 @@ pub mod api {
 				const FUNCTION: &'static str = "set_min_fee";
 			}
 			pub struct TransactionApi<'a, T: ::subxt::Config, X> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 				marker: ::core::marker::PhantomData<X>,
 			}
 			impl<'a, T, X> TransactionApi<'a, T, X>
@@ -22405,7 +22405,7 @@ pub mod api {
 				T: ::subxt::Config,
 				X: ::subxt::extrinsic::ExtrinsicParams<T>,
 			{
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client, marker: ::core::marker::PhantomData }
 				}
 				#[doc = "creates asset using `CurrencyFactory`,"]
@@ -22419,7 +22419,7 @@ pub mod api {
 					>,
 					decimals: ::core::option::Option<::core::primitive::u32>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -22427,7 +22427,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -22441,9 +22441,9 @@ pub mod api {
 							220u8, 111u8, 159u8, 212u8, 136u8, 69u8, 17u8, 165u8, 36u8, 37u8,
 						] {
 						let call = RegisterAsset { location, ed, ratio, decimals };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Given well existing asset, update its remote information."]
@@ -22457,7 +22457,7 @@ pub mod api {
 					>,
 					decimals: ::core::option::Option<::core::primitive::u32>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -22465,7 +22465,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -22480,9 +22480,9 @@ pub mod api {
 							61u8, 54u8,
 						] {
 						let call = UpdateAsset { asset_id, location, ratio, decimals };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Minimal amount of asset_id required to send message to other network."]
@@ -22499,7 +22499,7 @@ pub mod api {
 					foreign_asset_id : runtime_types :: composable_traits :: xcm :: assets :: XcmAssetLocation,
 					amount: ::core::option::Option<::core::primitive::u128>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -22507,7 +22507,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -22522,9 +22522,9 @@ pub mod api {
 							7u8,
 						] {
 						let call = SetMinFee { target_parachain_id, foreign_asset_id, amount };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -22573,7 +22573,7 @@ pub mod api {
 					runtime_types::composable_traits::xcm::assets::XcmAssetLocation,
 				>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Twox128,
 					)])
@@ -22587,7 +22587,7 @@ pub mod api {
 				const STORAGE: &'static str = "ForeignToLocal";
 				type Value = runtime_types::primitives::currency::CurrencyId;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Blake2_128Concat,
 					)])
@@ -22603,11 +22603,11 @@ pub mod api {
 				type Value = ::core::primitive::u128;
 				fn key(&self) -> ::subxt::StorageEntryKey {
 					::subxt::StorageEntryKey::Map(vec![
-						::subxt::StorageMapKey::new(
+						::subxt::storage::address::StorageMapKey::new(
 							&self.0,
 							::subxt::StorageHasher::Blake2_128Concat,
 						),
-						::subxt::StorageMapKey::new(
+						::subxt::storage::address::StorageMapKey::new(
 							&self.1,
 							::subxt::StorageHasher::Blake2_128Concat,
 						),
@@ -22620,17 +22620,17 @@ pub mod api {
 				const STORAGE: &'static str = "AssetRatio";
 				type Value = runtime_types::sp_arithmetic::fixed_point::FixedU128;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Twox128,
 					)])
 				}
 			}
 			pub struct StorageApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " Mapping local asset to foreign asset."]
@@ -22645,7 +22645,7 @@ pub mod api {
 								runtime_types::composable_traits::xcm::assets::XcmAssetLocation,
 							>,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -22668,7 +22668,7 @@ pub mod api {
 							let entry = LocalToForeign(_0);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -22678,8 +22678,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, LocalToForeign<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, LocalToForeign<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -22701,7 +22701,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -22713,7 +22713,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::core::option::Option<runtime_types::primitives::currency::CurrencyId>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -22736,7 +22736,7 @@ pub mod api {
 							let entry = ForeignToLocal(_0);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -22746,8 +22746,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, ForeignToLocal<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, ForeignToLocal<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -22769,7 +22769,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -22781,7 +22781,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::core::option::Option<::core::primitive::u128>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -22804,7 +22804,7 @@ pub mod api {
 							let entry = MinFeeAmounts(_0, _1);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -22813,8 +22813,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, MinFeeAmounts<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, MinFeeAmounts<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -22836,7 +22836,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -22850,7 +22850,7 @@ pub mod api {
 						::core::option::Option<
 							runtime_types::sp_arithmetic::fixed_point::FixedU128,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -22873,7 +22873,7 @@ pub mod api {
 							let entry = AssetRatio(_0);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -22883,8 +22883,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, AssetRatio<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, AssetRatio<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -22906,7 +22906,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -22945,7 +22945,7 @@ pub mod api {
 				const FUNCTION: &'static str = "remove";
 			}
 			pub struct TransactionApi<'a, T: ::subxt::Config, X> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 				marker: ::core::marker::PhantomData<X>,
 			}
 			impl<'a, T, X> TransactionApi<'a, T, X>
@@ -22953,7 +22953,7 @@ pub mod api {
 				T: ::subxt::Config,
 				X: ::subxt::extrinsic::ExtrinsicParams<T>,
 			{
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client, marker: ::core::marker::PhantomData }
 				}
 				#[doc = "Sets the value of an `asset_id` to the signed account id. Only callable by root."]
@@ -22962,8 +22962,8 @@ pub mod api {
 					asset_id: runtime_types::primitives::currency::CurrencyId,
 					value: ::subxt::sp_core::crypto::AccountId32,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<'a, T, X, Set, DispatchError, root_mod::Event>,
-					::subxt::BasicError,
+					::subxt::tx::SubmittableExtrinsic<'a, T, X, Set, DispatchError, root_mod::Event>,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -22977,9 +22977,9 @@ pub mod api {
 							10u8, 77u8, 49u8, 78u8, 199u8, 69u8, 71u8, 85u8, 171u8, 81u8, 171u8,
 						] {
 						let call = Set { asset_id, value };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Sets the value of an `asset_id` to root. Only callable by root."]
@@ -22987,7 +22987,7 @@ pub mod api {
 					&self,
 					asset_id: runtime_types::primitives::currency::CurrencyId,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -22995,7 +22995,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -23009,9 +23009,9 @@ pub mod api {
 							20u8, 145u8, 162u8, 11u8, 253u8, 53u8, 240u8, 54u8, 221u8, 107u8,
 						] {
 						let call = GrantRoot { asset_id };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Removes mapping of an `asset_id`. Only callable by root."]
@@ -23019,8 +23019,8 @@ pub mod api {
 					&self,
 					asset_id: runtime_types::primitives::currency::CurrencyId,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<'a, T, X, Remove, DispatchError, root_mod::Event>,
-					::subxt::BasicError,
+					::subxt::tx::SubmittableExtrinsic<'a, T, X, Remove, DispatchError, root_mod::Event>,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -23035,9 +23035,9 @@ pub mod api {
 							101u8, 12u8,
 						] {
 						let call = Remove { asset_id };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -23084,17 +23084,17 @@ pub mod api {
 					::subxt::sp_core::crypto::AccountId32,
 				>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Twox64Concat,
 					)])
 				}
 			}
 			pub struct StorageApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				pub fn origins_by_asset_id(
@@ -23108,7 +23108,7 @@ pub mod api {
 								::subxt::sp_core::crypto::AccountId32,
 							>,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -23131,7 +23131,7 @@ pub mod api {
 							let entry = OriginsByAssetId(_0);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -23140,8 +23140,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, OriginsByAssetId<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, OriginsByAssetId<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -23163,7 +23163,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -23326,7 +23326,7 @@ pub mod api {
 				const FUNCTION: &'static str = "burn_from";
 			}
 			pub struct TransactionApi<'a, T: ::subxt::Config, X> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 				marker: ::core::marker::PhantomData<X>,
 			}
 			impl<'a, T, X> TransactionApi<'a, T, X>
@@ -23334,7 +23334,7 @@ pub mod api {
 				T: ::subxt::Config,
 				X: ::subxt::extrinsic::ExtrinsicParams<T>,
 			{
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client, marker: ::core::marker::PhantomData }
 				}
 				#[doc = "Transfer `amount` of `asset` from `origin` to `dest`."]
@@ -23354,7 +23354,7 @@ pub mod api {
 					amount: ::core::primitive::u128,
 					keep_alive: ::core::primitive::bool,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -23362,7 +23362,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -23377,9 +23377,9 @@ pub mod api {
 							217u8,
 						] {
 						let call = Transfer { asset, dest, amount, keep_alive };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Transfer `amount` of the native asset from `origin` to `dest`. This is slightly"]
@@ -23399,7 +23399,7 @@ pub mod api {
 					value: ::core::primitive::u128,
 					keep_alive: ::core::primitive::bool,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -23407,7 +23407,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -23421,9 +23421,9 @@ pub mod api {
 							173u8, 111u8, 76u8, 223u8, 160u8, 86u8, 103u8, 200u8, 84u8, 101u8,
 						] {
 						let call = TransferNative { dest, value, keep_alive };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Transfer `amount` of the `asset` from `origin` to `dest`. This requires root."]
@@ -23447,7 +23447,7 @@ pub mod api {
 					value: ::core::primitive::u128,
 					keep_alive: ::core::primitive::bool,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -23455,7 +23455,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -23469,9 +23469,9 @@ pub mod api {
 							202u8, 230u8, 50u8, 39u8, 3u8, 52u8, 120u8, 28u8, 11u8, 191u8, 86u8,
 						] {
 						let call = ForceTransfer { asset, source, dest, value, keep_alive };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Transfer `amount` of the the native asset from `origin` to `dest`. This requires root."]
@@ -23494,7 +23494,7 @@ pub mod api {
 					value: ::core::primitive::u128,
 					keep_alive: ::core::primitive::bool,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -23502,7 +23502,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -23517,9 +23517,9 @@ pub mod api {
 							186u8, 238u8,
 						] {
 						let call = ForceTransferNative { source, dest, value, keep_alive };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Transfer all free balance of the `asset` from `origin` to `dest`."]
@@ -23536,7 +23536,7 @@ pub mod api {
 					>,
 					keep_alive: ::core::primitive::bool,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -23544,7 +23544,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -23558,9 +23558,9 @@ pub mod api {
 							135u8, 39u8, 213u8, 206u8, 99u8, 196u8, 158u8, 125u8, 45u8, 150u8,
 						] {
 						let call = TransferAll { asset, dest, keep_alive };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Transfer all free balance of the native asset from `origin` to `dest`."]
@@ -23576,7 +23576,7 @@ pub mod api {
 					>,
 					keep_alive: ::core::primitive::bool,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -23584,7 +23584,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -23598,9 +23598,9 @@ pub mod api {
 							6u8, 24u8, 208u8, 18u8, 158u8, 230u8, 110u8, 243u8, 157u8, 109u8,
 						] {
 						let call = TransferAllNative { dest, keep_alive };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Creates a new asset, minting `amount` of funds into the `dest` account. intended to be"]
@@ -23613,7 +23613,7 @@ pub mod api {
 						::core::primitive::u32,
 					>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -23621,7 +23621,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -23635,9 +23635,9 @@ pub mod api {
 							71u8, 236u8, 144u8, 50u8, 156u8, 152u8, 5u8, 142u8, 225u8, 74u8, 196u8,
 						] {
 						let call = MintInitialize { amount, dest };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Creates a new asset, minting `amount` of funds into the `dest` account. The `dest`"]
@@ -23656,7 +23656,7 @@ pub mod api {
 						::core::primitive::u32,
 					>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -23664,7 +23664,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -23679,9 +23679,9 @@ pub mod api {
 							210u8,
 						] {
 						let call = MintInitializeWithGovernance { amount, governance_origin, dest };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Mints `amount` of `asset_id` into the `dest` account."]
@@ -23694,7 +23694,7 @@ pub mod api {
 					>,
 					amount: ::core::primitive::u128,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -23702,7 +23702,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -23716,9 +23716,9 @@ pub mod api {
 							185u8, 8u8, 198u8, 225u8, 97u8, 158u8, 224u8, 231u8, 17u8, 93u8, 71u8,
 						] {
 						let call = MintInto { asset_id, dest, amount };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Mints `amount` of `asset_id` into the `dest` account."]
@@ -23731,7 +23731,7 @@ pub mod api {
 					>,
 					amount: ::core::primitive::u128,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -23739,7 +23739,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -23754,9 +23754,9 @@ pub mod api {
 							20u8,
 						] {
 						let call = BurnFrom { asset_id, dest, amount };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -23764,10 +23764,10 @@ pub mod api {
 		pub mod storage {
 			use super::runtime_types;
 			pub struct StorageApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 			}
@@ -23775,17 +23775,17 @@ pub mod api {
 		pub mod constants {
 			use super::runtime_types;
 			pub struct ConstantsApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> ConstantsApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				pub fn native_asset_id(
 					&self,
 				) -> ::core::result::Result<
 					runtime_types::primitives::currency::CurrencyId,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
@@ -23797,10 +23797,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Assets")?;
 						let constant = pallet.constant("NativeAssetId")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -23863,7 +23863,7 @@ pub mod api {
 				const FUNCTION: &'static str = "claim";
 			}
 			pub struct TransactionApi<'a, T: ::subxt::Config, X> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 				marker: ::core::marker::PhantomData<X>,
 			}
 			impl<'a, T, X> TransactionApi<'a, T, X>
@@ -23871,14 +23871,14 @@ pub mod api {
 				T: ::subxt::Config,
 				X: ::subxt::extrinsic::ExtrinsicParams<T>,
 			{
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client, marker: ::core::marker::PhantomData }
 				}
 				#[doc = "Initialize the pallet at the current transaction block."]
 				pub fn initialize(
 					&self,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -23886,7 +23886,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -23901,9 +23901,9 @@ pub mod api {
 							180u8,
 						] {
 						let call = Initialize {};
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Initialize the pallet at the given transaction block."]
@@ -23911,7 +23911,7 @@ pub mod api {
 					&self,
 					at: ::core::primitive::u64,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -23919,7 +23919,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -23933,9 +23933,9 @@ pub mod api {
 							189u8, 194u8, 146u8, 81u8, 1u8, 51u8, 147u8, 136u8, 160u8, 253u8,
 						] {
 						let call = InitializeAt { at };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Populate pallet by adding more rewards."]
@@ -23952,7 +23952,7 @@ pub mod api {
 						::core::primitive::u64,
 					)>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -23960,7 +23960,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -23975,9 +23975,9 @@ pub mod api {
 							253u8,
 						] {
 						let call = Populate { rewards };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Associate a reward account. A valid proof has to be provided."]
@@ -23996,7 +23996,7 @@ pub mod api {
 						::subxt::sp_core::crypto::AccountId32,
 					>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -24004,7 +24004,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -24019,9 +24019,9 @@ pub mod api {
 							109u8,
 						] {
 						let call = Associate { reward_account, proof };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Claim a reward from the associated reward account."]
@@ -24030,8 +24030,8 @@ pub mod api {
 				pub fn claim(
 					&self,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<'a, T, X, Claim, DispatchError, root_mod::Event>,
-					::subxt::BasicError,
+					::subxt::tx::SubmittableExtrinsic<'a, T, X, Claim, DispatchError, root_mod::Event>,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -24045,9 +24045,9 @@ pub mod api {
 							160u8, 81u8, 148u8, 30u8, 117u8, 255u8, 107u8, 177u8, 200u8, 78u8,
 						] {
 						let call = Claim {};
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -24108,7 +24108,7 @@ pub mod api {
 					::core::primitive::u64,
 				>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Blake2_128Concat,
 					)])
@@ -24158,17 +24158,17 @@ pub mod api {
 					::subxt::sp_core::crypto::AccountId32,
 				>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Blake2_128Concat,
 					)])
 				}
 			}
 			pub struct StorageApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				pub fn rewards(
@@ -24185,7 +24185,7 @@ pub mod api {
 								::core::primitive::u64,
 							>,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -24208,7 +24208,7 @@ pub mod api {
 							let entry = Rewards(_0);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -24217,8 +24217,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, Rewards<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, Rewards<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -24240,7 +24240,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -24249,7 +24249,7 @@ pub mod api {
 					&self,
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
-					Output = ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>,
+					Output = ::core::result::Result<::core::primitive::u128, ::subxt::error::DispatchError>,
 				> + 'a {
 					let client = self.client;
 					async move {
@@ -24271,7 +24271,7 @@ pub mod api {
 							let entry = TotalRewards;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -24280,7 +24280,7 @@ pub mod api {
 					&self,
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
-					Output = ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>,
+					Output = ::core::result::Result<::core::primitive::u128, ::subxt::error::DispatchError>,
 				> + 'a {
 					let client = self.client;
 					async move {
@@ -24302,7 +24302,7 @@ pub mod api {
 							let entry = ClaimedRewards;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -24311,7 +24311,7 @@ pub mod api {
 					&self,
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
-					Output = ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>,
+					Output = ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError>,
 				> + 'a {
 					let client = self.client;
 					async move {
@@ -24333,7 +24333,7 @@ pub mod api {
 							let entry = TotalContributors;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -24344,7 +24344,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::core::option::Option<::core::primitive::u64>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -24367,7 +24367,7 @@ pub mod api {
 							let entry = VestingTimeStart;
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -24383,7 +24383,7 @@ pub mod api {
 								::subxt::sp_core::crypto::AccountId32,
 							>,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -24406,7 +24406,7 @@ pub mod api {
 							let entry = Associations(_0);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -24416,8 +24416,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, Associations<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, Associations<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -24439,7 +24439,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -24448,10 +24448,10 @@ pub mod api {
 		pub mod constants {
 			use super::runtime_types;
 			pub struct ConstantsApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> ConstantsApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " The upfront liquidity unlocked at first claim."]
@@ -24459,7 +24459,7 @@ pub mod api {
 					&self,
 				) -> ::core::result::Result<
 					runtime_types::sp_arithmetic::per_things::Perbill,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
@@ -24472,16 +24472,16 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("CrowdloanRewards")?;
 						let constant = pallet.constant("InitialPayment")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " The time you have to wait to unlock another part of your reward."]
 				pub fn vesting_step(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u64, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u64, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("CrowdloanRewards", "VestingStep")? ==
@@ -24492,10 +24492,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("CrowdloanRewards")?;
 						let constant = pallet.constant("VestingStep")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " The arbitrary prefix used for the proof"]
@@ -24503,7 +24503,7 @@ pub mod api {
 					&self,
 				) -> ::core::result::Result<
 					::std::vec::Vec<::core::primitive::u8>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
@@ -24515,10 +24515,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("CrowdloanRewards")?;
 						let constant = pallet.constant("Prefix")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " The unique identifier of this pallet."]
@@ -24526,7 +24526,7 @@ pub mod api {
 					&self,
 				) -> ::core::result::Result<
 					runtime_types::frame_support::PalletId,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
@@ -24538,10 +24538,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("CrowdloanRewards")?;
 						let constant = pallet.constant("PalletId")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " The AccountId of this pallet."]
@@ -24549,7 +24549,7 @@ pub mod api {
 					&self,
 				) -> ::core::result::Result<
 					::subxt::sp_core::crypto::AccountId32,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
@@ -24561,10 +24561,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("CrowdloanRewards")?;
 						let constant = pallet.constant("account_id")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -24637,7 +24637,7 @@ pub mod api {
 				const FUNCTION: &'static str = "claim_for";
 			}
 			pub struct TransactionApi<'a, T: ::subxt::Config, X> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 				marker: ::core::marker::PhantomData<X>,
 			}
 			impl<'a, T, X> TransactionApi<'a, T, X>
@@ -24645,15 +24645,15 @@ pub mod api {
 				T: ::subxt::Config,
 				X: ::subxt::extrinsic::ExtrinsicParams<T>,
 			{
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client, marker: ::core::marker::PhantomData }
 				}
 				pub fn claim(
 					&self,
 					asset: runtime_types::primitives::currency::CurrencyId,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<'a, T, X, Claim, DispatchError, root_mod::Event>,
-					::subxt::BasicError,
+					::subxt::tx::SubmittableExtrinsic<'a, T, X, Claim, DispatchError, root_mod::Event>,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -24668,9 +24668,9 @@ pub mod api {
 							139u8,
 						] {
 						let call = Claim { asset };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				pub fn vested_transfer(
@@ -24690,7 +24690,7 @@ pub mod api {
 						::core::primitive::u128,
 					>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -24698,7 +24698,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -24713,9 +24713,9 @@ pub mod api {
 							249u8,
 						] {
 						let call = VestedTransfer { from, beneficiary, asset, schedule };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				pub fn update_vesting_schedules(
@@ -24733,7 +24733,7 @@ pub mod api {
 						>,
 					>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -24741,7 +24741,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -24755,9 +24755,9 @@ pub mod api {
 							11u8, 23u8, 54u8, 27u8, 98u8, 38u8, 217u8, 123u8, 53u8, 212u8,
 						] {
 						let call = UpdateVestingSchedules { who, asset, vesting_schedules };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				pub fn claim_for(
@@ -24768,7 +24768,7 @@ pub mod api {
 					>,
 					asset: runtime_types::primitives::currency::CurrencyId,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -24776,7 +24776,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -24790,9 +24790,9 @@ pub mod api {
 							129u8, 40u8, 54u8, 7u8, 231u8, 89u8, 131u8, 185u8, 182u8, 162u8, 102u8,
 						] {
 						let call = ClaimFor { dest, asset };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -24856,11 +24856,11 @@ pub mod api {
 				>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
 					::subxt::StorageEntryKey::Map(vec![
-						::subxt::StorageMapKey::new(
+						::subxt::storage::address::StorageMapKey::new(
 							&self.0,
 							::subxt::StorageHasher::Blake2_128Concat,
 						),
-						::subxt::StorageMapKey::new(
+						::subxt::storage::address::StorageMapKey::new(
 							&self.1,
 							::subxt::StorageHasher::Blake2_128Concat,
 						),
@@ -24868,10 +24868,10 @@ pub mod api {
 				}
 			}
 			pub struct StorageApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " Vesting schedules of an account."]
@@ -24891,7 +24891,7 @@ pub mod api {
 								::core::primitive::u128,
 							>,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -24914,7 +24914,7 @@ pub mod api {
 							let entry = VestingSchedules(_0, _1);
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -24926,8 +24926,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, VestingSchedules<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, VestingSchedules<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -24949,7 +24949,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -24958,16 +24958,16 @@ pub mod api {
 		pub mod constants {
 			use super::runtime_types;
 			pub struct ConstantsApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> ConstantsApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " The minimum amount transferred to call `vested_transfer`."]
 				pub fn min_vested_transfer(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u128, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Vesting", "MinVestedTransfer")? ==
@@ -24979,10 +24979,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Vesting")?;
 						let constant = pallet.constant("MinVestedTransfer")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -25032,7 +25032,7 @@ pub mod api {
 				const FUNCTION: &'static str = "cancel";
 			}
 			pub struct TransactionApi<'a, T: ::subxt::Config, X> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 				marker: ::core::marker::PhantomData<X>,
 			}
 			impl<'a, T, X> TransactionApi<'a, T, X>
@@ -25040,7 +25040,7 @@ pub mod api {
 				T: ::subxt::Config,
 				X: ::subxt::extrinsic::ExtrinsicParams<T>,
 			{
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client, marker: ::core::marker::PhantomData }
 				}
 				#[doc = "Create a new bond offer. To be `bond` to later."]
@@ -25062,8 +25062,8 @@ pub mod api {
 					>,
 					keep_alive: ::core::primitive::bool,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<'a, T, X, Offer, DispatchError, root_mod::Event>,
-					::subxt::BasicError,
+					::subxt::tx::SubmittableExtrinsic<'a, T, X, Offer, DispatchError, root_mod::Event>,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -25077,9 +25077,9 @@ pub mod api {
 							254u8, 48u8, 19u8, 40u8, 242u8, 74u8, 74u8, 11u8, 27u8, 55u8, 113u8,
 						] {
 						let call = Offer { offer, keep_alive };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Bond to an offer."]
@@ -25102,8 +25102,8 @@ pub mod api {
 					nb_of_bonds: ::core::primitive::u128,
 					keep_alive: ::core::primitive::bool,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<'a, T, X, Bond, DispatchError, root_mod::Event>,
-					::subxt::BasicError,
+					::subxt::tx::SubmittableExtrinsic<'a, T, X, Bond, DispatchError, root_mod::Event>,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -25118,9 +25118,9 @@ pub mod api {
 							163u8,
 						] {
 						let call = Bond { offer_id, nb_of_bonds, keep_alive };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Cancel a running offer."]
@@ -25135,8 +25135,8 @@ pub mod api {
 					&self,
 					offer_id: ::core::primitive::u128,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<'a, T, X, Cancel, DispatchError, root_mod::Event>,
-					::subxt::BasicError,
+					::subxt::tx::SubmittableExtrinsic<'a, T, X, Cancel, DispatchError, root_mod::Event>,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -25150,9 +25150,9 @@ pub mod api {
 							54u8, 199u8, 47u8, 20u8, 12u8, 37u8, 5u8, 5u8, 17u8, 165u8, 1u8,
 						] {
 						let call = Cancel { offer_id };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -25240,17 +25240,17 @@ pub mod api {
 					>,
 				);
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Blake2_128Concat,
 					)])
 				}
 			}
 			pub struct StorageApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " The counter used to uniquely identify bond offers within this pallet."]
@@ -25258,7 +25258,7 @@ pub mod api {
 					&self,
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
-					Output = ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>,
+					Output = ::core::result::Result<::core::primitive::u128, ::subxt::error::DispatchError>,
 				> + 'a {
 					let client = self.client;
 					async move {
@@ -25280,7 +25280,7 @@ pub mod api {
 							let entry = BondOfferCount;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -25300,7 +25300,7 @@ pub mod api {
 								::core::primitive::u32,
 							>,
 						)>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -25323,7 +25323,7 @@ pub mod api {
 							let entry = BondOffers(_0);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -25333,8 +25333,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, BondOffers<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, BondOffers<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -25356,7 +25356,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -25365,10 +25365,10 @@ pub mod api {
 		pub mod constants {
 			use super::runtime_types;
 			pub struct ConstantsApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> ConstantsApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " The pallet ID, required to create sub-accounts used by offers."]
@@ -25376,7 +25376,7 @@ pub mod api {
 					&self,
 				) -> ::core::result::Result<
 					runtime_types::frame_support::PalletId,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
@@ -25388,16 +25388,16 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("BondedFinance")?;
 						let constant = pallet.constant("PalletId")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " The stake a user has to put to create an offer."]
 				pub fn stake(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u128, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("BondedFinance", "Stake")? ==
@@ -25409,10 +25409,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("BondedFinance")?;
 						let constant = pallet.constant("Stake")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " The minimum reward for an offer."]
@@ -25420,7 +25420,7 @@ pub mod api {
 				#[doc = " Must be > T::Vesting::MinVestedTransfer."]
 				pub fn min_reward(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u128, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("BondedFinance", "MinReward")? ==
@@ -25432,10 +25432,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("BondedFinance")?;
 						let constant = pallet.constant("MinReward")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -25499,7 +25499,7 @@ pub mod api {
 				const FUNCTION: &'static str = "xcm_sell";
 			}
 			pub struct TransactionApi<'a, T: ::subxt::Config, X> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 				marker: ::core::marker::PhantomData<X>,
 			}
 			impl<'a, T, X> TransactionApi<'a, T, X>
@@ -25507,7 +25507,7 @@ pub mod api {
 				T: ::subxt::Config,
 				X: ::subxt::extrinsic::ExtrinsicParams<T>,
 			{
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client, marker: ::core::marker::PhantomData }
 				}
 				#[doc = "Inserts or replaces auction configuration."]
@@ -25517,7 +25517,7 @@ pub mod api {
 					configuration_id: ::core::primitive::u128,
 					configuration: runtime_types::composable_traits::time::TimeReleaseFunction,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -25525,7 +25525,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -25539,9 +25539,9 @@ pub mod api {
 							119u8, 69u8, 188u8, 167u8, 17u8, 8u8, 90u8, 32u8, 111u8, 107u8,
 						] {
 						let call = AddConfiguration { configuration_id, configuration };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "sell `order` in auction with `configuration`"]
@@ -25554,8 +25554,8 @@ pub mod api {
 					>,
 					configuration: runtime_types::composable_traits::time::TimeReleaseFunction,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<'a, T, X, Ask, DispatchError, root_mod::Event>,
-					::subxt::BasicError,
+					::subxt::tx::SubmittableExtrinsic<'a, T, X, Ask, DispatchError, root_mod::Event>,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -25570,9 +25570,9 @@ pub mod api {
 							130u8,
 						] {
 						let call = Ask { order, configuration };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "adds take to list, does not execute take immediately"]
@@ -25581,8 +25581,8 @@ pub mod api {
 					order_id: ::core::primitive::u128,
 					take: runtime_types::composable_traits::defi::Take<::core::primitive::u128>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<'a, T, X, Take, DispatchError, root_mod::Event>,
-					::subxt::BasicError,
+					::subxt::tx::SubmittableExtrinsic<'a, T, X, Take, DispatchError, root_mod::Event>,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -25597,9 +25597,9 @@ pub mod api {
 							160u8, 252u8,
 						] {
 						let call = Take { order_id, take };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "allows to remove `order_id` from storage"]
@@ -25607,7 +25607,7 @@ pub mod api {
 					&self,
 					order_id: ::core::primitive::u128,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -25615,7 +25615,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -25629,16 +25629,16 @@ pub mod api {
 							131u8, 153u8, 24u8, 35u8, 42u8, 236u8, 44u8, 77u8, 193u8, 13u8, 69u8,
 						] {
 						let call = Liquidate { order_id };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				pub fn xcm_sell(
 					&self,
 					request: runtime_types::composable_traits::xcm::XcmSellRequest,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -25646,7 +25646,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -25660,9 +25660,9 @@ pub mod api {
 							254u8, 2u8, 34u8, 159u8, 254u8, 97u8, 162u8, 88u8, 229u8, 177u8, 106u8,
 						] {
 						let call = XcmSell { request };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -25742,7 +25742,7 @@ pub mod api {
 					runtime_types::composable_traits::time::TimeReleaseFunction,
 				>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Twox64Concat,
 					)])
@@ -25758,8 +25758,8 @@ pub mod api {
 				type Value = ::core::primitive::u128;
 				fn key(&self) -> ::subxt::StorageEntryKey {
 					::subxt::StorageEntryKey::Map(vec![
-						::subxt::StorageMapKey::new(&self.0, ::subxt::StorageHasher::Twox64Concat),
-						::subxt::StorageMapKey::new(&self.1, ::subxt::StorageHasher::Twox64Concat),
+						::subxt::storage::address::StorageMapKey::new(&self.0, ::subxt::StorageHasher::Twox64Concat),
+						::subxt::storage::address::StorageMapKey::new(&self.1, ::subxt::StorageHasher::Twox64Concat),
 					])
 				}
 			}
@@ -25770,7 +25770,7 @@ pub mod api {
 				type Value =
 					(runtime_types::polkadot_parachain::primitives::Id, ::core::primitive::u64);
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Twox64Concat,
 					)])
@@ -25784,7 +25784,7 @@ pub mod api {
 				const STORAGE: &'static str = "ParachainXcmCallbackLocation";
 				type Value = runtime_types::composable_traits::xcm::CumulusMethodId;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Twox64Concat,
 					)])
@@ -25796,7 +25796,7 @@ pub mod api {
 				const STORAGE: &'static str = "Configurations";
 				type Value = runtime_types::composable_traits::time::TimeReleaseFunction;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Twox64Concat,
 					)])
@@ -25813,24 +25813,24 @@ pub mod api {
 					>,
 				>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Twox64Concat,
 					)])
 				}
 			}
 			pub struct StorageApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				pub fn orders_index(
 					&self,
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
-					Output = ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>,
+					Output = ::core::result::Result<::core::primitive::u128, ::subxt::error::DispatchError>,
 				> + 'a {
 					let client = self.client;
 					async move {
@@ -25852,7 +25852,7 @@ pub mod api {
 							let entry = OrdersIndex;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -25873,7 +25873,7 @@ pub mod api {
 								runtime_types::composable_traits::time::TimeReleaseFunction,
 							>,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -25896,7 +25896,7 @@ pub mod api {
 							let entry = SellOrders(_0);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -25905,8 +25905,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, SellOrders<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, SellOrders<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -25928,7 +25928,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -25940,7 +25940,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::core::option::Option<::core::primitive::u128>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -25963,7 +25963,7 @@ pub mod api {
 							let entry = XcmSellOrders(_0, _1);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -25972,8 +25972,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, XcmSellOrders<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, XcmSellOrders<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -25995,7 +25995,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -26011,7 +26011,7 @@ pub mod api {
 							runtime_types::polkadot_parachain::primitives::Id,
 							::core::primitive::u64,
 						)>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -26034,7 +26034,7 @@ pub mod api {
 							let entry = LocalOrderIdToRemote(_0);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -26045,8 +26045,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, LocalOrderIdToRemote<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, LocalOrderIdToRemote<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -26068,7 +26068,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -26082,7 +26082,7 @@ pub mod api {
 						::core::option::Option<
 							runtime_types::composable_traits::xcm::CumulusMethodId,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -26105,7 +26105,7 @@ pub mod api {
 							let entry = ParachainXcmCallbackLocation(_0);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -26115,8 +26115,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, ParachainXcmCallbackLocation<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, ParachainXcmCallbackLocation<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -26138,7 +26138,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -26152,7 +26152,7 @@ pub mod api {
 						::core::option::Option<
 							runtime_types::composable_traits::time::TimeReleaseFunction,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -26175,7 +26175,7 @@ pub mod api {
 							let entry = Configurations(_0);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -26185,8 +26185,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, Configurations<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, Configurations<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -26208,7 +26208,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -26228,7 +26228,7 @@ pub mod api {
 								>,
 							>,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -26251,7 +26251,7 @@ pub mod api {
 							let entry = Takes(_0);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -26262,8 +26262,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, Takes<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, Takes<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -26285,7 +26285,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -26294,17 +26294,17 @@ pub mod api {
 		pub mod constants {
 			use super::runtime_types;
 			pub struct ConstantsApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> ConstantsApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				pub fn pallet_id(
 					&self,
 				) -> ::core::result::Result<
 					runtime_types::frame_support::PalletId,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
@@ -26317,16 +26317,16 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("DutchAuction")?;
 						let constant = pallet.constant("PalletId")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " ED taken to create position. Part of if returned when position is liquidated."]
 				pub fn position_existential_deposit(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u128, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("DutchAuction", "PositionExistentialDeposit")? ==
@@ -26337,10 +26337,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("DutchAuction")?;
 						let constant = pallet.constant("PositionExistentialDeposit")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -26508,7 +26508,7 @@ pub mod api {
 				const FUNCTION: &'static str = "remove_remote_amm_id";
 			}
 			pub struct TransactionApi<'a, T: ::subxt::Config, X> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 				marker: ::core::marker::PhantomData<X>,
 			}
 			impl<'a, T, X> TransactionApi<'a, T, X>
@@ -26516,7 +26516,7 @@ pub mod api {
 				T: ::subxt::Config,
 				X: ::subxt::extrinsic::ExtrinsicParams<T>,
 			{
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client, marker: ::core::marker::PhantomData }
 				}
 				#[doc = "Sets the current Relayer configuration."]
@@ -26531,7 +26531,7 @@ pub mod api {
 					&self,
 					relayer: ::subxt::sp_core::crypto::AccountId32,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -26539,7 +26539,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -26553,9 +26553,9 @@ pub mod api {
 							6u8, 18u8, 242u8, 122u8, 175u8, 142u8, 154u8, 40u8, 52u8, 12u8, 219u8,
 						] {
 						let call = SetRelayer { relayer };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Rotates the Relayer Account"]
@@ -26568,7 +26568,7 @@ pub mod api {
 					new: ::subxt::sp_core::crypto::AccountId32,
 					validated_ttl: ::core::primitive::u32,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -26576,7 +26576,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -26591,9 +26591,9 @@ pub mod api {
 							30u8, 122u8,
 						] {
 						let call = RotateRelayer { new, validated_ttl };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Sets supported networks and maximum transaction sizes accepted by the Relayer."]
@@ -26606,7 +26606,7 @@ pub mod api {
 						::core::primitive::u128,
 					>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -26614,7 +26614,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -26628,9 +26628,9 @@ pub mod api {
 							209u8, 31u8, 84u8, 48u8, 76u8, 71u8, 179u8, 106u8, 60u8, 107u8, 183u8,
 						] {
 						let call = SetNetwork { network_id, network_info };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Sets the relayer budget for _incoming_ transactions for specific assets. Does not reset"]
@@ -26647,7 +26647,7 @@ pub mod api {
 						::core::primitive::u32,
 					>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -26655,7 +26655,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -26670,9 +26670,9 @@ pub mod api {
 							60u8,
 						] {
 						let call = SetBudget { asset_id, amount, decay };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Creates an outgoing transaction request, locking the funds locally until picked up by"]
@@ -26701,7 +26701,7 @@ pub mod api {
 					>,
 					keep_alive: ::core::primitive::bool,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -26709,7 +26709,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -26733,9 +26733,9 @@ pub mod api {
 							amm_swap_info,
 							keep_alive,
 						};
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "This is called by the Relayer to confirm that it will relay a transaction."]
@@ -26761,7 +26761,7 @@ pub mod api {
 					remote_asset_id: runtime_types::common::types::MosaicRemoteAssetId,
 					amount: ::core::primitive::u128,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -26769,7 +26769,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -26784,9 +26784,9 @@ pub mod api {
 							184u8,
 						] {
 						let call = AcceptTransfer { from, network_id, remote_asset_id, amount };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Claims user funds from the `OutgoingTransactions`, in case that the Relayer has not"]
@@ -26796,7 +26796,7 @@ pub mod api {
 					asset_id: runtime_types::primitives::currency::CurrencyId,
 					to: ::subxt::sp_core::crypto::AccountId32,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -26804,7 +26804,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -26819,9 +26819,9 @@ pub mod api {
 							19u8,
 						] {
 						let call = ClaimStaleTo { asset_id, to };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Mints new tokens into the pallet's wallet, ready for the user to be picked up after"]
@@ -26837,7 +26837,7 @@ pub mod api {
 					lock_time: ::core::primitive::u32,
 					id: ::subxt::sp_core::H256,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -26845,7 +26845,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -26866,9 +26866,9 @@ pub mod api {
 							lock_time,
 							id,
 						};
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Sets the time lock, in blocks, on new transfers"]
@@ -26878,7 +26878,7 @@ pub mod api {
 					&self,
 					period: ::core::primitive::u32,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -26886,7 +26886,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -26900,9 +26900,9 @@ pub mod api {
 							190u8, 6u8, 192u8, 237u8, 253u8, 186u8, 55u8, 64u8, 56u8, 204u8, 133u8,
 						] {
 						let call = SetTimelockDuration { period };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Burns funds waiting in incoming_transactions that are still unclaimed."]
@@ -26915,7 +26915,7 @@ pub mod api {
 					account: ::subxt::sp_core::crypto::AccountId32,
 					untrusted_amount: ::core::primitive::u128,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -26923,7 +26923,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -26943,9 +26943,9 @@ pub mod api {
 							account,
 							untrusted_amount,
 						};
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Collects funds deposited by the Relayer into the owner's account"]
@@ -26954,7 +26954,7 @@ pub mod api {
 					asset_id: runtime_types::primitives::currency::CurrencyId,
 					to: ::subxt::sp_core::crypto::AccountId32,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -26962,7 +26962,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -26977,9 +26977,9 @@ pub mod api {
 							82u8,
 						] {
 						let call = ClaimTo { asset_id, to };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Update a network asset mapping."]
@@ -26998,7 +26998,7 @@ pub mod api {
 						runtime_types::common::types::MosaicRemoteAssetId,
 					>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -27006,7 +27006,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -27020,9 +27020,9 @@ pub mod api {
 							251u8, 240u8, 107u8, 253u8, 194u8, 8u8, 241u8, 197u8, 141u8, 217u8,
 						] {
 						let call = UpdateAssetMapping { asset_id, network_id, remote_asset_id };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Adds a remote AMM for a specific Network"]
@@ -27031,7 +27031,7 @@ pub mod api {
 					network_id: ::core::primitive::u32,
 					amm_id: ::core::primitive::u128,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -27039,7 +27039,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -27054,9 +27054,9 @@ pub mod api {
 							162u8,
 						] {
 						let call = AddRemoteAmmId { network_id, amm_id };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Removes a remote AMM for a specific Network"]
@@ -27065,7 +27065,7 @@ pub mod api {
 					network_id: ::core::primitive::u32,
 					amm_id: ::core::primitive::u128,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -27073,7 +27073,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -27088,9 +27088,9 @@ pub mod api {
 							242u8,
 						] {
 						let call = RemoveRemoteAmmId { network_id, amm_id };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -27301,7 +27301,7 @@ pub mod api {
 					>,
 				>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Blake2_128Concat,
 					)])
@@ -27314,7 +27314,7 @@ pub mod api {
 				type Value =
 					runtime_types::pallet_mosaic::pallet::NetworkInfo<::core::primitive::u128>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Blake2_128Concat,
 					)])
@@ -27348,11 +27348,11 @@ pub mod api {
 				type Value = ();
 				fn key(&self) -> ::subxt::StorageEntryKey {
 					::subxt::StorageEntryKey::Map(vec![
-						::subxt::StorageMapKey::new(
+						::subxt::storage::address::StorageMapKey::new(
 							&self.0,
 							::subxt::StorageHasher::Blake2_128Concat,
 						),
-						::subxt::StorageMapKey::new(
+						::subxt::storage::address::StorageMapKey::new(
 							&self.1,
 							::subxt::StorageHasher::Blake2_128Concat,
 						),
@@ -27369,11 +27369,11 @@ pub mod api {
 				type Value = (::core::primitive::u128, ::core::primitive::u32);
 				fn key(&self) -> ::subxt::StorageEntryKey {
 					::subxt::StorageEntryKey::Map(vec![
-						::subxt::StorageMapKey::new(
+						::subxt::storage::address::StorageMapKey::new(
 							&self.0,
 							::subxt::StorageHasher::Blake2_128Concat,
 						),
-						::subxt::StorageMapKey::new(
+						::subxt::storage::address::StorageMapKey::new(
 							&self.1,
 							::subxt::StorageHasher::Blake2_128Concat,
 						),
@@ -27390,11 +27390,11 @@ pub mod api {
 				type Value = (::core::primitive::u128, ::core::primitive::u32);
 				fn key(&self) -> ::subxt::StorageEntryKey {
 					::subxt::StorageEntryKey::Map(vec![
-						::subxt::StorageMapKey::new(
+						::subxt::storage::address::StorageMapKey::new(
 							&self.0,
 							::subxt::StorageHasher::Blake2_128Concat,
 						),
-						::subxt::StorageMapKey::new(
+						::subxt::storage::address::StorageMapKey::new(
 							&self.1,
 							::subxt::StorageHasher::Blake2_128Concat,
 						),
@@ -27411,11 +27411,11 @@ pub mod api {
 				type Value = runtime_types::common::types::MosaicRemoteAssetId;
 				fn key(&self) -> ::subxt::StorageEntryKey {
 					::subxt::StorageEntryKey::Map(vec![
-						::subxt::StorageMapKey::new(
+						::subxt::storage::address::StorageMapKey::new(
 							&self.0,
 							::subxt::StorageHasher::Blake2_128Concat,
 						),
-						::subxt::StorageMapKey::new(
+						::subxt::storage::address::StorageMapKey::new(
 							&self.1,
 							::subxt::StorageHasher::Blake2_128Concat,
 						),
@@ -27432,11 +27432,11 @@ pub mod api {
 				type Value = runtime_types::primitives::currency::CurrencyId;
 				fn key(&self) -> ::subxt::StorageEntryKey {
 					::subxt::StorageEntryKey::Map(vec![
-						::subxt::StorageMapKey::new(
+						::subxt::storage::address::StorageMapKey::new(
 							&self.0,
 							::subxt::StorageHasher::Blake2_128Concat,
 						),
-						::subxt::StorageMapKey::new(
+						::subxt::storage::address::StorageMapKey::new(
 							&self.1,
 							::subxt::StorageHasher::Blake2_128Concat,
 						),
@@ -27444,10 +27444,10 @@ pub mod api {
 				}
 			}
 			pub struct StorageApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				pub fn relayer(
@@ -27461,7 +27461,7 @@ pub mod api {
 								::core::primitive::u32,
 							>,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -27484,7 +27484,7 @@ pub mod api {
 							let entry = Relayer;
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -27504,7 +27504,7 @@ pub mod api {
 								>,
 							>,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -27527,7 +27527,7 @@ pub mod api {
 							let entry = AssetsInfo(_0);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -27536,8 +27536,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, AssetsInfo<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, AssetsInfo<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -27559,7 +27559,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -27574,7 +27574,7 @@ pub mod api {
 								::core::primitive::u128,
 							>,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -27597,7 +27597,7 @@ pub mod api {
 							let entry = NetworkInfos(_0);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -27606,8 +27606,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, NetworkInfos<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, NetworkInfos<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -27629,7 +27629,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -27637,7 +27637,7 @@ pub mod api {
 					&self,
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
-					Output = ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>,
+					Output = ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError>,
 				> + 'a {
 					let client = self.client;
 					async move {
@@ -27659,7 +27659,7 @@ pub mod api {
 							let entry = TimeLockPeriod;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -27667,7 +27667,7 @@ pub mod api {
 					&self,
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
-					Output = ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>,
+					Output = ::core::result::Result<::core::primitive::u128, ::subxt::error::DispatchError>,
 				> + 'a {
 					let client = self.client;
 					async move {
@@ -27689,7 +27689,7 @@ pub mod api {
 							let entry = Nonce;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -27704,7 +27704,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::core::option::Option<()>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -27727,7 +27727,7 @@ pub mod api {
 							let entry = RemoteAmmWhitelist(_0, _1);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -27739,8 +27739,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, RemoteAmmWhitelist<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, RemoteAmmWhitelist<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -27762,7 +27762,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -27775,7 +27775,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::core::option::Option<(::core::primitive::u128, ::core::primitive::u32)>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -27798,7 +27798,7 @@ pub mod api {
 							let entry = OutgoingTransactions(_0, _1);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -27808,8 +27808,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, OutgoingTransactions<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, OutgoingTransactions<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -27831,7 +27831,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -27844,7 +27844,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::core::option::Option<(::core::primitive::u128, ::core::primitive::u32)>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -27867,7 +27867,7 @@ pub mod api {
 							let entry = IncomingTransactions(_0, _1);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -27877,8 +27877,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, IncomingTransactions<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, IncomingTransactions<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -27900,7 +27900,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -27912,7 +27912,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::core::option::Option<runtime_types::common::types::MosaicRemoteAssetId>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -27935,7 +27935,7 @@ pub mod api {
 							let entry = LocalToRemoteAsset(_0, _1);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -27944,8 +27944,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, LocalToRemoteAsset<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, LocalToRemoteAsset<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -27967,7 +27967,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -27979,7 +27979,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::core::option::Option<runtime_types::primitives::currency::CurrencyId>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -28002,7 +28002,7 @@ pub mod api {
 							let entry = RemoteToLocalAsset(_0, _1);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -28011,8 +28011,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, RemoteToLocalAsset<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, RemoteToLocalAsset<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -28034,7 +28034,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -28043,16 +28043,16 @@ pub mod api {
 		pub mod constants {
 			use super::runtime_types;
 			pub struct ConstantsApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> ConstantsApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " The minimum time to live before a relayer account rotation."]
 				pub fn minimum_ttl(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Mosaic", "MinimumTTL")? ==
@@ -28064,16 +28064,16 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Mosaic")?;
 						let constant = pallet.constant("MinimumTTL")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " The minimum period for which we lock outgoing/incoming funds."]
 				pub fn minimum_time_lock_period(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Mosaic", "MinimumTimeLockPeriod")? ==
@@ -28085,15 +28085,15 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Mosaic")?;
 						let constant = pallet.constant("MinimumTimeLockPeriod")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				pub fn timelock_period(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Mosaic", "timelock_period")? ==
@@ -28104,10 +28104,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Mosaic")?;
 						let constant = pallet.constant("timelock_period")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -28141,7 +28141,7 @@ pub mod api {
 				const FUNCTION: &'static str = "sell";
 			}
 			pub struct TransactionApi<'a, T: ::subxt::Config, X> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 				marker: ::core::marker::PhantomData<X>,
 			}
 			impl<'a, T, X> TransactionApi<'a, T, X>
@@ -28149,14 +28149,14 @@ pub mod api {
 				T: ::subxt::Config,
 				X: ::subxt::extrinsic::ExtrinsicParams<T>,
 			{
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client, marker: ::core::marker::PhantomData }
 				}
 				pub fn add_liquidation_strategy(
 					&self,
 					configuration : runtime_types :: pallet_liquidations :: pallet :: LiquidationStrategyConfiguration,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -28164,7 +28164,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -28178,9 +28178,9 @@ pub mod api {
 							164u8, 31u8, 111u8, 23u8, 239u8, 7u8, 225u8, 117u8, 109u8, 30u8, 135u8,
 						] {
 						let call = AddLiquidationStrategy { configuration };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				pub fn sell(
@@ -28191,8 +28191,8 @@ pub mod api {
 					>,
 					configuration: ::std::vec::Vec<::core::primitive::u32>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<'a, T, X, Sell, DispatchError, root_mod::Event>,
-					::subxt::BasicError,
+					::subxt::tx::SubmittableExtrinsic<'a, T, X, Sell, DispatchError, root_mod::Event>,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -28207,9 +28207,9 @@ pub mod api {
 							27u8,
 						] {
 						let call = Sell { order, configuration };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -28234,7 +28234,7 @@ pub mod api {
 				type Value =
 					runtime_types::pallet_liquidations::pallet::LiquidationStrategyConfiguration;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Twox64Concat,
 					)])
@@ -28259,10 +28259,10 @@ pub mod api {
 				}
 			}
 			pub struct StorageApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}				pub fn strategies (& self , _0 : & 'a :: core :: primitive :: u32 , block_hash : :: core :: option :: Option < T :: Hash > ,) -> impl :: core :: future :: Future < Output = :: core :: result :: Result < :: core :: option :: Option < runtime_types :: pallet_liquidations :: pallet :: LiquidationStrategyConfiguration > , :: subxt :: BasicError > > + 'a{
 					let client = self.client;
@@ -28285,7 +28285,7 @@ pub mod api {
 							let entry = Strategies(_0);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -28294,8 +28294,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, Strategies<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, Strategies<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -28317,7 +28317,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -28325,7 +28325,7 @@ pub mod api {
 					&self,
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
-					Output = ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>,
+					Output = ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError>,
 				> + 'a {
 					let client = self.client;
 					async move {
@@ -28347,7 +28347,7 @@ pub mod api {
 							let entry = StrategyIndex;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -28355,7 +28355,7 @@ pub mod api {
 					&self,
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
-					Output = ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>,
+					Output = ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError>,
 				> + 'a {
 					let client = self.client;
 					async move {
@@ -28377,7 +28377,7 @@ pub mod api {
 							let entry = DefaultStrategyIndex;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -28386,17 +28386,17 @@ pub mod api {
 		pub mod constants {
 			use super::runtime_types;
 			pub struct ConstantsApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> ConstantsApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				pub fn pallet_id(
 					&self,
 				) -> ::core::result::Result<
 					runtime_types::frame_support::PalletId,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
@@ -28408,10 +28408,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Liquidations")?;
 						let constant = pallet.constant("PalletId")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -28501,7 +28501,7 @@ pub mod api {
 				const FUNCTION: &'static str = "liquidate";
 			}
 			pub struct TransactionApi<'a, T: ::subxt::Config, X> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 				marker: ::core::marker::PhantomData<X>,
 			}
 			impl<'a, T, X> TransactionApi<'a, T, X>
@@ -28509,7 +28509,7 @@ pub mod api {
 				T: ::subxt::Config,
 				X: ::subxt::extrinsic::ExtrinsicParams<T>,
 			{
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client, marker: ::core::marker::PhantomData }
 				}
 				#[doc = "Create a new lending market."]
@@ -28527,7 +28527,7 @@ pub mod api {
 					>,
 					keep_alive: ::core::primitive::bool,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -28535,7 +28535,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -28549,9 +28549,9 @@ pub mod api {
 							120u8, 122u8, 150u8, 63u8, 143u8, 148u8, 33u8, 130u8, 158u8, 19u8,
 						] {
 						let call = CreateMarket { input, keep_alive };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "owner must be very careful calling this"]
@@ -28563,7 +28563,7 @@ pub mod api {
 						::core::primitive::u32,
 					>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -28571,7 +28571,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -28585,9 +28585,9 @@ pub mod api {
 							94u8, 26u8, 217u8, 198u8, 172u8, 172u8, 254u8, 55u8, 177u8, 154u8,
 						] {
 						let call = UpdateMarket { market_id, input };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Deposit collateral to market."]
@@ -28600,7 +28600,7 @@ pub mod api {
 					amount: ::core::primitive::u128,
 					keep_alive: ::core::primitive::bool,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -28608,7 +28608,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -28622,9 +28622,9 @@ pub mod api {
 							167u8, 123u8, 194u8, 13u8, 145u8, 78u8, 130u8, 73u8, 90u8, 61u8, 213u8,
 						] {
 						let call = DepositCollateral { market_id, amount, keep_alive };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Withdraw collateral from market."]
@@ -28636,7 +28636,7 @@ pub mod api {
 					market_id: runtime_types::pallet_lending::types::MarketIndex,
 					amount: ::core::primitive::u128,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -28644,7 +28644,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -28658,9 +28658,9 @@ pub mod api {
 							47u8, 228u8, 30u8, 41u8, 47u8, 97u8, 227u8, 53u8, 236u8, 35u8,
 						] {
 						let call = WithdrawCollateral { market_id, amount };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Borrow asset against deposited collateral."]
@@ -28672,8 +28672,8 @@ pub mod api {
 					market_id: runtime_types::pallet_lending::types::MarketIndex,
 					amount_to_borrow: ::core::primitive::u128,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<'a, T, X, Borrow, DispatchError, root_mod::Event>,
-					::subxt::BasicError,
+					::subxt::tx::SubmittableExtrinsic<'a, T, X, Borrow, DispatchError, root_mod::Event>,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -28687,9 +28687,9 @@ pub mod api {
 							125u8, 241u8, 30u8, 223u8, 174u8, 91u8, 148u8, 252u8, 11u8, 137u8,
 						] {
 						let call = Borrow { market_id, amount_to_borrow };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Repay part or all of the borrow in the given market."]
@@ -28711,7 +28711,7 @@ pub mod api {
 					>,
 					keep_alive: ::core::primitive::bool,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -28719,7 +28719,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -28733,9 +28733,9 @@ pub mod api {
 							66u8, 33u8, 146u8, 75u8, 148u8, 230u8, 126u8, 39u8, 69u8, 136u8,
 						] {
 						let call = RepayBorrow { market_id, beneficiary, amount, keep_alive };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Check if borrows for the `borrowers` accounts are required to be liquidated, initiate"]
@@ -28750,7 +28750,7 @@ pub mod api {
 						::subxt::sp_core::crypto::AccountId32,
 					>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -28758,7 +28758,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -28773,9 +28773,9 @@ pub mod api {
 							105u8,
 						] {
 						let call = Liquidate { market_id, borrowers };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -28899,7 +28899,7 @@ pub mod api {
 					::core::primitive::u32,
 				>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Twox64Concat,
 					)])
@@ -28913,7 +28913,7 @@ pub mod api {
 				const STORAGE: &'static str = "DebtTokenForMarket";
 				type Value = runtime_types::primitives::currency::CurrencyId;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Twox64Concat,
 					)])
@@ -28929,8 +28929,8 @@ pub mod api {
 				type Value = runtime_types::sp_arithmetic::fixed_point::FixedU128;
 				fn key(&self) -> ::subxt::StorageEntryKey {
 					::subxt::StorageEntryKey::Map(vec![
-						::subxt::StorageMapKey::new(&self.0, ::subxt::StorageHasher::Twox64Concat),
-						::subxt::StorageMapKey::new(&self.1, ::subxt::StorageHasher::Twox64Concat),
+						::subxt::storage::address::StorageMapKey::new(&self.0, ::subxt::StorageHasher::Twox64Concat),
+						::subxt::storage::address::StorageMapKey::new(&self.1, ::subxt::StorageHasher::Twox64Concat),
 					])
 				}
 			}
@@ -28944,8 +28944,8 @@ pub mod api {
 				type Value = ::core::primitive::u64;
 				fn key(&self) -> ::subxt::StorageEntryKey {
 					::subxt::StorageEntryKey::Map(vec![
-						::subxt::StorageMapKey::new(&self.0, ::subxt::StorageHasher::Twox64Concat),
-						::subxt::StorageMapKey::new(&self.1, ::subxt::StorageHasher::Twox64Concat),
+						::subxt::storage::address::StorageMapKey::new(&self.0, ::subxt::StorageHasher::Twox64Concat),
+						::subxt::storage::address::StorageMapKey::new(&self.1, ::subxt::StorageHasher::Twox64Concat),
 					])
 				}
 			}
@@ -28959,8 +28959,8 @@ pub mod api {
 				type Value = ::core::primitive::u128;
 				fn key(&self) -> ::subxt::StorageEntryKey {
 					::subxt::StorageEntryKey::Map(vec![
-						::subxt::StorageMapKey::new(&self.0, ::subxt::StorageHasher::Twox64Concat),
-						::subxt::StorageMapKey::new(&self.1, ::subxt::StorageHasher::Twox64Concat),
+						::subxt::storage::address::StorageMapKey::new(&self.0, ::subxt::StorageHasher::Twox64Concat),
+						::subxt::storage::address::StorageMapKey::new(&self.1, ::subxt::StorageHasher::Twox64Concat),
 					])
 				}
 			}
@@ -28970,7 +28970,7 @@ pub mod api {
 				const STORAGE: &'static str = "BorrowIndex";
 				type Value = runtime_types::sp_arithmetic::fixed_point::FixedU128;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Twox64Concat,
 					)])
@@ -28986,11 +28986,11 @@ pub mod api {
 				type Value = ::core::primitive::u128;
 				fn key(&self) -> ::subxt::StorageEntryKey {
 					::subxt::StorageEntryKey::Map(vec![
-						::subxt::StorageMapKey::new(
+						::subxt::storage::address::StorageMapKey::new(
 							&self.0,
 							::subxt::StorageHasher::Blake2_128Concat,
 						),
-						::subxt::StorageMapKey::new(
+						::subxt::storage::address::StorageMapKey::new(
 							&self.1,
 							::subxt::StorageHasher::Blake2_128Concat,
 						),
@@ -29007,10 +29007,10 @@ pub mod api {
 				}
 			}
 			pub struct StorageApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " Lending instances counter"]
@@ -29020,7 +29020,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						runtime_types::pallet_lending::types::MarketIndex,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -29043,7 +29043,7 @@ pub mod api {
 							let entry = LendingCount;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -29067,7 +29067,7 @@ pub mod api {
 								::core::primitive::u32,
 							>,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -29090,7 +29090,7 @@ pub mod api {
 							let entry = Markets(_0);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -29104,8 +29104,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, Markets<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, Markets<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -29127,7 +29127,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -29147,7 +29147,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::core::option::Option<runtime_types::primitives::currency::CurrencyId>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -29170,7 +29170,7 @@ pub mod api {
 							let entry = DebtTokenForMarket(_0);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -29188,8 +29188,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, DebtTokenForMarket<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, DebtTokenForMarket<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -29211,7 +29211,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -29228,7 +29228,7 @@ pub mod api {
 						::core::option::Option<
 							runtime_types::sp_arithmetic::fixed_point::FixedU128,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -29251,7 +29251,7 @@ pub mod api {
 							let entry = DebtIndex(_0, _1);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -29263,8 +29263,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, DebtIndex<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, DebtIndex<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -29286,7 +29286,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -29301,7 +29301,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::core::option::Option<::core::primitive::u64>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -29324,7 +29324,7 @@ pub mod api {
 							let entry = BorrowTimestamp(_0, _1);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -29336,8 +29336,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, BorrowTimestamp<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, BorrowTimestamp<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -29359,7 +29359,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -29371,7 +29371,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::core::option::Option<::core::primitive::u128>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -29394,7 +29394,7 @@ pub mod api {
 							let entry = BorrowRent(_0, _1);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -29403,8 +29403,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, BorrowRent<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, BorrowRent<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -29426,7 +29426,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -29440,7 +29440,7 @@ pub mod api {
 						::core::option::Option<
 							runtime_types::sp_arithmetic::fixed_point::FixedU128,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -29463,7 +29463,7 @@ pub mod api {
 							let entry = BorrowIndex(_0);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -29473,8 +29473,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, BorrowIndex<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, BorrowIndex<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -29496,7 +29496,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -29509,7 +29509,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::core::option::Option<::core::primitive::u128>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -29532,7 +29532,7 @@ pub mod api {
 							let entry = AccountCollateral(_0, _1);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -29542,8 +29542,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, AccountCollateral<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, AccountCollateral<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -29565,7 +29565,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -29574,7 +29574,7 @@ pub mod api {
 					&self,
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
-					Output = ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>,
+					Output = ::core::result::Result<::core::primitive::u64, ::subxt::error::DispatchError>,
 				> + 'a {
 					let client = self.client;
 					async move {
@@ -29596,7 +29596,7 @@ pub mod api {
 							let entry = LastBlockTimestamp;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -29605,10 +29605,10 @@ pub mod api {
 		pub mod constants {
 			use super::runtime_types;
 			pub struct ConstantsApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> ConstantsApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " Minimal price of borrow asset in Oracle price required to create."]
@@ -29638,7 +29638,7 @@ pub mod api {
 				#[doc = " upgrades."]
 				pub fn oracle_market_creation_stake(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u128, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Lending", "OracleMarketCreationStake")? ==
@@ -29650,17 +29650,17 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Lending")?;
 						let constant = pallet.constant("OracleMarketCreationStake")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				pub fn pallet_id(
 					&self,
 				) -> ::core::result::Result<
 					runtime_types::frame_support::PalletId,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
@@ -29672,10 +29672,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Lending")?;
 						let constant = pallet.constant("PalletId")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -29774,7 +29774,7 @@ pub mod api {
 				const FUNCTION: &'static str = "enable_twap";
 			}
 			pub struct TransactionApi<'a, T: ::subxt::Config, X> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 				marker: ::core::marker::PhantomData<X>,
 			}
 			impl<'a, T, X> TransactionApi<'a, T, X>
@@ -29782,7 +29782,7 @@ pub mod api {
 				T: ::subxt::Config,
 				X: ::subxt::extrinsic::ExtrinsicParams<T>,
 			{
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client, marker: ::core::marker::PhantomData }
 				}
 				#[doc = "Create a new pool."]
@@ -29796,8 +29796,8 @@ pub mod api {
 						::core::primitive::u32,
 					>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<'a, T, X, Create, DispatchError, root_mod::Event>,
-					::subxt::BasicError,
+					::subxt::tx::SubmittableExtrinsic<'a, T, X, Create, DispatchError, root_mod::Event>,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -29812,9 +29812,9 @@ pub mod api {
 							103u8, 23u8,
 						] {
 						let call = Create { pool };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Execute a buy order on pool."]
@@ -29828,8 +29828,8 @@ pub mod api {
 					min_receive: ::core::primitive::u128,
 					keep_alive: ::core::primitive::bool,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<'a, T, X, Buy, DispatchError, root_mod::Event>,
-					::subxt::BasicError,
+					::subxt::tx::SubmittableExtrinsic<'a, T, X, Buy, DispatchError, root_mod::Event>,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -29843,9 +29843,9 @@ pub mod api {
 							229u8, 0u8, 180u8, 251u8, 58u8, 22u8, 244u8, 235u8, 127u8, 250u8,
 						] {
 						let call = Buy { pool_id, asset_id, amount, min_receive, keep_alive };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Execute a sell order on pool."]
@@ -29859,8 +29859,8 @@ pub mod api {
 					min_receive: ::core::primitive::u128,
 					keep_alive: ::core::primitive::bool,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<'a, T, X, Sell, DispatchError, root_mod::Event>,
-					::subxt::BasicError,
+					::subxt::tx::SubmittableExtrinsic<'a, T, X, Sell, DispatchError, root_mod::Event>,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -29875,9 +29875,9 @@ pub mod api {
 							133u8,
 						] {
 						let call = Sell { pool_id, asset_id, amount, min_receive, keep_alive };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Execute a specific swap operation."]
@@ -29895,8 +29895,8 @@ pub mod api {
 					min_receive: ::core::primitive::u128,
 					keep_alive: ::core::primitive::bool,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<'a, T, X, Swap, DispatchError, root_mod::Event>,
-					::subxt::BasicError,
+					::subxt::tx::SubmittableExtrinsic<'a, T, X, Swap, DispatchError, root_mod::Event>,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -29911,9 +29911,9 @@ pub mod api {
 							70u8, 62u8,
 						] {
 						let call = Swap { pool_id, pair, quote_amount, min_receive, keep_alive };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Add liquidity to the given pool."]
@@ -29927,7 +29927,7 @@ pub mod api {
 					min_mint_amount: ::core::primitive::u128,
 					keep_alive: ::core::primitive::bool,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -29935,7 +29935,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -29956,9 +29956,9 @@ pub mod api {
 							min_mint_amount,
 							keep_alive,
 						};
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Remove liquidity from the given pool."]
@@ -29971,7 +29971,7 @@ pub mod api {
 					min_base_amount: ::core::primitive::u128,
 					min_quote_amount: ::core::primitive::u128,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -29979,7 +29979,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -29999,16 +29999,16 @@ pub mod api {
 							min_base_amount,
 							min_quote_amount,
 						};
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				pub fn enable_twap(
 					&self,
 					pool_id: ::core::primitive::u128,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -30016,7 +30016,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -30031,9 +30031,9 @@ pub mod api {
 							218u8, 41u8,
 						] {
 						let call = EnableTwap { pool_id };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -30115,7 +30115,7 @@ pub mod api {
 			pub struct TwapUpdated {
 				pub pool_id: ::core::primitive::u128,
 				pub timestamp: ::core::primitive::u64,
-				pub twaps: ::subxt::KeyedVec<
+				pub twaps: ::subxt::utils::KeyedVec<
 					runtime_types::primitives::currency::CurrencyId,
 					runtime_types::sp_arithmetic::fixed_point::FixedU128,
 				>,
@@ -30146,7 +30146,7 @@ pub mod api {
 					::core::primitive::u32,
 				>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Blake2_128Concat,
 					)])
@@ -30161,7 +30161,7 @@ pub mod api {
 					::core::primitive::u128,
 				>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Blake2_128Concat,
 					)])
@@ -30176,24 +30176,24 @@ pub mod api {
 					::core::primitive::u128,
 				>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Blake2_128Concat,
 					)])
 				}
 			}
 			pub struct StorageApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				pub fn pool_count(
 					&self,
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
-					Output = ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>,
+					Output = ::core::result::Result<::core::primitive::u128, ::subxt::error::DispatchError>,
 				> + 'a {
 					let client = self.client;
 					async move {
@@ -30215,7 +30215,7 @@ pub mod api {
 							let entry = PoolCount;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -30232,7 +30232,7 @@ pub mod api {
 								::core::primitive::u32,
 							>,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -30255,7 +30255,7 @@ pub mod api {
 							let entry = Pools(_0);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -30264,8 +30264,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, Pools<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, Pools<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -30287,7 +30287,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -30303,7 +30303,7 @@ pub mod api {
 								::core::primitive::u128,
 							>,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -30326,7 +30326,7 @@ pub mod api {
 							let entry = TWAPState(_0);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -30335,8 +30335,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, TWAPState<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, TWAPState<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -30358,7 +30358,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -30374,7 +30374,7 @@ pub mod api {
 								::core::primitive::u128,
 							>,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -30397,7 +30397,7 @@ pub mod api {
 							let entry = PriceCumulativeState(_0);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -30406,8 +30406,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, PriceCumulativeState<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, PriceCumulativeState<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -30429,7 +30429,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -30438,17 +30438,17 @@ pub mod api {
 		pub mod constants {
 			use super::runtime_types;
 			pub struct ConstantsApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> ConstantsApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				pub fn pallet_id(
 					&self,
 				) -> ::core::result::Result<
 					runtime_types::frame_support::PalletId,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
@@ -30461,16 +30461,16 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Pablo")?;
 						let constant = pallet.constant("PalletId")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " Minimum duration for a sale."]
 				pub fn lbp_min_sale_duration(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Pablo", "LbpMinSaleDuration")? ==
@@ -30482,16 +30482,16 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Pablo")?;
 						let constant = pallet.constant("LbpMinSaleDuration")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " Maximum duration for a sale."]
 				pub fn lbp_max_sale_duration(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Pablo", "LbpMaxSaleDuration")? ==
@@ -30503,10 +30503,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Pablo")?;
 						let constant = pallet.constant("LbpMaxSaleDuration")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " Maximum initial weight."]
@@ -30514,7 +30514,7 @@ pub mod api {
 					&self,
 				) -> ::core::result::Result<
 					runtime_types::sp_arithmetic::per_things::Permill,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
@@ -30527,10 +30527,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Pablo")?;
 						let constant = pallet.constant("LbpMaxInitialWeight")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " Minimum final weight."]
@@ -30538,7 +30538,7 @@ pub mod api {
 					&self,
 				) -> ::core::result::Result<
 					runtime_types::sp_arithmetic::per_things::Permill,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
@@ -30550,16 +30550,16 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Pablo")?;
 						let constant = pallet.constant("LbpMinFinalWeight")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = " The interval between TWAP computations."]
 				pub fn twap_interval(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u64, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u64, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Pablo", "TWAPInterval")? ==
@@ -30571,10 +30571,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Pablo")?;
 						let constant = pallet.constant("TWAPInterval")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -30665,7 +30665,7 @@ pub mod api {
 				const FUNCTION: &'static str = "remove_liquidity";
 			}
 			pub struct TransactionApi<'a, T: ::subxt::Config, X> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 				marker: ::core::marker::PhantomData<X>,
 			}
 			impl<'a, T, X> TransactionApi<'a, T, X>
@@ -30673,7 +30673,7 @@ pub mod api {
 				T: ::subxt::Config,
 				X: ::subxt::extrinsic::ExtrinsicParams<T>,
 			{
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client, marker: ::core::marker::PhantomData }
 				}
 				#[doc = "Create, update or remove route."]
@@ -30689,7 +30689,7 @@ pub mod api {
 						>,
 					>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -30697,7 +30697,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -30711,9 +30711,9 @@ pub mod api {
 							12u8, 10u8, 64u8, 4u8, 95u8, 172u8, 45u8, 196u8, 219u8, 132u8, 192u8,
 						] {
 						let call = UpdateRoute { asset_pair, route };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Exchange `amount` of quote asset for `asset_pair` via route found in router."]
@@ -30726,7 +30726,7 @@ pub mod api {
 					amount: ::core::primitive::u128,
 					min_receive: ::core::primitive::u128,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -30734,7 +30734,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -30748,9 +30748,9 @@ pub mod api {
 							142u8, 178u8, 95u8, 0u8, 83u8, 152u8, 27u8, 111u8, 24u8, 49u8, 108u8,
 						] {
 						let call = Exchange { asset_pair, amount, min_receive };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Sell `amount` of quote asset for `asset_pair` via route found in router."]
@@ -30763,8 +30763,8 @@ pub mod api {
 					amount: ::core::primitive::u128,
 					min_receive: ::core::primitive::u128,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<'a, T, X, Sell, DispatchError, root_mod::Event>,
-					::subxt::BasicError,
+					::subxt::tx::SubmittableExtrinsic<'a, T, X, Sell, DispatchError, root_mod::Event>,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -30779,9 +30779,9 @@ pub mod api {
 							215u8,
 						] {
 						let call = Sell { asset_pair, amount, min_receive };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Buy `amount` of quote asset for `asset_pair` via route found in router."]
@@ -30794,8 +30794,8 @@ pub mod api {
 					amount: ::core::primitive::u128,
 					min_receive: ::core::primitive::u128,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<'a, T, X, Buy, DispatchError, root_mod::Event>,
-					::subxt::BasicError,
+					::subxt::tx::SubmittableExtrinsic<'a, T, X, Buy, DispatchError, root_mod::Event>,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -30809,9 +30809,9 @@ pub mod api {
 							181u8, 125u8, 255u8, 12u8, 39u8, 255u8, 16u8, 128u8, 103u8, 101u8,
 						] {
 						let call = Buy { asset_pair, amount, min_receive };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Add liquidity to the underlying pablo pool."]
@@ -30826,7 +30826,7 @@ pub mod api {
 					min_mint_amount: ::core::primitive::u128,
 					keep_alive: ::core::primitive::bool,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -30834,7 +30834,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -30855,9 +30855,9 @@ pub mod api {
 							min_mint_amount,
 							keep_alive,
 						};
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Remove liquidity from the underlying pablo pool."]
@@ -30871,7 +30871,7 @@ pub mod api {
 					min_base_amount: ::core::primitive::u128,
 					min_quote_amount: ::core::primitive::u128,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -30879,7 +30879,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -30899,9 +30899,9 @@ pub mod api {
 							min_base_amount,
 							min_quote_amount,
 						};
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -30957,11 +30957,11 @@ pub mod api {
 				>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
 					::subxt::StorageEntryKey::Map(vec![
-						::subxt::StorageMapKey::new(
+						::subxt::storage::address::StorageMapKey::new(
 							&self.0,
 							::subxt::StorageHasher::Blake2_128Concat,
 						),
-						::subxt::StorageMapKey::new(
+						::subxt::storage::address::StorageMapKey::new(
 							&self.1,
 							::subxt::StorageHasher::Blake2_128Concat,
 						),
@@ -30969,10 +30969,10 @@ pub mod api {
 				}
 			}
 			pub struct StorageApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				pub fn dex_routes(
@@ -30988,7 +30988,7 @@ pub mod api {
 								runtime_types::dali_runtime::MaxHopsCount,
 							>,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -31011,7 +31011,7 @@ pub mod api {
 							let entry = DexRoutes(_0, _1);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -31020,8 +31020,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, DexRoutes<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, DexRoutes<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -31043,7 +31043,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -31052,16 +31052,16 @@ pub mod api {
 		pub mod constants {
 			use super::runtime_types;
 			pub struct ConstantsApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> ConstantsApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " The maximum hops in the route."]
 				pub fn max_hops_in_route(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("DexRouter", "MaxHopsInRoute")? ==
@@ -31072,17 +31072,17 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("DexRouter")?;
 						let constant = pallet.constant("MaxHopsInRoute")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				pub fn pallet_id(
 					&self,
 				) -> ::core::result::Result<
 					runtime_types::frame_support::PalletId,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
@@ -31094,10 +31094,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("DexRouter")?;
 						let constant = pallet.constant("PalletId")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -31113,16 +31113,16 @@ pub mod api {
 		pub mod constants {
 			use super::runtime_types;
 			pub struct ConstantsApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> ConstantsApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " the size of batch to take each time trying to release rewards"]
 				pub fn release_rewards_pools_batch_size(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u8, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u8, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("StakingRewards", "ReleaseRewardsPoolsBatchSize")? ==
@@ -31134,17 +31134,17 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("StakingRewards")?;
 						let constant = pallet.constant("ReleaseRewardsPoolsBatchSize")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				pub fn pallet_id(
 					&self,
 				) -> ::core::result::Result<
 					runtime_types::frame_support::PalletId,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
@@ -31157,10 +31157,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("StakingRewards")?;
 						let constant = pallet.constant("PalletId")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -31193,7 +31193,7 @@ pub mod api {
 				const FUNCTION: &'static str = "enable";
 			}
 			pub struct TransactionApi<'a, T: ::subxt::Config, X> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 				marker: ::core::marker::PhantomData<X>,
 			}
 			impl<'a, T, X> TransactionApi<'a, T, X>
@@ -31201,7 +31201,7 @@ pub mod api {
 				T: ::subxt::Config,
 				X: ::subxt::extrinsic::ExtrinsicParams<T>,
 			{
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client, marker: ::core::marker::PhantomData }
 				}
 				#[doc = "Disable a pallet function."]
@@ -31216,7 +31216,7 @@ pub mod api {
 						runtime_types::dali_runtime::MaxStringSize,
 					>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -31224,7 +31224,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -31239,9 +31239,9 @@ pub mod api {
 							167u8, 183u8,
 						] {
 						let call = Disable { entry };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				#[doc = "Enable a previously disabled pallet function."]
@@ -31256,8 +31256,8 @@ pub mod api {
 						runtime_types::dali_runtime::MaxStringSize,
 					>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<'a, T, X, Enable, DispatchError, root_mod::Event>,
-					::subxt::BasicError,
+					::subxt::tx::SubmittableExtrinsic<'a, T, X, Enable, DispatchError, root_mod::Event>,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -31271,9 +31271,9 @@ pub mod api {
 							209u8, 141u8, 211u8, 240u8, 41u8, 118u8, 97u8, 105u8, 97u8, 75u8,
 						] {
 						let call = Enable { entry };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -31317,17 +31317,17 @@ pub mod api {
 				const STORAGE: &'static str = "DisabledCalls";
 				type Value = ();
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Twox64Concat,
 					)])
 				}
 			}
 			pub struct StorageApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " The list of disabled extrinsics."]
@@ -31340,7 +31340,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::core::option::Option<()>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -31363,7 +31363,7 @@ pub mod api {
 							let entry = DisabledCalls(_0);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -31373,8 +31373,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, DisabledCalls<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, DisabledCalls<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -31396,7 +31396,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -31405,15 +31405,15 @@ pub mod api {
 		pub mod constants {
 			use super::runtime_types;
 			pub struct ConstantsApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> ConstantsApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				pub fn max_string_size(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("CallFilter", "MaxStringSize")? ==
@@ -31424,10 +31424,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("CallFilter")?;
 						let constant = pallet.constant("MaxStringSize")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -31456,7 +31456,7 @@ pub mod api {
 				const FUNCTION: &'static str = "send_ping";
 			}
 			pub struct TransactionApi<'a, T: ::subxt::Config, X> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 				marker: ::core::marker::PhantomData<X>,
 			}
 			impl<'a, T, X> TransactionApi<'a, T, X>
@@ -31464,14 +31464,14 @@ pub mod api {
 				T: ::subxt::Config,
 				X: ::subxt::extrinsic::ExtrinsicParams<T>,
 			{
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client, marker: ::core::marker::PhantomData }
 				}
 				pub fn open_channel(
 					&self,
 					params: runtime_types::ibc_trait::OpenChannelParams,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -31479,7 +31479,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -31493,16 +31493,16 @@ pub mod api {
 							58u8, 24u8, 88u8, 248u8, 131u8, 58u8, 129u8, 186u8, 224u8, 99u8, 183u8,
 						] {
 						let call = OpenChannel { params };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				pub fn send_ping(
 					&self,
 					params: runtime_types::pallet_ibc_ping::SendPingParams,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -31510,7 +31510,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -31524,9 +31524,9 @@ pub mod api {
 							234u8, 155u8, 102u8, 119u8, 218u8, 244u8, 111u8, 39u8, 165u8, 80u8,
 						] {
 						let call = SendPing { params };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -31556,10 +31556,10 @@ pub mod api {
 		pub mod storage {
 			use super::runtime_types;
 			pub struct StorageApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 			}
@@ -31598,7 +31598,7 @@ pub mod api {
 				const FUNCTION: &'static str = "set_pallet_params";
 			}
 			pub struct TransactionApi<'a, T: ::subxt::Config, X> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 				marker: ::core::marker::PhantomData<X>,
 			}
 			impl<'a, T, X> TransactionApi<'a, T, X>
@@ -31606,7 +31606,7 @@ pub mod api {
 				T: ::subxt::Config,
 				X: ::subxt::extrinsic::ExtrinsicParams<T>,
 			{
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client, marker: ::core::marker::PhantomData }
 				}
 				pub fn transfer(
@@ -31615,7 +31615,7 @@ pub mod api {
 					asset_id: runtime_types::primitives::currency::CurrencyId,
 					amount: ::core::primitive::u128,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -31623,7 +31623,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -31637,16 +31637,16 @@ pub mod api {
 							183u8, 0u8, 95u8, 180u8, 247u8, 89u8, 197u8, 101u8, 42u8, 218u8,
 						] {
 						let call = Transfer { params, asset_id, amount };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				pub fn open_channel(
 					&self,
 					params: runtime_types::ibc_trait::OpenChannelParams,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -31654,7 +31654,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -31668,16 +31668,16 @@ pub mod api {
 							58u8, 24u8, 88u8, 248u8, 131u8, 58u8, 129u8, 186u8, 224u8, 99u8, 183u8,
 						] {
 						let call = OpenChannel { params };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				pub fn set_pallet_params(
 					&self,
 					params: runtime_types::ibc_transfer::pallet::PalletParams,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -31685,7 +31685,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -31700,9 +31700,9 @@ pub mod api {
 							173u8,
 						] {
 						let call = SetPalletParams { params };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -31759,7 +31759,7 @@ pub mod api {
 				const STORAGE: &'static str = "IbcAssetIds";
 				type Value = ::std::vec::Vec<::core::primitive::u8>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Twox64Concat,
 					)])
@@ -31775,10 +31775,10 @@ pub mod api {
 				}
 			}
 			pub struct StorageApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " Pallet Params used to disable sending or receipt of ibc tokens"]
@@ -31788,7 +31788,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						runtime_types::ibc_transfer::pallet::PalletParams,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -31811,7 +31811,7 @@ pub mod api {
 							let entry = Params;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -31824,7 +31824,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::core::option::Option<::std::vec::Vec<::core::primitive::u8>>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -31847,7 +31847,7 @@ pub mod api {
 							let entry = IbcAssetIds(_0);
 							client.storage().fetch(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -31858,8 +31858,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, IbcAssetIds<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, IbcAssetIds<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -31881,7 +31881,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -31892,7 +31892,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::std::vec::Vec<::std::vec::Vec<::core::primitive::u8>>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -31915,7 +31915,7 @@ pub mod api {
 							let entry = ChannelIds;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -31924,17 +31924,17 @@ pub mod api {
 		pub mod constants {
 			use super::runtime_types;
 			pub struct ConstantsApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> ConstantsApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				pub fn pallet_id(
 					&self,
 				) -> ::core::result::Result<
 					runtime_types::frame_support::PalletId,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
@@ -31946,10 +31946,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Transfer")?;
 						let constant = pallet.constant("PalletId")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -31986,7 +31986,7 @@ pub mod api {
 				const FUNCTION: &'static str = "initiate_connection";
 			}
 			pub struct TransactionApi<'a, T: ::subxt::Config, X> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 				marker: ::core::marker::PhantomData<X>,
 			}
 			impl<'a, T, X> TransactionApi<'a, T, X>
@@ -31994,14 +31994,14 @@ pub mod api {
 				T: ::subxt::Config,
 				X: ::subxt::extrinsic::ExtrinsicParams<T>,
 			{
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client, marker: ::core::marker::PhantomData }
 				}
 				pub fn deliver(
 					&self,
 					messages: ::std::vec::Vec<runtime_types::pallet_ibc::Any>,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -32009,7 +32009,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -32024,16 +32024,16 @@ pub mod api {
 							220u8,
 						] {
 						let call = Deliver { messages };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				pub fn create_client(
 					&self,
 					msg: runtime_types::pallet_ibc::Any,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -32041,7 +32041,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -32055,16 +32055,16 @@ pub mod api {
 							174u8, 219u8, 15u8, 18u8, 180u8, 242u8, 55u8, 6u8, 150u8, 245u8, 203u8,
 						] {
 						let call = CreateClient { msg };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 				pub fn initiate_connection(
 					&self,
 					params: runtime_types::pallet_ibc::ConnectionParams,
 				) -> Result<
-					::subxt::SubmittableExtrinsic<
+					::subxt::tx::SubmittableExtrinsic<
 						'a,
 						T,
 						X,
@@ -32072,7 +32072,7 @@ pub mod api {
 						DispatchError,
 						root_mod::Event,
 					>,
-					::subxt::BasicError,
+					::subxt::error::DispatchError,
 				> {
 					let runtime_call_hash = {
 						let locked_metadata = self.client.metadata();
@@ -32087,9 +32087,9 @@ pub mod api {
 							196u8, 131u8,
 						] {
 						let call = InitiateConnection { params };
-						Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
+						Ok(::subxt::tx::SubmittableExtrinsic::new(self.client, call))
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -32139,7 +32139,7 @@ pub mod api {
 				const STORAGE: &'static str = "ClientStates";
 				type Value = ::std::vec::Vec<::core::primitive::u8>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Blake2_128Concat,
 					)])
@@ -32155,11 +32155,11 @@ pub mod api {
 				type Value = ::std::vec::Vec<::core::primitive::u8>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
 					::subxt::StorageEntryKey::Map(vec![
-						::subxt::StorageMapKey::new(
+						::subxt::storage::address::StorageMapKey::new(
 							&self.0,
 							::subxt::StorageHasher::Blake2_128Concat,
 						),
-						::subxt::StorageMapKey::new(
+						::subxt::storage::address::StorageMapKey::new(
 							&self.1,
 							::subxt::StorageHasher::Blake2_128Concat,
 						),
@@ -32176,11 +32176,11 @@ pub mod api {
 				type Value = ::std::vec::Vec<::core::primitive::u8>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
 					::subxt::StorageEntryKey::Map(vec![
-						::subxt::StorageMapKey::new(
+						::subxt::storage::address::StorageMapKey::new(
 							&self.0,
 							::subxt::StorageHasher::Blake2_128Concat,
 						),
-						::subxt::StorageMapKey::new(
+						::subxt::storage::address::StorageMapKey::new(
 							&self.1,
 							::subxt::StorageHasher::Blake2_128Concat,
 						),
@@ -32197,11 +32197,11 @@ pub mod api {
 				type Value = ::core::primitive::u64;
 				fn key(&self) -> ::subxt::StorageEntryKey {
 					::subxt::StorageEntryKey::Map(vec![
-						::subxt::StorageMapKey::new(
+						::subxt::storage::address::StorageMapKey::new(
 							&self.0,
 							::subxt::StorageHasher::Blake2_128Concat,
 						),
-						::subxt::StorageMapKey::new(
+						::subxt::storage::address::StorageMapKey::new(
 							&self.1,
 							::subxt::StorageHasher::Blake2_128Concat,
 						),
@@ -32214,7 +32214,7 @@ pub mod api {
 				const STORAGE: &'static str = "Connections";
 				type Value = ::std::vec::Vec<::core::primitive::u8>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Blake2_128Concat,
 					)])
@@ -32248,11 +32248,11 @@ pub mod api {
 				type Value = ::std::vec::Vec<::core::primitive::u8>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
 					::subxt::StorageEntryKey::Map(vec![
-						::subxt::StorageMapKey::new(
+						::subxt::storage::address::StorageMapKey::new(
 							&self.0,
 							::subxt::StorageHasher::Blake2_128Concat,
 						),
-						::subxt::StorageMapKey::new(
+						::subxt::storage::address::StorageMapKey::new(
 							&self.1,
 							::subxt::StorageHasher::Blake2_128Concat,
 						),
@@ -32268,7 +32268,7 @@ pub mod api {
 					::std::vec::Vec<::core::primitive::u8>,
 				)>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Blake2_128Concat,
 					)])
@@ -32284,11 +32284,11 @@ pub mod api {
 				type Value = ::core::primitive::u64;
 				fn key(&self) -> ::subxt::StorageEntryKey {
 					::subxt::StorageEntryKey::Map(vec![
-						::subxt::StorageMapKey::new(
+						::subxt::storage::address::StorageMapKey::new(
 							&self.0,
 							::subxt::StorageHasher::Blake2_128Concat,
 						),
-						::subxt::StorageMapKey::new(
+						::subxt::storage::address::StorageMapKey::new(
 							&self.1,
 							::subxt::StorageHasher::Blake2_128Concat,
 						),
@@ -32305,11 +32305,11 @@ pub mod api {
 				type Value = ::core::primitive::u64;
 				fn key(&self) -> ::subxt::StorageEntryKey {
 					::subxt::StorageEntryKey::Map(vec![
-						::subxt::StorageMapKey::new(
+						::subxt::storage::address::StorageMapKey::new(
 							&self.0,
 							::subxt::StorageHasher::Blake2_128Concat,
 						),
-						::subxt::StorageMapKey::new(
+						::subxt::storage::address::StorageMapKey::new(
 							&self.1,
 							::subxt::StorageHasher::Blake2_128Concat,
 						),
@@ -32326,11 +32326,11 @@ pub mod api {
 				type Value = ::core::primitive::u64;
 				fn key(&self) -> ::subxt::StorageEntryKey {
 					::subxt::StorageEntryKey::Map(vec![
-						::subxt::StorageMapKey::new(
+						::subxt::storage::address::StorageMapKey::new(
 							&self.0,
 							::subxt::StorageHasher::Blake2_128Concat,
 						),
-						::subxt::StorageMapKey::new(
+						::subxt::storage::address::StorageMapKey::new(
 							&self.1,
 							::subxt::StorageHasher::Blake2_128Concat,
 						),
@@ -32347,7 +32347,7 @@ pub mod api {
 				const STORAGE: &'static str = "Acknowledgements";
 				type Value = ::std::vec::Vec<::core::primitive::u8>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&(&self.0, &self.1, &self.2),
 						::subxt::StorageHasher::Blake2_128Concat,
 					)])
@@ -32368,7 +32368,7 @@ pub mod api {
 				const STORAGE: &'static str = "Clients";
 				type Value = ::std::vec::Vec<::core::primitive::u8>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Blake2_128Concat,
 					)])
@@ -32389,7 +32389,7 @@ pub mod api {
 				const STORAGE: &'static str = "ConnectionClient";
 				type Value = ::std::vec::Vec<::std::vec::Vec<::core::primitive::u8>>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&self.0,
 						::subxt::StorageHasher::Blake2_128Concat,
 					)])
@@ -32405,7 +32405,7 @@ pub mod api {
 				const STORAGE: &'static str = "PacketReceipt";
 				type Value = ::std::vec::Vec<::core::primitive::u8>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&(&self.0, &self.1, &self.2),
 						::subxt::StorageHasher::Blake2_128Concat,
 					)])
@@ -32430,7 +32430,7 @@ pub mod api {
 				const STORAGE: &'static str = "PacketCommitment";
 				type Value = ::std::vec::Vec<::core::primitive::u8>;
 				fn key(&self) -> ::subxt::StorageEntryKey {
-					::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+					::subxt::StorageEntryKey::Map(vec![::subxt::storage::address::StorageMapKey::new(
 						&(&self.0, &self.1, &self.2),
 						::subxt::StorageHasher::Blake2_128Concat,
 					)])
@@ -32459,10 +32459,10 @@ pub mod api {
 				}
 			}
 			pub struct StorageApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				#[doc = " client_id => ClientState"]
@@ -32473,7 +32473,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::std::vec::Vec<::core::primitive::u8>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -32496,7 +32496,7 @@ pub mod api {
 							let entry = ClientStates(_0);
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -32506,8 +32506,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, ClientStates<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, ClientStates<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -32529,7 +32529,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -32542,7 +32542,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::std::vec::Vec<::core::primitive::u8>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -32565,7 +32565,7 @@ pub mod api {
 							let entry = ConsensusStates(_0, _1);
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -32575,8 +32575,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, ConsensusStates<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, ConsensusStates<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -32598,7 +32598,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -32611,7 +32611,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::std::vec::Vec<::core::primitive::u8>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -32634,7 +32634,7 @@ pub mod api {
 							let entry = ClientUpdateHeight(_0, _1);
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -32644,8 +32644,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, ClientUpdateHeight<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, ClientUpdateHeight<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -32667,7 +32667,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -32678,7 +32678,7 @@ pub mod api {
 					_1: &'a [::core::primitive::u8],
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
-					Output = ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>,
+					Output = ::core::result::Result<::core::primitive::u64, ::subxt::error::DispatchError>,
 				> + 'a {
 					let client = self.client;
 					async move {
@@ -32700,7 +32700,7 @@ pub mod api {
 							let entry = ClientUpdateTime(_0, _1);
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -32710,8 +32710,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, ClientUpdateTime<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, ClientUpdateTime<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -32733,7 +32733,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -32745,7 +32745,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::std::vec::Vec<::core::primitive::u8>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -32768,7 +32768,7 @@ pub mod api {
 							let entry = Connections(_0);
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -32778,8 +32778,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, Connections<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, Connections<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -32801,7 +32801,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -32810,7 +32810,7 @@ pub mod api {
 					&self,
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
-					Output = ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>,
+					Output = ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError>,
 				> + 'a {
 					let client = self.client;
 					async move {
@@ -32832,7 +32832,7 @@ pub mod api {
 							let entry = CounterForConnections;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -32840,7 +32840,7 @@ pub mod api {
 					&self,
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
-					Output = ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>,
+					Output = ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError>,
 				> + 'a {
 					let client = self.client;
 					async move {
@@ -32862,7 +32862,7 @@ pub mod api {
 							let entry = ChannelCounter;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -32875,7 +32875,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::std::vec::Vec<::core::primitive::u8>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -32898,7 +32898,7 @@ pub mod api {
 							let entry = Channels(_0, _1);
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -32908,8 +32908,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, Channels<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, Channels<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -32931,7 +32931,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -32946,7 +32946,7 @@ pub mod api {
 							::std::vec::Vec<::core::primitive::u8>,
 							::std::vec::Vec<::core::primitive::u8>,
 						)>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -32969,7 +32969,7 @@ pub mod api {
 							let entry = ChannelsConnection(_0);
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -32979,8 +32979,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, ChannelsConnection<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, ChannelsConnection<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -33002,7 +33002,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -33013,7 +33013,7 @@ pub mod api {
 					_1: &'a [::core::primitive::u8],
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
-					Output = ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>,
+					Output = ::core::result::Result<::core::primitive::u64, ::subxt::error::DispatchError>,
 				> + 'a {
 					let client = self.client;
 					async move {
@@ -33035,7 +33035,7 @@ pub mod api {
 							let entry = NextSequenceSend(_0, _1);
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -33045,8 +33045,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, NextSequenceSend<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, NextSequenceSend<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -33068,7 +33068,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -33079,7 +33079,7 @@ pub mod api {
 					_1: &'a [::core::primitive::u8],
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
-					Output = ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>,
+					Output = ::core::result::Result<::core::primitive::u64, ::subxt::error::DispatchError>,
 				> + 'a {
 					let client = self.client;
 					async move {
@@ -33101,7 +33101,7 @@ pub mod api {
 							let entry = NextSequenceRecv(_0, _1);
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -33111,8 +33111,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, NextSequenceRecv<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, NextSequenceRecv<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -33134,7 +33134,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -33145,7 +33145,7 @@ pub mod api {
 					_1: &'a [::core::primitive::u8],
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
-					Output = ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>,
+					Output = ::core::result::Result<::core::primitive::u64, ::subxt::error::DispatchError>,
 				> + 'a {
 					let client = self.client;
 					async move {
@@ -33167,7 +33167,7 @@ pub mod api {
 							let entry = NextSequenceAck(_0, _1);
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -33177,8 +33177,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, NextSequenceAck<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, NextSequenceAck<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -33200,7 +33200,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -33214,7 +33214,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::std::vec::Vec<::core::primitive::u8>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -33237,7 +33237,7 @@ pub mod api {
 							let entry = Acknowledgements(_0, _1, _2);
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -33247,8 +33247,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, Acknowledgements<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, Acknowledgements<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -33270,7 +33270,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -33279,7 +33279,7 @@ pub mod api {
 					&self,
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
-					Output = ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>,
+					Output = ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError>,
 				> + 'a {
 					let client = self.client;
 					async move {
@@ -33301,7 +33301,7 @@ pub mod api {
 							let entry = CounterForAcknowledgements;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -33313,7 +33313,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::std::vec::Vec<::core::primitive::u8>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -33336,7 +33336,7 @@ pub mod api {
 							let entry = Clients(_0);
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -33346,8 +33346,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, Clients<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, Clients<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -33369,7 +33369,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -33378,7 +33378,7 @@ pub mod api {
 					&self,
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
-					Output = ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>,
+					Output = ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError>,
 				> + 'a {
 					let client = self.client;
 					async move {
@@ -33400,7 +33400,7 @@ pub mod api {
 							let entry = CounterForClients;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -33412,7 +33412,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::std::vec::Vec<::std::vec::Vec<::core::primitive::u8>>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -33435,7 +33435,7 @@ pub mod api {
 							let entry = ConnectionClient(_0);
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -33445,8 +33445,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, ConnectionClient<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, ConnectionClient<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -33468,7 +33468,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -33482,7 +33482,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::std::vec::Vec<::core::primitive::u8>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -33505,7 +33505,7 @@ pub mod api {
 							let entry = PacketReceipt(_0, _1, _2);
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -33515,8 +33515,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, PacketReceipt<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, PacketReceipt<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -33538,7 +33538,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -33547,7 +33547,7 @@ pub mod api {
 					&self,
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
-					Output = ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>,
+					Output = ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError>,
 				> + 'a {
 					let client = self.client;
 					async move {
@@ -33569,7 +33569,7 @@ pub mod api {
 							let entry = CounterForPacketReceipt;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -33583,7 +33583,7 @@ pub mod api {
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
 						::std::vec::Vec<::core::primitive::u8>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -33606,7 +33606,7 @@ pub mod api {
 							let entry = PacketCommitment(_0, _1, _2);
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -33616,8 +33616,8 @@ pub mod api {
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
 					Output = ::core::result::Result<
-						::subxt::KeyIter<'a, T, PacketCommitment<'a>>,
-						::subxt::BasicError,
+						::subxt::storage::KeyIter<'a, T, PacketCommitment<'a>>,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -33639,7 +33639,7 @@ pub mod api {
 							] {
 							client.storage().iter(block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -33648,7 +33648,7 @@ pub mod api {
 					&self,
 					block_hash: ::core::option::Option<T::Hash>,
 				) -> impl ::core::future::Future<
-					Output = ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>,
+					Output = ::core::result::Result<::core::primitive::u32, ::subxt::error::DispatchError>,
 				> + 'a {
 					let client = self.client;
 					async move {
@@ -33670,7 +33670,7 @@ pub mod api {
 							let entry = CounterForPacketCommitment;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -33684,7 +33684,7 @@ pub mod api {
 							::core::primitive::u64,
 							runtime_types::pallet_ibc::IbcConsensusState,
 						>,
-						::subxt::BasicError,
+						::subxt::error::DispatchError,
 					>,
 				> + 'a {
 					let client = self.client;
@@ -33707,7 +33707,7 @@ pub mod api {
 							let entry = HostConsensusStates;
 							client.storage().fetch_or_default(&entry, block_hash).await
 						} else {
-							Err(::subxt::MetadataError::IncompatibleMetadata.into())
+							Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 						}
 					}
 				}
@@ -33716,15 +33716,15 @@ pub mod api {
 		pub mod constants {
 			use super::runtime_types;
 			pub struct ConstantsApi<'a, T: ::subxt::Config> {
-				client: &'a ::subxt::Client<T>,
+				client: &'a ::subxt::client::OnlineClient<T>,
 			}
 			impl<'a, T: ::subxt::Config> ConstantsApi<'a, T> {
-				pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+				pub fn new(client: &'a ::subxt::client::OnlineClient<T>) -> Self {
 					Self { client }
 				}
 				pub fn expected_block_time(
 					&self,
-				) -> ::core::result::Result<::core::primitive::u64, ::subxt::BasicError> {
+				) -> ::core::result::Result<::core::primitive::u64, ::subxt::error::DispatchError> {
 					let locked_metadata = self.client.metadata();
 					let metadata = locked_metadata.read();
 					if metadata.constant_hash("Ibc", "ExpectedBlockTime")? ==
@@ -33736,10 +33736,10 @@ pub mod api {
 						] {
 						let pallet = metadata.pallet("Ibc")?;
 						let constant = pallet.constant("ExpectedBlockTime")?;
-						let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+						let value = ::subxt::ext::codec::Decode::decode(&mut &constant.value[..])?;
 						Ok(value)
 					} else {
-						Err(::subxt::MetadataError::IncompatibleMetadata.into())
+						Err(::subxt::metadata::MetadataError::IncompatibleMetadata.into())
 					}
 				}
 			}
@@ -34053,7 +34053,7 @@ pub mod api {
 					pub asset_id: _1,
 					pub reserved: runtime_types::sp_arithmetic::per_things::Perquintill,
 					pub manager: _0,
-					pub strategies: ::subxt::KeyedVec<
+					pub strategies: ::subxt::utils::KeyedVec<
 						_0,
 						runtime_types::sp_arithmetic::per_things::Perquintill,
 					>,
@@ -34519,7 +34519,7 @@ pub mod api {
 						::core::primitive::u32,
 					>,
 				>,
-				pub horizontal_messages: ::subxt::KeyedVec<
+				pub horizontal_messages: ::subxt::utils::KeyedVec<
 					runtime_types::polkadot_parachain::primitives::Id,
 					::std::vec::Vec<
 						runtime_types::polkadot_core_primitives::InboundHrmpMessage<
@@ -34763,7 +34763,7 @@ pub mod api {
 				pub mod bounded_btree_map {
 					use super::runtime_types;
 					#[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
-					pub struct BoundedBTreeMap<_0, _1>(pub ::subxt::KeyedVec<_0, _1>);
+					pub struct BoundedBTreeMap<_0, _1>(pub ::subxt::utils::KeyedVec<_0, _1>);
 				}
 				pub mod bounded_vec {
 					use super::runtime_types;
@@ -39842,7 +39842,7 @@ pub mod api {
 						maybe_timepoint: ::core::option::Option<
 							runtime_types::pallet_multisig::Timepoint<::core::primitive::u32>,
 						>,
-						call: ::subxt::WrapperKeepOpaque<runtime_types::dali_runtime::Call>,
+						call: ::subxt::utils::WrapperKeepOpaque<runtime_types::dali_runtime::Call>,
 						store_call: ::core::primitive::bool,
 						max_weight: ::core::primitive::u64,
 					},
@@ -40435,7 +40435,7 @@ pub mod api {
 					TwapUpdated {
 						pool_id: ::core::primitive::u128,
 						timestamp: ::core::primitive::u64,
-						twaps: ::subxt::KeyedVec<
+						twaps: ::subxt::utils::KeyedVec<
 							runtime_types::primitives::currency::CurrencyId,
 							runtime_types::sp_arithmetic::fixed_point::FixedU128,
 						>,
@@ -44077,9 +44077,9 @@ pub mod api {
 	#[doc = r" The default error type returned when there is a runtime issue."]
 	pub type DispatchError = runtime_types::sp_runtime::DispatchError;
 	impl ::subxt::HasModuleError for runtime_types::sp_runtime::DispatchError {
-		fn module_error_data(&self) -> Option<::subxt::ModuleErrorData> {
+		fn module_error_data(&self) -> Option<::subxt::error::ModuleErrorData> {
 			if let Self::Module(module_error) = self {
-				Some(::subxt::ModuleErrorData {
+				Some(::subxt::error::ModuleErrorData {
 					pallet_index: module_error.index,
 					error: module_error.error,
 				})
@@ -44089,7 +44089,7 @@ pub mod api {
 		}
 	}
 	pub struct RuntimeApi<T: ::subxt::Config, X> {
-		pub client: ::subxt::Client<T>,
+		pub client: ::subxt::client::OnlineClient<T>,
 		marker: ::core::marker::PhantomData<X>,
 	}
 	impl<T: ::subxt::Config, X> Clone for RuntimeApi<T, X> {
@@ -44097,12 +44097,12 @@ pub mod api {
 			Self { client: self.client.clone(), marker: ::core::marker::PhantomData }
 		}
 	}
-	impl<T, X> ::core::convert::From<::subxt::Client<T>> for RuntimeApi<T, X>
+	impl<T, X> ::core::convert::From<::subxt::client::OnlineClient<T>> for RuntimeApi<T, X>
 	where
 		T: ::subxt::Config,
 		X: ::subxt::extrinsic::ExtrinsicParams<T>,
 	{
-		fn from(client: ::subxt::Client<T>) -> Self {
+		fn from(client: ::subxt::client::OnlineClient<T>) -> Self {
 			Self { client, marker: ::core::marker::PhantomData }
 		}
 	}
@@ -44111,7 +44111,7 @@ pub mod api {
 		T: ::subxt::Config,
 		X: ::subxt::extrinsic::ExtrinsicParams<T>,
 	{
-		pub fn validate_metadata(&'a self) -> Result<(), ::subxt::MetadataError> {
+		pub fn validate_metadata(&'a self) -> Result<(), ::subxt::metadata::MetadataError> {
 			let runtime_metadata_hash = {
 				let locked_metadata = self.client.metadata();
 				let metadata = locked_metadata.read();
@@ -44123,7 +44123,7 @@ pub mod api {
 					124u8, 210u8, 154u8, 181u8, 204u8, 194u8, 171u8, 26u8, 72u8, 124u8, 109u8,
 					40u8, 176u8, 24u8, 201u8, 235u8, 51u8, 156u8, 171u8, 97u8,
 				] {
-				Err(::subxt::MetadataError::IncompatibleMetadata)
+				Err(::subxt::metadata::MetadataError::IncompatibleMetadata)
 			} else {
 				Ok(())
 			}
@@ -44142,22 +44142,22 @@ pub mod api {
 		}
 	}
 	pub struct EventsApi<'a, T: ::subxt::Config> {
-		client: &'a ::subxt::Client<T>,
+		client: &'a ::subxt::client::OnlineClient<T>,
 	}
 	impl<'a, T: ::subxt::Config> EventsApi<'a, T> {
 		pub async fn at(
 			&self,
 			block_hash: T::Hash,
-		) -> Result<::subxt::events::Events<T, Event>, ::subxt::BasicError> {
+		) -> Result<::subxt::events::Events<T, Event>, ::subxt::error::DispatchError> {
 			::subxt::events::at::<T, Event>(self.client, block_hash).await
 		}
 		pub async fn subscribe(
 			&self,
 		) -> Result<
 			::subxt::events::EventSubscription<'a, ::subxt::events::EventSub<T::Header>, T, Event>,
-			::subxt::BasicError,
+			::subxt::error::DispatchError,
 		> {
-			::subxt::events::subscribe::<T, Event>(self.client).await
+			::subxt::rpc::RpcClient::subscribe::<T, Event>(self.client).await
 		}
 		pub async fn subscribe_finalized(
 			&self,
@@ -44168,13 +44168,13 @@ pub mod api {
 				T,
 				Event,
 			>,
-			::subxt::BasicError,
+			::subxt::error::DispatchError,
 		> {
-			::subxt::events::subscribe_finalized::<T, Event>(self.client).await
+			::subxt::rpc::RpcClient::subscribe_finalized::<T, Event>(self.client).await
 		}
 	}
 	pub struct ConstantsApi<'a, T: ::subxt::Config> {
-		client: &'a ::subxt::Client<T>,
+		client: &'a ::subxt::client::OnlineClient<T>,
 	}
 	impl<'a, T: ::subxt::Config> ConstantsApi<'a, T> {
 		pub fn system(&self) -> system::constants::ConstantsApi<'a, T> {
@@ -44272,7 +44272,7 @@ pub mod api {
 		}
 	}
 	pub struct StorageApi<'a, T: ::subxt::Config> {
-		client: &'a ::subxt::Client<T>,
+		client: &'a ::subxt::client::OnlineClient<T>,
 	}
 	impl<'a, T> StorageApi<'a, T>
 	where
@@ -44420,7 +44420,7 @@ pub mod api {
 		}
 	}
 	pub struct TransactionApi<'a, T: ::subxt::Config, X> {
-		client: &'a ::subxt::Client<T>,
+		client: &'a ::subxt::client::OnlineClient<T>,
 		marker: ::core::marker::PhantomData<X>,
 	}
 	impl<'a, T, X> TransactionApi<'a, T, X>
