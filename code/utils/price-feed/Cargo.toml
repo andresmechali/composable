@@ -5,13 +5,13 @@ version = "0.1.0"
 
 
 [dependencies]
-binance = "0.18.3"
+binance = "0.20.2"
 chrono = "0.4.19"
 clap = { version = "3.1.12", features = ["derive"] }
 custom_derive = "0.1.7"
 enum_derive = "0.1.7"
 env_logger = "0.9.0"
-futures = "0.3.21"
+futures = "0.3.26"
 jsonrpc-client-transports = "18.0.0"
 jsonrpc-core = "18.0.0"
 lazy_static = "1.4.0"
@@ -21,11 +21,11 @@ scale-codec = { package = "parity-scale-codec", version = "3.0.0", features = [
   "derive",
 ] }
 serde = { version = '1.0.136', features = ["derive"] }
-serde_json = "1.0.79"
+serde_json = "1.0.94"
 signal-hook = "0.3.13"
 signal-hook-tokio = { version = "0.3.1", features = ["futures-v0_3"] }
 sp-arithmetic = { git = "https://github.com/paritytech/substrate", branch = "polkadot-v0.9.36" }
-subxt = { git = "https://github.com/paritytech/subxt", rev = "2a913a3aa99a07f7acaedbbaeed6925d34627303" }
+subxt = { git = "https://github.com/paritytech/subxt", version = "0.27.1" }
 tokio = { version = "1.18.0", features = ["full"] }
 tokio-stream = "0.1.8"
 url = "1.7.2"
