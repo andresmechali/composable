@@ -47,7 +47,8 @@ members = [
   "parachain/runtime/composable-wasm",
   "utils/common",
   "utils/collator-sidecar",
-  "utils/price-feed"
+  "utils/price-feed",
+  "utils/binance-feed"
 ]
 resolver = "2"
 
